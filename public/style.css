@@ -141,7 +141,7 @@ img { max-width: 100%; display: block; }
 /* ---------- NAVBAR ---------- */
 .navbar {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 40px; left: 0; right: 0;
   z-index: 1000;
   padding: 1rem 0;
   transition: var(--transition);
@@ -227,7 +227,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-top: 90px;
+  padding-top: 130px;
 }
 .hero-bg {
   position: absolute;
@@ -371,8 +371,12 @@ img { max-width: 100%; display: block; }
 
 /* ---------- TICKER ---------- */
 .ticker-wrap {
-  background: linear-gradient(135deg, rgba(22,163,74,.1), rgba(212,175,55,.07));
-  border-top: 1px solid rgba(22,163,74,.15);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  background: #050b12;
   border-bottom: 1px solid rgba(22,163,74,.15);
   overflow: hidden;
   padding: .65rem 0;
