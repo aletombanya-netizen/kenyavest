@@ -6,6 +6,7 @@ require('dotenv').config();
 const connectDB = require('./src/config/db');
 const authRoutes = require('./src/routes/authRoutes');
 const paymentRoutes = require('./src/routes/paymentRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
