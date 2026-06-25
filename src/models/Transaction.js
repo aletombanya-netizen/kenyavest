@@ -14,17 +14,16 @@ const transactionSchema = mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ['deposit', 'withdrawal', 'investment', 'roi'],
+      enum: ['deposit', 'withdrawal', 'investment', 'roi', 'referral'],
     },
     status: {
       type: String,
       required: true,
-      enum: ['pending', 'success', 'failed'],
+      enum: ['pending', 'completed', 'failed', 'rejected'],
       default: 'pending',
     },
     reference: {
       type: String,
-      required: true,
       unique: true,
     },
     mpesaReceiptNumber: {
@@ -32,7 +31,10 @@ const transactionSchema = mongoose.Schema(
     },
     phone: {
       type: String,
-    }
+    },
+    description: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -40,5 +42,4 @@ const transactionSchema = mongoose.Schema(
 );
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
-
 module.exports = Transaction;

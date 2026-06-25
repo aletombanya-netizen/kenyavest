@@ -1,7 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
+  const otpForm = document.getElementById('otpForm');
+  const resendOtpBtn = document.getElementById('resendOtpBtn');
   const errorMsg = document.getElementById('errorMsg');
+  
+  const loginSection = document.getElementById('loginSection');
+  const registerSection = document.getElementById('registerSection');
+  const otpSection = document.getElementById('otpSection');
+
+  let currentPhone = '';
 
   // Check if already logged in
   if (localStorage.getItem('token') && (loginForm || registerForm)) {
@@ -12,6 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (errorMsg) {
       errorMsg.textContent = msg;
       errorMsg.style.display = 'block';
+    } else {
+      alert(msg);
+    }
+  };
+
+  const showSuccess = (msg) => {
+    if (errorMsg) {
+      errorMsg.textContent = msg;
+      errorMsg.style.color = '#16a34a'; // Green color for success
+      errorMsg.style.display = 'block';
+      setTimeout(() => {
+        errorMsg.style.color = '#ff4c4c'; // Reset back to red
+      }, 5000);
     } else {
       alert(msg);
     }
@@ -35,6 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem('token', data.token);
           localStorage.setItem('userInfo', JSON.stringify(data));
           window.location.href = '/dashboard.html';
+        } else if (res.status === 403 && data.requiresVerification) {
+          currentPhone = data.phone || phone;
+          loginSection.style.display = 'none';
+          otpSection.style.display = 'block';
+          showError('Please verify your phone number first.');
         } else {
           showError(data.message || 'Login failed');
         }
@@ -59,12 +85,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const data = await res.json();
 
-        if (res.ok) {
+        if (res.status === 201 && data.requiresVerification) {
+          currentPhone = data.phone || phone;
+          registerSection.style.display = 'none';
+          otpSection.style.display = 'block';
+          showSuccess('Account created! Please verify your phone number.');
+        } else if (res.ok) {
           localStorage.setItem('token', data.token);
           localStorage.setItem('userInfo', JSON.stringify(data));
           window.location.href = '/dashboard.html';
         } else {
           showError(data.message || 'Registration failed');
+        }
+      } catch (err) {
+        showError('Network error');
+      }
+    });
+  }
+
+  if (otpForm) {
+    otpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = document.getElementById('otpCode').value.trim();
+      
+      if (!code || code.length !== 6) return showError('Enter a valid 6-digit OTP');
+
+      try {
+        const res = await fetch('/api/auth/verify-phone', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: currentPhone, code })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('userInfo', JSON.stringify(data));
+          window.location.href = '/dashboard.html';
+        } else {
+          showError(data.message || 'Verification failed');
+        }
+      } catch (err) {
+        showError('Network error');
+      }
+    });
+  }
+
+  if (resendOtpBtn) {
+    resendOtpBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        const res = await fetch('/api/auth/resend-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: currentPhone })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          showSuccess(data.message || 'New OTP sent.');
+        } else {
+          showError(data.message || 'Failed to resend OTP');
         }
       } catch (err) {
         showError('Network error');

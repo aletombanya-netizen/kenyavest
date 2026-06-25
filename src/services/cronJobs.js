@@ -2,6 +2,7 @@ const cron = require('node-cron');
 const Investment = require('../models/Investment');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
+const { sendROICreditEmail } = require('./emailService');
 const crypto = require('crypto');
 
 /**
@@ -22,14 +23,17 @@ const startDailyROICron = () => {
         user.balance += investment.dailyReturn;
         await user.save();
 
-        // Log ROI as a transaction
         await Transaction.create({
           user: user._id,
           amount: investment.dailyReturn,
           type: 'roi',
-          status: 'success',
+          status: 'completed',
           reference: `ROI-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+          description: `Daily ROI from ${investment.planName} plan`,
         });
+
+        // Email notification (non-blocking)
+        if (user.email) sendROICreditEmail(user, investment.dailyReturn).catch(() => {});
 
         credited++;
       }

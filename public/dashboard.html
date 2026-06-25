@@ -1,139 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - KenyaVest</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — KenyaVest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    body { background-color: #0B1120; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
-    .header { background-color: #1A2235; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(244,196,48,0.2); }
-    .header h1 { margin: 0; color: #F4C430; font-size: 1.5rem; }
-    .logout-btn { background: transparent; border: 1px solid #F4C430; color: #F4C430; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.3s; }
-    .logout-btn:hover { background: #F4C430; color: #000; }
-    .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-    .card { background-color: #1A2235; padding: 30px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .card h2 { margin-top: 0; color: #F4C430; }
-    .balance-display { font-size: 2.5rem; font-weight: bold; margin: 20px 0; }
-    .action-buttons { display: flex; gap: 10px; }
-    .btn { padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-    .btn-primary { background: linear-gradient(135deg, #F4C430, #D4A017); color: #000; }
-    .btn-primary:hover { box-shadow: 0 0 15px rgba(244,196,48,0.5); }
-    
-    /* Deposit Modal */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
-    .modal-content { background: #1A2235; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid rgba(244,196,48,0.2); }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; color: #aaa; }
-    .form-group input { width: 100%; padding: 10px; border: 1px solid #333; border-radius: 6px; background-color: #0B1120; color: #fff; box-sizing: border-box; }
-    .close-modal { float: right; cursor: pointer; color: #aaa; font-size: 1.5rem; }
-    
-    .transaction-list { list-style: none; padding: 0; }
-    .transaction-list li { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #333; }
-    .status-success { color: #4ade80; }
-    .status-pending { color: #F4C430; }
-    .status-failed { color: #f87171; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0d14; --bg2: #111622; --bg3: #181f30;
+      --border: rgba(255,255,255,0.08); --text: #e8eaf0; --text2: #8b9ab8;
+      --gold: #F4C430; --accent: #4ade80; --danger: #ef4444;
+      --warning: #f59e0b; --info: #3b82f6; --purple: #a855f7;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ─ Header ─ */
+    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .header-logo { font-size: 20px; font-weight: 800; color: var(--gold); display: flex; align-items: center; gap: 8px; }
+    .header-logo::before { content: '💰'; }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .user-pill { display: flex; align-items: center; gap: 8px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px 5px 5px; }
+    .user-pill-avatar { width: 28px; height: 28px; background: linear-gradient(135deg,var(--gold),#b8860b); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #000; }
+    .user-pill-name { font-size: 13px; font-weight: 500; }
+    .btn-logout { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: var(--danger); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+    .btn-logout:hover { background: rgba(239,68,68,0.2); }
+
+    /* ─ Layout ─ */
+    .page { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+
+    /* ─ Stat grid ─ */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 22px; transition: transform 0.2s, border-color 0.2s; }
+    .stat-card:hover { transform: translateY(-2px); border-color: rgba(244,196,48,0.3); }
+    .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .stat-label { font-size: 12px; color: var(--text2); font-weight: 500; }
+    .stat-icon { font-size: 24px; }
+    .stat-value { font-size: 28px; font-weight: 800; }
+    .stat-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+    /* ─ Cards ─ */
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
+    .card-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .card-title { font-size: 15px; font-weight: 700; }
+    .card-body { padding: 22px; }
+
+    /* ─ Action buttons ─ */
+    .action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .action-btn { flex: 1; min-width: 130px; padding: 13px 16px; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .action-btn-deposit { background: linear-gradient(135deg, var(--gold), #b8860b); color: #000; }
+    .action-btn-deposit:hover { box-shadow: 0 0 20px rgba(244,196,48,0.4); }
+    .action-btn-withdraw { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); }
+    .action-btn-withdraw:hover { background: rgba(244,196,48,0.08); }
+    .action-btn-invest { background: linear-gradient(135deg, #1a7a4a, #22a05a); color: #fff; }
+    .action-btn-invest:hover { box-shadow: 0 0 20px rgba(34,160,90,0.35); }
+
+    /* ─ Chart ─ */
+    .chart-wrap { height: 240px; }
+
+    /* ─ Investment progress ─ */
+    .invest-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .invest-item:last-child { border-bottom: none; }
+    .invest-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .invest-plan { font-size: 13px; font-weight: 600; }
+    .invest-roi { font-size: 12px; color: var(--accent); font-weight: 600; }
+    .progress-bar { background: var(--bg3); border-radius: 20px; height: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg,var(--gold),var(--accent)); transition: width 0.8s ease; }
+    .invest-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--text2); }
+
+    /* ─ Transaction list ─ */
+    .tx-list { list-style: none; }
+    .tx-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .tx-item:last-child { border-bottom: none; }
+    .tx-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .tx-icon-deposit { background: rgba(74,222,128,0.1); }
+    .tx-icon-withdrawal { background: rgba(245,158,11,0.1); }
+    .tx-icon-roi { background: rgba(59,130,246,0.1); }
+    .tx-icon-investment { background: rgba(168,85,247,0.1); }
+    .tx-icon-referral { background: rgba(244,196,48,0.1); }
+    .tx-info { flex: 1; }
+    .tx-label { font-size: 13px; font-weight: 600; }
+    .tx-date { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .tx-amount { font-size: 14px; font-weight: 700; }
+    .tx-amount.positive { color: var(--accent); }
+    .tx-amount.negative { color: var(--danger); }
+    .badge { display: inline-flex; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; margin-left: 6px; }
+    .badge-pending { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .badge-completed { background: rgba(74,222,128,0.1); color: var(--accent); }
+    .badge-failed { background: rgba(239,68,68,0.1); color: var(--danger); }
+    .badge-rejected { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+    /* ─ Referral card ─ */
+    .referral-code-box { background: var(--bg3); border: 1.5px dashed rgba(244,196,48,0.4); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .referral-code { font-size: 22px; font-weight: 800; letter-spacing: 4px; color: var(--gold); }
+    .copy-btn { background: rgba(244,196,48,0.1); border: 1px solid rgba(244,196,48,0.3); color: var(--gold); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+    .copy-btn:hover { background: rgba(244,196,48,0.2); }
+    .referral-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ref-stat { background: var(--bg3); border-radius: 10px; padding: 14px; text-align: center; }
+    .ref-stat-val { font-size: 20px; font-weight: 700; color: var(--gold); }
+    .ref-stat-lbl { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+    /* ─ Modals ─ */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); justify-content: center; align-items: center; z-index: 200; }
+    .modal.open { display: flex; }
+    .modal-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; width: 90%; max-width: 420px; padding: 28px; position: relative; }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--gold); margin-bottom: 20px; }
+    .modal-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: var(--text2); font-size: 22px; cursor: pointer; }
+    .modal-close:hover { color: var(--text); }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); display: block; margin-bottom: 5px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 14px; outline: none; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+    .modal-btn { width: 100%; padding: 12px; background: linear-gradient(135deg,var(--gold),#b8860b); border: none; border-radius: 10px; color: #000; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; margin-top: 6px; }
+    .modal-btn:hover { opacity: 0.9; }
+    .modal-msg { text-align: center; font-size: 13px; padding-top: 12px; min-height: 20px; }
+    .modal-msg.success { color: var(--accent); }
+    .modal-msg.error { color: var(--danger); }
+    .roi-preview { text-align: center; color: var(--accent); font-size: 13px; font-weight: 600; margin: 8px 0; min-height: 20px; }
+
+    /* ─ Toast ─ */
+    .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.4); transform: translateY(60px); opacity: 0; transition: all 0.3s; z-index: 9999; max-width: 300px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: rgba(74,222,128,0.4); color: var(--accent); }
+    .toast.error { border-color: rgba(239,68,68,0.4); color: var(--danger); }
+
+    /* ─ Empty ─ */
+    .empty { text-align: center; padding: 32px; color: var(--text2); font-size: 13px; }
+    .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+    /* ─ Responsive ─ */
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .referral-code { font-size: 18px; }
+    }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>KenyaVest</h1>
-  <div style="display: flex; align-items: center; gap: 15px;">
-    <span id="userNameDisplay">Welcome, User</span>
-    <button class="logout-btn" id="logoutBtn">Logout</button>
+<header class="header">
+  <div class="header-logo">KenyaVest</div>
+  <div class="header-right">
+    <div class="user-pill">
+      <div class="user-pill-avatar" id="avatarInitial">U</div>
+      <span class="user-pill-name" id="userNameDisplay">Loading...</span>
+    </div>
+    <button class="btn-logout" id="logoutBtn">Logout</button>
   </div>
-</div>
+</header>
 
-<div class="container">
-  <div class="card">
-    <h2>Available Balance</h2>
-    <div class="balance-display">KES <span id="balanceAmount">0.00</span></div>
-    <div class="action-buttons">
-      <button class="btn btn-primary" id="openDepositModal">Deposit via M-Pesa</button>
-      <button class="btn btn-primary" id="openWithdrawModal" style="background: transparent; border: 1px solid #F4C430; color: #F4C430;">Withdraw</button>
-      <button class="btn btn-primary" id="openInvestModal" style="background: linear-gradient(135deg, #1a7a4a, #22a05a);">Invest Now</button>
+<div class="page">
+
+  <!-- ─ Stats Row ─ -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-top"><span class="stat-label">Available Balance</span><span class="stat-icon">💰</span></div>
+      <div class="stat-value" style="color:var(--gold)">KES <span id="balanceAmount">0.00</span></div>
+      <div class="stat-sub">Your wallet balance</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top"><span class="stat-label">Total Invested</span><span class="stat-icon">📈</span></div>
+      <div class="stat-value" style="color:var(--accent)">KES <span id="totalInvested">0</span></div>
+      <div class="stat-sub">Across all active plans</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top"><span class="stat-label">Total ROI Earned</span><span class="stat-icon">💸</span></div>
+      <div class="stat-value" style="color:var(--info)">KES <span id="totalROI">0</span></div>
+      <div class="stat-sub">Daily returns to date</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top"><span class="stat-label">Referral Earnings</span><span class="stat-icon">🎁</span></div>
+      <div class="stat-value" style="color:var(--purple)">KES <span id="referralEarnings">0</span></div>
+      <div class="stat-sub">From referral bonuses</div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Active Investments</h2>
-    <div id="investmentsList"><p style="color:#aaa">Loading...</p></div>
+  <!-- ─ Action Buttons ─ -->
+  <div class="action-row">
+    <button class="action-btn action-btn-deposit" id="openDepositModal">📥 Deposit M-Pesa</button>
+    <button class="action-btn action-btn-withdraw" id="openWithdrawModal">📤 Withdraw</button>
+    <button class="action-btn action-btn-invest" id="openInvestModal">🚀 Invest Now</button>
   </div>
 
+  <!-- ─ Balance Chart ─ -->
   <div class="card">
-    <h2>Recent Transactions</h2>
-    <ul class="transaction-list" id="transactionList">
-      <li>Loading...</li>
-    </ul>
+    <div class="card-header">
+      <span class="card-title">📊 Balance History</span>
+      <span style="font-size:12px;color:var(--text2)">Last 30 transactions</span>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrap"><canvas id="balanceChart"></canvas></div>
+    </div>
   </div>
+
+  <!-- ─ Two column ─ -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" id="twoCol">
+
+    <!-- Active Investments -->
+    <div class="card" style="grid-column: span 1">
+      <div class="card-header"><span class="card-title">🌱 Active Investments</span></div>
+      <div class="card-body" id="investmentsList">
+        <div class="empty"><div class="empty-icon">📦</div><p>No active investments</p></div>
+      </div>
+    </div>
+
+    <!-- Referral Card -->
+    <div class="card" style="grid-column: span 1">
+      <div class="card-header"><span class="card-title">🎁 Your Referral</span></div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Share your code and earn <strong style="color:var(--gold)">10%</strong> of every friend's first deposit!</p>
+        <div class="referral-code-box">
+          <span class="referral-code" id="referralCode">------</span>
+          <button class="copy-btn" onclick="copyReferral()">📋 Copy</button>
+        </div>
+        <div class="referral-stats">
+          <div class="ref-stat"><div class="ref-stat-val" id="refCount">0</div><div class="ref-stat-lbl">Friends Referred</div></div>
+          <div class="ref-stat"><div class="ref-stat-val" id="refEarnings">KES 0</div><div class="ref-stat-lbl">Total Earned</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─ Transactions ─ -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">📋 Recent Transactions</span></div>
+    <div class="card-body">
+      <ul class="tx-list" id="transactionList">
+        <li class="empty"><div class="empty-icon">⏳</div><p>Loading transactions...</p></li>
+      </ul>
+    </div>
+  </div>
+
 </div>
 
-<!-- Deposit Modal -->
+<!-- ─ Deposit Modal ─ -->
 <div class="modal" id="depositModal">
-  <div class="modal-content">
-    <span class="close-modal" id="closeModal">&times;</span>
-    <h2 style="margin-top: 0; color: #F4C430;">M-Pesa Deposit</h2>
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAllModals()">×</button>
+    <div class="modal-title">📥 M-Pesa Deposit</div>
     <form id="depositForm">
-      <div class="form-group">
-        <label for="depositAmount">Amount (KES)</label>
-        <input type="number" id="depositAmount" min="10" placeholder="e.g. 1000" required>
-      </div>
-      <div class="form-group">
-        <label for="depositPhone">M-Pesa Phone Number</label>
-        <input type="text" id="depositPhone" placeholder="e.g. 0712345678" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Initiate Payment</button>
+      <div class="form-group"><label>Amount (KES)</label><input type="number" id="depositAmount" min="10" placeholder="e.g. 1000" required /></div>
+      <div class="form-group"><label>M-Pesa Phone</label><input type="tel" id="depositPhone" placeholder="e.g. 0712345678" required /></div>
+      <button type="submit" class="modal-btn">Initiate M-Pesa Payment →</button>
     </form>
-    <div id="depositMsg" style="margin-top: 15px; font-size: 0.9rem; text-align: center;"></div>
+    <div class="modal-msg" id="depositMsg"></div>
   </div>
 </div>
 
-<!-- Withdraw Modal -->
+<!-- ─ Withdraw Modal ─ -->
 <div class="modal" id="withdrawModal">
-  <div class="modal-content">
-    <span class="close-modal" id="closeWithdrawModal">&times;</span>
-    <h2 style="margin-top: 0; color: #F4C430;">Withdraw to M-Pesa</h2>
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAllModals()">×</button>
+    <div class="modal-title">📤 Withdraw to M-Pesa</div>
     <form id="withdrawForm">
-      <div class="form-group">
-        <label for="withdrawAmount">Amount (KES)</label>
-        <input type="number" id="withdrawAmount" min="50" placeholder="e.g. 500" required>
-      </div>
-      <div class="form-group">
-        <label for="withdrawPhone">M-Pesa Phone Number</label>
-        <input type="text" id="withdrawPhone" placeholder="e.g. 0712345678" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Request Withdrawal</button>
+      <div class="form-group"><label>Amount (KES)</label><input type="number" id="withdrawAmount" min="50" placeholder="e.g. 500" required /></div>
+      <div class="form-group"><label>M-Pesa Phone</label><input type="tel" id="withdrawPhone" placeholder="e.g. 0712345678" required /></div>
+      <button type="submit" class="modal-btn" style="background:linear-gradient(135deg,#f59e0b,#b45309)">Request Withdrawal →</button>
     </form>
-    <div id="withdrawMsg" style="margin-top: 15px; font-size: 0.9rem; text-align: center;"></div>
+    <div class="modal-msg" id="withdrawMsg"></div>
   </div>
 </div>
 
-<!-- Invest Modal -->
+<!-- ─ Invest Modal ─ -->
 <div class="modal" id="investModal">
-  <div class="modal-content" style="max-width: 480px;">
-    <span class="close-modal" id="closeInvestModal">&times;</span>
-    <h2 style="margin-top: 0; color: #F4C430;">Start Investing</h2>
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAllModals()">×</button>
+    <div class="modal-title">🚀 Start Investing</div>
     <form id="investForm">
       <div class="form-group">
-        <label for="investPlan">Select Plan</label>
-        <select id="investPlan" style="width:100%; padding:10px; border:1px solid #333; border-radius:6px; background:#0B1120; color:#fff; box-sizing:border-box;">
-          <option value="starter">Starter — 3% daily (KES 500 – 4,999)</option>
-          <option value="pro">Pro — 5% daily (KES 5,000 – 49,999)</option>
-          <option value="elite">Elite — 8% daily (KES 50,000+)</option>
+        <label>Select Plan</label>
+        <select id="investPlan" onchange="updateROIPreview()">
+          <option value="starter">Starter — 3%/day (KES 500–4,999)</option>
+          <option value="pro">Pro — 5%/day (KES 5,000–49,999)</option>
+          <option value="elite">Elite — 8%/day (KES 50,000+)</option>
         </select>
       </div>
-      <div class="form-group">
-        <label for="investAmount">Amount (KES)</label>
-        <input type="number" id="investAmount" min="500" placeholder="e.g. 5000" required>
-      </div>
-      <p id="roiPreview" style="color: #4ade80; text-align: center; font-size: 0.9rem; min-height: 1.5em;"></p>
-      <button type="submit" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #1a7a4a, #22a05a);">Activate Plan</button>
+      <div class="form-group"><label>Amount (KES)</label><input type="number" id="investAmount" min="500" placeholder="e.g. 5000" oninput="updateROIPreview()" required /></div>
+      <div class="roi-preview" id="roiPreview"></div>
+      <button type="submit" class="modal-btn" style="background:linear-gradient(135deg,#1a7a4a,#22a05a)">Activate Plan →</button>
     </form>
-    <div id="investMsg" style="margin-top: 15px; font-size: 0.9rem; text-align: center;"></div>
+    <div class="modal-msg" id="investMsg"></div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script src="/js/dashboard.js"></script>
 </body>

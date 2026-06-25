@@ -1,28 +1,17 @@
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const payhero = require('../services/payhero');
+const { sendDepositConfirmation } = require('../services/emailService');
 const crypto = require('crypto');
 
-// @desc    Initiate M-Pesa Deposit via Payhero
-// @route   POST /api/payments/deposit
-// @access  Private
+// ── Initiate Deposit ──────────────────────────────────────────────
+// @route POST /api/payments/deposit
 const initiateDeposit = async (req, res) => {
   try {
     const { amount, phone } = req.body;
-
-    if (!amount || amount < 10) {
-      return res.status(400).json({ message: 'Amount must be at least KES 10' });
-    }
-
-    if (!phone) {
-      return res.status(400).json({ message: 'Phone number is required' });
-    }
-
-    // Generate unique reference
     const reference = `KV-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
-    // Create pending transaction
-    const transaction = await Transaction.create({
+    await Transaction.create({
       user: req.user._id,
       amount,
       type: 'deposit',
@@ -31,71 +20,90 @@ const initiateDeposit = async (req, res) => {
       phone,
     });
 
-    // Initiate STK Push
     const payheroResponse = await payhero.initiateSTKPush(amount, phone, reference);
 
+    // Send deposit confirmation email (non-blocking)
+    const user = await User.findById(req.user._id);
+    if (user?.email) sendDepositConfirmation(user, amount).catch(() => {});
+
     res.status(200).json({
-      message: 'M-Pesa STK push initiated successfully. Please enter your PIN on your phone.',
+      message: 'M-Pesa STK push initiated. Please enter your PIN on your phone.',
       reference,
       payheroResponse,
     });
   } catch (error) {
-    console.error(error);
+    console.error('[Deposit Error]', error);
     res.status(500).json({ message: error.message || 'Server error during deposit' });
   }
 };
 
-// @desc    Payhero Webhook Callback
-// @route   POST /api/payments/callback
-// @access  Public
+// ── Payhero Callback ──────────────────────────────────────────────
+// @route POST /api/payments/callback
 const payheroCallback = async (req, res) => {
   try {
     const data = req.body;
-    console.log('Payhero Callback Received:', data);
+    console.log('Payhero Callback:', JSON.stringify(data));
 
-    // Ensure it's a successful response from Payhero
-    if (data && data.response && data.response.Success) {
-      const reference = data.response.CheckoutRequestID; // Or ExternalReference depending on Payhero response structure
-      const amount = data.response.Amount;
-      const mpesaReceiptNumber = data.response.MpesaReceiptNumber;
+    const isSuccess = data?.response?.Success || data?.status === 'SUCCESS';
+    const extRef    = data?.response?.ExternalReference || data?.external_reference;
+    const amount    = data?.response?.Amount || data?.amount;
+    const receipt   = data?.response?.MpesaReceiptNumber || data?.mpesa_receipt;
 
-      // Find the pending transaction
-      // Note: Adapt reference logic based on exact Payhero callback payload for external_reference
-      const transaction = await Transaction.findOne({ reference: data.response.ExternalReference });
-
+    if (isSuccess && extRef) {
+      const transaction = await Transaction.findOne({ reference: extRef });
       if (transaction && transaction.status === 'pending') {
-        // Update transaction status
-        transaction.status = 'success';
-        transaction.mpesaReceiptNumber = mpesaReceiptNumber;
+        transaction.status = 'completed';
+        if (receipt) transaction.mpesaReceiptNumber = receipt;
         await transaction.save();
 
-        // Update user balance
+        // Credit user balance
         const user = await User.findById(transaction.user);
         if (user) {
           user.balance += Number(transaction.amount);
+
+          // ── Referral Bonus (first deposit only) ───────────────
+          if (!user.hasDeposited && user.referredBy) {
+            const referrer = await User.findById(user.referredBy);
+            if (referrer) {
+              const bonus = Math.floor(transaction.amount * 0.10);
+              referrer.balance         += bonus;
+              referrer.referralEarnings += bonus;
+              await referrer.save();
+
+              await Transaction.create({
+                user: referrer._id,
+                amount: bonus,
+                type: 'referral',
+                status: 'completed',
+                reference: `REF-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+                description: `Referral bonus from ${user.name}`,
+              });
+              console.log(`[REFERRAL] Credited KES ${bonus} to ${referrer.phone}`);
+            }
+          }
+
+          user.hasDeposited = true;
           await user.save();
         }
       }
-    } else if (data && data.response && !data.response.Success) {
-        // Handle failed transaction
-        const transaction = await Transaction.findOne({ reference: data.response.ExternalReference });
-        if (transaction && transaction.status === 'pending') {
-            transaction.status = 'failed';
-            await transaction.save();
-        }
+    } else if (extRef) {
+      // Payment failed/cancelled
+      const transaction = await Transaction.findOne({ reference: extRef });
+      if (transaction && transaction.status === 'pending') {
+        transaction.status = 'failed';
+        await transaction.save();
+      }
     }
 
-    // Always return 200 OK to acknowledge receipt to Payhero
     res.status(200).send('OK');
   } catch (error) {
-    console.error('Callback Error:', error);
+    console.error('[Callback Error]', error);
     res.status(500).send('Server Error');
   }
 };
 
-// @desc    Get user transactions
-// @route   GET /api/payments/transactions
-// @access  Private
+// ── Get Transactions ──────────────────────────────────────────────
+// @route GET /api/payments/transactions
 const getTransactions = async (req, res) => {
   try {
     const transactions = await Transaction.find({ user: req.user._id }).sort({ createdAt: -1 });
@@ -105,9 +113,8 @@ const getTransactions = async (req, res) => {
   }
 };
 
-// @desc    Request a withdrawal
-// @route   POST /api/payments/withdraw
-// @access  Private
+// ── Request Withdrawal ────────────────────────────────────────────
+// @route POST /api/payments/withdraw
 const requestWithdrawal = async (req, res) => {
   try {
     const { amount, phone } = req.body;
@@ -117,18 +124,16 @@ const requestWithdrawal = async (req, res) => {
     }
 
     const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
+    if (!user) return res.status(404).json({ message: 'User not found' });
     if (user.balance < amount) {
       return res.status(400).json({ message: 'Insufficient balance' });
     }
 
-    // Generate unique reference
-    const reference = `WD-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+    // Reserve balance (deduct immediately, restore if rejected)
+    user.balance -= amount;
+    await user.save();
 
-    // Create pending withdrawal transaction
+    const reference = `WD-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
     const transaction = await Transaction.create({
       user: user._id,
       amount,
@@ -139,12 +144,12 @@ const requestWithdrawal = async (req, res) => {
     });
 
     res.status(200).json({
-      message: 'Withdrawal request submitted successfully. Awaiting admin approval.',
+      message: 'Withdrawal request submitted. Awaiting admin approval.',
       transaction,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error during withdrawal request' });
+    console.error('[Withdrawal Error]', error);
+    res.status(500).json({ message: 'Server error during withdrawal' });
   }
 };
 

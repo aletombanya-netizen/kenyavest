@@ -38,14 +38,24 @@ document.getElementById('loginBtn').addEventListener('click',       () => openMo
 document.getElementById('registerNavBtn').addEventListener('click', () => openModal('register'));
 document.getElementById('heroRegBtn').addEventListener('click',     () => openModal('register'));
 
-// ---- TAB SWITCH ----
+// ---- TAB SWITCH (includes extra panels) ----
+let _currentPhone = '';
+
+function showPanel(id) {
+  ['regForm','logForm','otpForm','forgotForm','resetForm'].forEach(p => {
+    const el = document.getElementById(p);
+    if (el) el.style.display = p === id ? 'block' : 'none';
+  });
+}
+
 function switchTab(tab) {
   const isReg = tab === 'register';
-  document.getElementById('regForm').style.display = isReg ? 'block' : 'none';
-  document.getElementById('logForm').style.display = isReg ? 'none'  : 'block';
   document.getElementById('tabReg').classList.toggle('active', isReg);
   document.getElementById('tabLog').classList.toggle('active', !isReg);
+  showPanel(isReg ? 'regForm' : 'logForm');
 }
+
+function openForgotPassword() { showPanel('forgotForm'); }
 
 // ---- FORM SUBMISSIONS ----
 async function submitReg(e) {
@@ -67,7 +77,12 @@ async function submitReg(e) {
       body: JSON.stringify({ name, phone, password })
     });
     const data = await res.json();
-    if (res.ok) {
+    
+    if (res.status === 201 && data.requiresVerification) {
+      _currentPhone = data.phone || phone;
+      showToast('✅ Account created! Please verify your phone number.');
+      showPanel('otpForm');
+    } else if (res.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userInfo', JSON.stringify(data));
       closeModal();
@@ -94,14 +109,62 @@ async function submitLog(e) {
       body: JSON.stringify({ phone, password })
     });
     const data = await res.json();
+    
     if (res.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userInfo', JSON.stringify(data));
       closeModal();
       showToast('✅ Login successful! Redirecting to dashboard...');
       setTimeout(() => window.location.href = '/dashboard.html', 1500);
+    } else if (res.status === 403 && data.requiresVerification) {
+      _currentPhone = data.phone || phone;
+      showToast('⚠️ Please verify your phone number first.');
+      showPanel('otpForm');
     } else {
       showToast('❌ ' + (data.message || 'Login failed'));
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+  }
+}
+
+async function submitOTP() {
+  const code = document.getElementById('otpCode').value.trim();
+  if (!code || code.length !== 6) return showToast('❌ Enter a valid 6-digit OTP');
+
+  try {
+    const res = await fetch('/api/auth/verify-phone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: _currentPhone, code })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      closeModal();
+      showToast('✅ Verification successful! Redirecting to dashboard...');
+      setTimeout(() => window.location.href = '/dashboard.html', 1500);
+    } else {
+      showToast('❌ ' + (data.message || 'Verification failed'));
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+  }
+}
+
+async function resendOTP() {
+  try {
+    const res = await fetch('/api/auth/resend-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: _currentPhone })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast('✅ ' + data.message);
+    } else {
+      showToast('❌ ' + (data.message || 'Failed to resend OTP'));
     }
   } catch (err) {
     showToast('❌ Network error');
