@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KenyaVest - Smart Investments in Kenya Shillings</title>
+  <meta name="description" content="KenyaVest is Kenya's premier online investment platform. Grow your money with flexible plans starting from KES 1,000. Earn daily returns safely via M-Pesa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="#home" class="nav-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 2L4 10V22C4 30.8 11.2 39 20 41C28.8 39 36 30.8 36 22V10L20 2Z" fill="url(#sg1)"/>
+          <path d="M13 21L17 25L27 15" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="sg1" x1="4" y1="2" x2="36" y2="41" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#16a34a"/><stop offset="1" stop-color="#D4AF37"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">Kenya<span class="logo-accent">Vest</span></span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link">Home</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#plans" class="nav-link">Plans</a></li>
+      <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+      <li><a href="#faq" class="nav-link">FAQ</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" id="loginBtn">Login</button>
+      <button class="btn btn-primary" id="registerNavBtn">Get Started</button>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="container hero-content">
+    <div class="hero-badge anim-up">
+      <span class="badge-dot"></span>
+      <span>&#x1F1F0;&#x1F1EA; Kenya's #1 Investment Platform</span>
+    </div>
+    <h1 class="hero-title anim-up d1">
+      Grow Your Wealth<br>
+      <span class="grad-text">Earn Daily Returns</span><br>
+      in Kenya Shillings
+    </h1>
+    <p class="hero-sub anim-up d2">
+      Join over <strong>50,000+</strong> Kenyans earning consistent passive income.
+      Start investing from as little as <strong>KES 1,000</strong> and watch your money grow every day.
+    </p>
+    <div class="hero-cta anim-up d3">
+      <button class="btn btn-primary btn-lg" id="heroRegBtn">Start Investing Today</button>
+      <a href="#plans" class="btn btn-outline btn-lg">View Plans</a>
+    </div>
+    <div class="hero-stats anim-up d4">
+      <div class="hstat">
+        <div class="hstat-val"><span class="count" data-to="50000">0</span>+</div>
+        <div class="hstat-lbl">Active Investors</div>
+      </div>
+      <div class="hstat-divider"></div>
+      <div class="hstat">
+        <div class="hstat-val">KES <span class="count" data-to="850">0</span>M+</div>
+        <div class="hstat-lbl">Total Paid Out</div>
+      </div>
+      <div class="hstat-divider"></div>
+      <div class="hstat">
+        <div class="hstat-val"><span class="count" data-to="99">0</span>%</div>
+        <div class="hstat-lbl">Satisfaction Rate</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-dot"></div></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span>&#x1F4C8; BTC/KES +3.4%</span>
+    <span>&#x1F4B9; ETH/KES +2.1%</span>
+    <span>&#x1F4CA; NSE 20 Index +1.7%</span>
+    <span>&#x1F30D; USD/KES 129.50</span>
+    <span>&#x1F4B0; Active Plans: 12,847</span>
+    <span>&#x1F3C6; Withdrawals Today: KES 4.2M</span>
+    <span>&#x1F4C8; BTC/KES +3.4%</span>
+    <span>&#x1F4B9; ETH/KES +2.1%</span>
+    <span>&#x1F4CA; NSE 20 Index +1.7%</span>
+    <span>&#x1F30D; USD/KES 129.50</span>
+    <span>&#x1F4B0; Active Plans: 12,847</span>
+    <span>&#x1F3C6; Withdrawals Today: KES 4.2M</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="card-stack">
+          <div class="float-card fc-top">
+            <div class="fc-ico">&#x1F4B0;</div>
+            <div><div class="fc-lbl">Today's Earnings</div><div class="fc-val">+ KES 4,320</div></div>
+          </div>
+          <div class="chart-box">
+            <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="cg1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#16a34a" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#16a34a" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,140 C40,120 60,100 90,80 S150,50 180,35 S250,10 300,4 L300,160 L0,160Z" fill="url(#cg1)"/>
+              <path d="M0,140 C40,120 60,100 90,80 S150,50 180,35 S250,10 300,4" fill="none" stroke="#16a34a" stroke-width="2.5"/>
+              <circle cx="300" cy="4" r="5" fill="#16a34a"/>
+              <circle cx="300" cy="4" r="9" fill="#16a34a" fill-opacity="0.2"/>
+            </svg>
+            <div class="chart-lbl">6-Month Growth Trend</div>
+          </div>
+          <div class="float-card fc-bot">
+            <div class="fc-ico">&#x1F4C8;</div>
+            <div><div class="fc-lbl">Portfolio Growth</div><div class="fc-val">+127%</div></div>
+          </div>
+          <div class="float-card fc-ref">
+            <div class="fc-ico">&#x1F465;</div>
+            <div><div class="fc-lbl">Referral Bonus</div><div class="fc-val">KES 2,500</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="about-content">
+        <div class="sec-tag">Who We Are</div>
+        <h2 class="sec-title">Kenya's Most Trusted <span class="grad-text">Investment Platform</span></h2>
+        <p class="about-p">KenyaVest is a licensed and regulated online investment company dedicated to helping Kenyans achieve financial freedom. Founded in 2021, we leverage advanced trading algorithms, real estate portfolios, and diversified asset strategies to generate consistent returns.</p>
+        <p class="about-p">Our expert team manages a diversified portfolio including forex trading, cryptocurrency, NSE stocks, and real estate to ensure maximum returns while minimizing risk for every investor.</p>
+        <div class="about-feats">
+          <div class="about-feat">
+            <div class="af-ico">&#x1F512;</div>
+            <div><h4>SSL Secured</h4><p>Bank-grade 256-bit encryption protects your data and funds</p></div>
+          </div>
+          <div class="about-feat">
+            <div class="af-ico">&#x26A1;</div>
+            <div><h4>Instant Withdrawals</h4><p>Withdraw via M-Pesa, bank transfer, or crypto anytime</p></div>
+          </div>
+          <div class="about-feat">
+            <div class="af-ico">&#x1F6E1;&#xFE0F;</div>
+            <div><h4>Capital Protection</h4><p>Your principal is secured and returned at plan maturity</p></div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('register')">Join KenyaVest Today</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section feat-section" id="features">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-tag">Why Choose Us</div>
+      <h2 class="sec-title">Everything You Need to <span class="grad-text">Build Wealth</span></h2>
+      <p class="sec-sub">A complete investment ecosystem designed for Kenyan investors of all levels</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-ico">&#x1F4F1;</div>
+        <h3>M-Pesa Integration</h3>
+        <p>Deposit and withdraw directly via M-Pesa, Airtel Money, or your local bank. No complicated setups.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">&#x1F504;</div>
+        <h3>Daily Compound Returns</h3>
+        <p>Earnings credited daily. Enable auto-compound to maximize your investment growth exponentially.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">&#x1F91D;</div>
+        <h3>Lucrative Referral Program</h3>
+        <p>Earn 10% commission on every investment made by people you refer. No limit, no expiry.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">&#x1F4CA;</div>
+        <h3>Real-Time Dashboard</h3>
+        <p>Track every investment, earning, and withdrawal in real-time from your personalized dashboard, 24/7.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">&#x1F3C6;</div>
+        <h3>Verified Track Record</h3>
+        <p>3+ years of consistent payouts. Thousands of verified reviews from satisfied Kenyan investors.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-ico">&#x1F310;</div>
+        <h3>Invest Anywhere</h3>
+        <p>Invest from anywhere in Kenya or abroad. Fully optimized for mobile and desktop, always in control.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="section plans-section" id="plans">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-tag">Investment Plans</div>
+      <h2 class="sec-title">Choose Your <span class="grad-text">Growth Plan</span></h2>
+      <p class="sec-sub">All plans include capital return at maturity, daily earnings, and 10% referral bonus</p>
+    </div>
+    <div class="plans-grid">
+
+      <div class="plan-card">
+        <div class="plan-tier">Starter</div>
+        <div class="plan-ico">&#x1F331;</div>
+        <h3>Starter Plan</h3>
+        <div class="plan-range">KES 1,000 &ndash; KES 4,999</div>
+        <div class="plan-rate"><span class="rate-num">5%</span><span class="rate-lbl">Daily Return</span></div>
+        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+        <ul class="plan-list">
+          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+          <li><span class="ck">&#10003;</span> 10% referral commission</li>
+          <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
+          <li><span class="ck">&#10003;</span> 24/7 Support</li>
+        </ul>
+        <div class="plan-ret">Total Return: <strong>135%</strong></div>
+        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-tier">Basic</div>
+        <div class="plan-ico">&#x1F4C8;</div>
+        <h3>Basic Plan</h3>
+        <div class="plan-range">KES 5,000 &ndash; KES 19,999</div>
+        <div class="plan-rate"><span class="rate-num">7%</span><span class="rate-lbl">Daily Return</span></div>
+        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+        <ul class="plan-list">
+          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+          <li><span class="ck">&#10003;</span> 10% referral commission</li>
+          <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
+          <li><span class="ck">&#10003;</span> Priority Support</li>
+        </ul>
+        <div class="plan-ret">Total Return: <strong>149%</strong></div>
+        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      </div>
+
+      <div class="plan-card plan-popular">
+        <div class="pop-ribbon">Most Popular</div>
+        <div class="plan-tier">Standard</div>
+        <div class="plan-ico">&#x1F48E;</div>
+        <h3>Standard Plan</h3>
+        <div class="plan-range">KES 20,000 &ndash; KES 49,999</div>
+        <div class="plan-rate"><span class="rate-num">10%</span><span class="rate-lbl">Daily Return</span></div>
+        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+        <ul class="plan-list">
+          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+          <li><span class="ck">&#10003;</span> 10% referral commission</li>
+          <li><span class="ck">&#10003;</span> Instant M-Pesa payouts</li>
+          <li><span class="ck">&#10003;</span> Dedicated account manager</li>
+        </ul>
+        <div class="plan-ret">Total Return: <strong>170%</strong></div>
+        <button class="btn btn-plan btn-plan-hot" onclick="openModal('register')">Invest Now</button>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-tier">Premium</div>
+        <div class="plan-ico">&#x1F3C6;</div>
+        <h3>Premium Plan</h3>
+        <div class="plan-range">KES 50,000 &ndash; KES 99,999</div>
+        <div class="plan-rate"><span class="rate-num">15%</span><span class="rate-lbl">Daily Return</span></div>
+        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+        <ul class="plan-list">
+          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+          <li><span class="ck">&#10003;</span> 10% referral commission</li>
+          <li><span class="ck">&#10003;</span> Priority instant payouts</li>
+          <li><span class="ck">&#10003;</span> VIP account manager</li>
+        </ul>
+        <div class="plan-ret">Total Return: <strong>205%</strong></div>
+        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      </div>
+
+      <div class="plan-card plan-vip">
+        <div class="plan-tier">VIP</div>
+        <div class="plan-ico">&#x1F451;</div>
+        <h3>VIP Plan</h3>
+        <div class="plan-range">KES 100,000+</div>
+        <div class="plan-rate"><span class="rate-num">20%</span><span class="rate-lbl">Daily Return</span></div>
+        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+        <ul class="plan-list">
+          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+          <li><span class="ck">&#10003;</span> 10% referral commission</li>
+          <li><span class="ck">&#10003;</span> Guaranteed instant payouts</li>
+          <li><span class="ck">&#10003;</span> Personal wealth manager</li>
+        </ul>
+        <div class="plan-ret">Total Return: <strong>240%</strong></div>
+        <button class="btn btn-plan btn-plan-vip" onclick="openModal('register')">Invest Now</button>
+      </div>
+
+    </div>
+
+    <div class="ref-banner">
+      <div class="ref-ico">&#x1F465;</div>
+      <div class="ref-text">
+        <h3>Earn More with Referrals</h3>
+        <p>Invite friends and earn <strong>10% commission</strong> on every investment they make &mdash; forever. No limit on referrals.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('register')">Get Your Referral Link</button>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="section calc-section" id="calculator">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-tag">Profit Calculator</div>
+      <h2 class="sec-title">Calculate Your <span class="grad-text">Potential Returns</span></h2>
+    </div>
+    <div class="calc-box">
+      <div class="calc-inputs">
+        <div class="c-field">
+          <label>Investment Amount (KES)</label>
+          <input type="number" id="cAmount" value="10000" min="1000" step="500" oninput="calcProfit()">
+        </div>
+        <div class="c-field">
+          <label>Select Plan</label>
+          <select id="cPlan" onchange="calcProfit()">
+            <option value="5,7">Starter &ndash; 5% Daily / 7 Days</option>
+            <option value="7,7" selected>Basic &ndash; 7% Daily / 7 Days</option>
+            <option value="10,7">Standard &ndash; 10% Daily / 7 Days</option>
+            <option value="15,7">Premium &ndash; 15% Daily / 7 Days</option>
+            <option value="20,7">VIP &ndash; 20% Daily / 7 Days</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-results">
+        <div class="c-result">
+          <div class="cr-lbl">Daily Earnings</div>
+          <div class="cr-val" id="rDaily">KES 700</div>
+        </div>
+        <div class="c-result">
+          <div class="cr-lbl">Total Profit</div>
+          <div class="cr-val green" id="rProfit">KES 4,900</div>
+        </div>
+        <div class="c-result">
+          <div class="cr-lbl">Total Payout (incl. capital)</div>
+          <div class="cr-val gold" id="rTotal">KES 14,900</div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-lg w100" onclick="openModal('register')">Start Earning Now &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-tag">How It Works</div>
+      <h2 class="sec-title">Start Earning in <span class="grad-text">3 Simple Steps</span></h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-ico">&#x1F4DD;</div>
+        <h3>Create Free Account</h3>
+        <p>Sign up in under 2 minutes with your name, email, and M-Pesa number. No paperwork, 100% free.</p>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-ico">&#x1F4B3;</div>
+        <h3>Fund Your Account</h3>
+        <p>Deposit from KES 1,000 using M-Pesa, Airtel Money, bank transfer, or cryptocurrency instantly.</p>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-ico">&#x1F4B0;</div>
+        <h3>Earn Daily Returns</h3>
+        <p>Pick your plan and start earning every day. Withdraw anytime or compound to grow faster.</p>
+      </div>
+    </div>
+    <div class="steps-cta">
+      <button class="btn btn-primary btn-lg" onclick="openModal('register')">Create Free Account</button>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="st-ico">&#x1F465;</div>
+        <div class="st-num"><span class="count" data-to="50000">0</span>+</div>
+        <div class="st-lbl">Active Investors</div>
+      </div>
+      <div class="stat-item">
+        <div class="st-ico">&#x1F4B0;</div>
+        <div class="st-num">KES <span class="count" data-to="850">0</span>M+</div>
+        <div class="st-lbl">Total Paid Out</div>
+      </div>
+      <div class="stat-item">
+        <div class="st-ico">&#x1F30D;</div>
+        <div class="st-num"><span class="count" data-to="47">0</span>+</div>
+        <div class="st-lbl">Counties Reached</div>
+      </div>
+      <div class="stat-item">
+        <div class="st-ico">&#x23F1;&#xFE0F;</div>
+        <div class="st-num"><span class="count" data-to="3">0</span>+ Yrs</div>
+        <div class="st-lbl">In Operation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-tag">Testimonials</div>
+      <h2 class="sec-title">What Our <span class="grad-text">Investors Say</span></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+        <p>"I started with KES 5,000 on the Basic plan. Within a week I earned KES 2,450 in profit plus my capital back. This is legit! I've since upgraded to the Premium plan."</p>
+        <div class="testi-author"><div class="t-av">JM</div><div><div class="t-name">James Mwangi</div><div class="t-loc">&#x1F4CD; Nairobi, Kenya</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+        <p>"After my first withdrawal of KES 15,000 via M-Pesa in seconds I was convinced. My whole family now invests together and we're earning serious passive income."</p>
+        <div class="testi-author"><div class="t-av">GW</div><div><div class="t-name">Grace Wanjiku</div><div class="t-loc">&#x1F4CD; Mombasa, Kenya</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+        <p>"The referral program earns me KES 20,000+ monthly. I've referred 12 friends and I earn 10% every time they invest. KenyaVest changed my financial life completely."</p>
+        <div class="testi-author"><div class="t-av">PO</div><div><div class="t-name">Peter Otieno</div><div class="t-loc">&#x1F4CD; Kisumu, Kenya</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+        <p>"As a single mother I needed reliable extra income. KenyaVest's Standard plan gives me KES 2,000 daily. I withdraw every evening to M-Pesa &mdash; zero delays!"</p>
+        <div class="testi-author"><div class="t-av">AN</div><div><div class="t-name">Aisha Njeri</div><div class="t-loc">&#x1F4CD; Nakuru, Kenya</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+        <p>"KenyaVest is now part of my business portfolio. The VIP plan at 20% daily is exceptional. I've reinvested my profits 4 times and the returns keep compounding."</p>
+        <div class="testi-author"><div class="t-av">DK</div><div><div class="t-name">David Kamau</div><div class="t-loc">&#x1F4CD; Eldoret, Kenya</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50;</div>
+        <p>"Customer support is excellent! Had a query at midnight and got a response in 10 minutes. Platform is secure, transparent, and truly pays. Highly recommend!"</p>
+        <div class="testi-author"><div class="t-av">FM</div><div><div class="t-name">Faith Mutua</div><div class="t-loc">&#x1F4CD; Thika, Kenya</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-tag">FAQs</div>
+      <h2 class="sec-title">Frequently Asked <span class="grad-text">Questions</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>How do I get started?</span><span class="faq-ico">+</span></button>
+        <div class="faq-a"><p>Click "Get Started", fill in your details, verify your phone, deposit via M-Pesa, choose a plan and you're earning. The whole process takes under 5 minutes.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>What is the minimum investment?</span><span class="faq-ico">+</span></button>
+        <div class="faq-a"><p>The minimum investment is KES 1,000 on our Starter Plan. We believe in making investment accessible to every Kenyan regardless of income level.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>How and when can I withdraw?</span><span class="faq-ico">+</span></button>
+        <div class="faq-a"><p>Withdraw your daily earnings anytime via M-Pesa, Airtel Money, bank transfer, or crypto. Processed instantly &mdash; usually within seconds. Minimum withdrawal: KES 500.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>Is my investment capital safe?</span><span class="faq-ico">+</span></button>
+        <div class="faq-a"><p>Yes. Your principal is fully secured and returned at the end of your plan period. We use a segregated fund model to ensure capital is always protected.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>How does the referral program work?</span><span class="faq-ico">+</span></button>
+        <div class="faq-a"><p>After registering you get a unique referral link. When someone signs up and invests using your link, you earn 10% of their invested amount instantly. No limit on referrals.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>Can I invest in multiple plans simultaneously?</span><span class="faq-ico">+</span></button>
+        <div class="faq-a"><p>Yes! You can have multiple active investments across different plans at the same time. Many investors diversify across plans to maximize their total returns.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)"><span>Is KenyaVest regulated and legal?</span><span class="faq-ico">+</span></button>
+        <div class="faq-a"><p>KenyaVest operates as a registered investment company in Kenya, complying with all applicable Kenyan financial regulations. Our operations are transparent and independently audited.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-band">
+  <div class="cta-glow"></div>
+  <div class="container cta-inner">
+    <h2>Ready to Start Earning?</h2>
+    <p>Join thousands of Kenyans already growing their wealth. Sign up in under 2 minutes &mdash; completely free.</p>
+    <div class="cta-btns">
+      <button class="btn btn-white btn-lg" onclick="openModal('register')">Create Free Account</button>
+      <a href="tel:+254700000000" class="btn btn-outline-white btn-lg">&#x1F4DE; Call Us Now</a>
+    </div>
+    <div class="cta-trust">
+      <span>&#x1F512; 256-bit SSL Secured</span>
+      <span>&#x26A1; Instant M-Pesa Payouts</span>
+      <span>&#x2705; 50,000+ Happy Investors</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="sec-header">
+      <div class="sec-tag">Contact Us</div>
+      <h2 class="sec-title">We're Here to <span class="grad-text">Help You</span></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="ci-item"><div class="ci-ico">&#x1F4E7;</div><div><h4>Email Support</h4><p>support@kenyavest.co.ke</p></div></div>
+        <div class="ci-item"><div class="ci-ico">&#x1F4F1;</div><div><h4>WhatsApp / Phone</h4><p>+254 700 000 000</p></div></div>
+        <div class="ci-item"><div class="ci-ico">&#x1F4AC;</div><div><h4>Live Chat</h4><p>Available 24/7 on our platform</p></div></div>
+        <div class="ci-item"><div class="ci-ico">&#x1F4CD;</div><div><h4>Office</h4><p>Westlands, Nairobi, Kenya</p></div></div>
+        <div class="social-row">
+          <a href="#" class="soc-btn">f</a>
+          <a href="#" class="soc-btn">𝕏</a>
+          <a href="#" class="soc-btn">in</a>
+          <a href="#" class="soc-btn">&#x2708;&#xFE0F;</a>
+          <a href="#" class="soc-btn">&#x25B6;</a>
+        </div>
+      </div>
+      <form class="contact-form" onsubmit="submitContact(event)">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name</label><input type="text" placeholder="John Doe" required></div>
+          <div class="form-group"><label>Email</label><input type="email" placeholder="john@email.com" required></div>
+        </div>
+        <div class="form-group"><label>Subject</label><input type="text" placeholder="How can we help?" required></div>
+        <div class="form-group"><label>Message</label><textarea rows="5" placeholder="Type your message here..." required></textarea></div>
+        <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="container footer-grid">
+      <div class="f-brand">
+        <a href="#home" class="nav-logo">
+          <div class="logo-icon logo-sm">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 2L4 10V22C4 30.8 11.2 39 20 41C28.8 39 36 30.8 36 22V10L20 2Z" fill="url(#sg2)"/>
+              <path d="M13 21L17 25L27 15" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs><linearGradient id="sg2" x1="4" y1="2" x2="36" y2="41" gradientUnits="userSpaceOnUse"><stop stop-color="#16a34a"/><stop offset="1" stop-color="#D4AF37"/></linearGradient></defs>
+            </svg>
+          </div>
+          <span class="logo-text">Kenya<span class="logo-accent">Vest</span></span>
+        </a>
+        <p class="f-tagline">Kenya's most trusted online investment platform. Grow your wealth with confidence.</p>
+        <div class="f-badges"><span class="f-badge">&#x1F512; SSL Secured</span><span class="f-badge">&#x2705; Verified</span></div>
+      </div>
+      <div class="f-col"><h4>Quick Links</h4><ul>
+        <li><a href="#home">Home</a></li><li><a href="#about">About Us</a></li>
+        <li><a href="#plans">Investment Plans</a></li><li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#faq">FAQ</a></li><li><a href="#contact">Contact</a></li>
+      </ul></div>
+      <div class="f-col"><h4>Our Plans</h4><ul>
+        <li><a href="#plans">Starter (5%/day)</a></li><li><a href="#plans">Basic (7%/day)</a></li>
+        <li><a href="#plans">Standard (10%/day)</a></li><li><a href="#plans">Premium (15%/day)</a></li>
+        <li><a href="#plans">VIP (20%/day)</a></li>
+      </ul></div>
+      <div class="f-col"><h4>Legal</h4><ul>
+        <li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Risk Disclosure</a></li><li><a href="#">AML Policy</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container fb-inner">
+      <p>&copy; 2024 KenyaVest. All rights reserved. Registered in Kenya. CRN: PVT-2021-KV.</p>
+      <p class="f-disc">Risk Warning: Investment carries risk. Returns are not guaranteed. Only invest what you can afford to lose.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="overlayClose(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-tabs">
+      <button class="m-tab active" id="tabReg" onclick="switchTab('register')">Register</button>
+      <button class="m-tab" id="tabLog" onclick="switchTab('login')">Login</button>
+    </div>
+
+    <div id="regForm">
+      <div class="m-head"><h2>Create Free Account</h2><p>Start earning daily returns in minutes</p></div>
+      <form onsubmit="submitReg(event)">
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="John" required></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe" required></div>
+        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@example.com" required></div>
+        <div class="form-group"><label>Phone Number (M-Pesa)</label><input type="tel" placeholder="+254 7XX XXX XXX" required></div>
+        <div class="form-group"><label>Password</label>
+          <div class="pw-wrap"><input type="password" id="pw1" placeholder="Min. 8 characters" required><button type="button" class="eye-btn" onclick="togglePw('pw1')">&#x1F441;</button></div>
+        </div>
+        <div class="form-group"><label>Referral Code (Optional)</label><input type="text" placeholder="Enter referral code if you have one"></div>
+        <div class="form-chk"><input type="checkbox" id="chkT" required><label for="chkT">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label></div>
+        <button type="submit" class="btn btn-primary btn-lg w100">Create Account &rarr;</button>
+        <p class="m-foot">Already have an account? <a href="#" onclick="switchTab('login')">Login here</a></p>
+      </form>
+    </div>
+
+    <div id="logForm" style="display:none">
+      <div class="m-head"><h2>Welcome Back &#x1F44B;</h2><p>Login to access your investment dashboard</p></div>
+      <form onsubmit="submitLog(event)">
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@example.com" required></div>
+        <div class="form-group"><label>Password</label>
+          <div class="pw-wrap"><input type="password" id="pw2" placeholder="Your password" required><button type="button" class="eye-btn" onclick="togglePw('pw2')">&#x1F441;</button></div>
+        </div>
+        <div class="log-opts"><label><input type="checkbox"> Remember me</label><a href="#" class="forgot">Forgot Password?</a></div>
+        <button type="submit" class="btn btn-primary btn-lg w100">Login to Dashboard &rarr;</button>
+        <p class="m-foot">Don't have an account? <a href="#" onclick="switchTab('register')">Register free</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- BACK TO TOP -->
+<button id="btt" class="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#x2191;</button>
+
+<script src="app.js"></script>
+</body>
+</html>
