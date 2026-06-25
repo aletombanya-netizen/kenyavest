@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
 require('dotenv').config();
 
 const connectDB = require('./src/config/db');
@@ -10,6 +12,7 @@ const adminRoutes = require('./src/routes/adminRoutes');
 const investmentRoutes = require('./src/routes/investmentRoutes');
 const contactRoutes = require('./src/routes/contactRoutes');
 const { startDailyROICron } = require('./src/services/cronJobs');
+const { apiLimiter, authLimiter } = require('./src/middleware/rateLimiter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,24 +23,75 @@ connectDB();
 // Start cron jobs
 startDailyROICron();
 
-// Middleware
-app.use(cors());
-app.use(express.json()); // Allow parsing JSON bodies
-app.use(express.urlencoded({ extended: false }));
+// ── Security Headers (Helmet) ─────────────────────────────────────
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com'],
+        fontSrc: ["'self'", 'fonts.gstatic.com'],
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        connectSrc: ["'self'", 'https://kashflowvest.onrender.com'],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/investments', investmentRoutes);
-app.use('/api/contact', contactRoutes);
+// ── CORS ──────────────────────────────────────────────────────────
+const allowedOrigins = [
+  'https://kashflowvest.onrender.com',
+  'http://localhost:3000',
+  'http://localhost:5000',
+];
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
 
-// Serve static files from the 'public' directory
+// ── Request Logging ───────────────────────────────────────────────
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+}
+
+// ── Body Parsers ──────────────────────────────────────────────────
+app.use(express.json({ limit: '10kb' })); // Limit body size to prevent large payload attacks
+app.use(express.urlencoded({ extended: false, limit: '10kb' }));
+
+// ── API Routes (with rate limiting) ──────────────────────────────
+app.use('/api/auth', authLimiter, authRoutes);     // Strict limit on auth
+app.use('/api/payments', apiLimiter, paymentRoutes);
+app.use('/api/admin', apiLimiter, adminRoutes);
+app.use('/api/investments', apiLimiter, investmentRoutes);
+app.use('/api/contact', apiLimiter, contactRoutes);
+
+// ── Static Files ──────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Catch-all route to serve the main index.html for SPA-like behavior
+// ── Catch-all (SPA fallback) ──────────────────────────────────────
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ── Global Error Handler ──────────────────────────────────────────
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : err.message,
+  });
 });
 
 app.listen(PORT, () => {
