@@ -21,10 +21,10 @@ const initiateSTKPush = async (amount, phone, reference) => {
               : `Basic ${Buffer.from(process.env.PAYHERO_API_KEY).toString('base64')}`,
           }),
         },
-        ...(process.env.PAYHERO_USERNAME && process.env.PAYHERO_PASSWORD && {
+        ...(process.env.PAYHERO_API_USER && process.env.PAYHERO_API_PASS && {
           auth: {
-            username: process.env.PAYHERO_USERNAME,
-            password: process.env.PAYHERO_PASSWORD,
+            username: process.env.PAYHERO_API_USER,
+            password: process.env.PAYHERO_API_PASS,
           },
         }),
       }
