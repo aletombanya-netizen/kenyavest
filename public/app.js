@@ -1,5 +1,5 @@
 /* =========================================
-   KenyaVest – app.js
+   KenyaVest – app.js  (Inves Theme + Features)
    ========================================= */
 
 // ---- NAVBAR SCROLL ----
@@ -15,7 +15,6 @@ const navLinks  = document.getElementById('navLinks');
 hamburger.addEventListener('click', () => {
   navLinks.classList.toggle('open');
 });
-// Close nav on link click
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', () => navLinks.classList.remove('open'));
 });
@@ -33,10 +32,8 @@ function closeModal() {
 function overlayClose(e) {
   if (e.target.id === 'modal') closeModal();
 }
-// ESC key
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// Navbar buttons
 document.getElementById('loginBtn').addEventListener('click',       () => openModal('login'));
 document.getElementById('registerNavBtn').addEventListener('click', () => openModal('register'));
 document.getElementById('heroRegBtn').addEventListener('click',     () => openModal('register'));
@@ -86,13 +83,10 @@ function toggleFaq(btn) {
   const item   = btn.closest('.faq-item');
   const answer = item.querySelector('.faq-a');
   const isOpen = item.classList.contains('open');
-
-  // close all
   document.querySelectorAll('.faq-item').forEach(i => {
     i.classList.remove('open');
     i.querySelector('.faq-a').classList.remove('open');
   });
-
   if (!isOpen) {
     item.classList.add('open');
     answer.classList.add('open');
@@ -105,49 +99,36 @@ function calcProfit() {
   const parts  = document.getElementById('cPlan').value.split(',');
   const rate   = parseFloat(parts[0]) / 100;
   const days   = parseInt(parts[1]);
-
   const daily  = amount * rate;
   const profit = daily * days;
   const total  = amount + profit;
-
   const fmt = n => 'KES ' + Math.round(n).toLocaleString('en-KE');
-
   document.getElementById('rDaily').textContent  = fmt(daily);
   document.getElementById('rProfit').textContent = fmt(profit);
   document.getElementById('rTotal').textContent  = fmt(total);
 }
-calcProfit(); // init
+calcProfit();
 
 // ---- COUNTER ANIMATION ----
 function animateCount(el) {
-  const target = parseInt(el.dataset.to);
+  const target   = parseInt(el.dataset.to);
   const duration = 1800;
-  const step = target / (duration / 16);
-  let current = 0;
-
+  const step     = target / (duration / 16);
+  let current    = 0;
   const timer = setInterval(() => {
     current += step;
-    if (current >= target) {
-      current = target;
-      clearInterval(timer);
-    }
+    if (current >= target) { current = target; clearInterval(timer); }
     el.textContent = Math.floor(current).toLocaleString('en-KE');
   }, 16);
 }
-
-// Observe counters
 const counterObs = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      animateCount(entry.target);
-      counterObs.unobserve(entry.target);
-    }
+    if (entry.isIntersecting) { animateCount(entry.target); counterObs.unobserve(entry.target); }
   });
 }, { threshold: 0.4 });
-
 document.querySelectorAll('.count').forEach(el => counterObs.observe(el));
 
-// ---- SCROLL REVEAL ----
+// ---- SCROLL REVEAL (Enhanced) ----
 const revealObs = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -155,66 +136,60 @@ const revealObs = new IntersectionObserver((entries) => {
       revealObs.unobserve(entry.target);
     }
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
-// Add reveal class to major section elements
 document.querySelectorAll(
-  '.feat-card, .plan-card, .step-card, .testi-card, .about-feat, .ci-item'
+  '.feat-card, .plan-card, .step-card, .testi-card, .about-feat, .ci-item, .stat-item, .faq-item'
 ).forEach((el, i) => {
   el.style.opacity = '0';
-  el.style.transform = 'translateY(30px)';
-  el.style.transition = `opacity .6s ease ${(i % 6) * .08}s, transform .6s ease ${(i % 6) * .08}s`;
+  el.style.transform = 'translateY(32px)';
+  el.style.transition = `opacity .65s ease ${(i % 8) * .07}s, transform .65s cubic-bezier(.25,.8,.25,1) ${(i % 8) * .07}s`;
   el.classList.add('scroll-reveal');
   revealObs.observe(el);
 });
 
-// CSS rule for revealed state (injected)
 const style = document.createElement('style');
 style.textContent = '.scroll-reveal.revealed { opacity:1 !important; transform:translateY(0) !important; }';
 document.head.appendChild(style);
 
 // ---- ACTIVE NAV ON SCROLL ----
-const sections = document.querySelectorAll('section[id], div[id]');
+const sections   = document.querySelectorAll('section[id], div[id]');
 const navLinksAll = document.querySelectorAll('.nav-link');
-
 const navObs = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       navLinksAll.forEach(link => {
         link.style.color = '';
         if (link.getAttribute('href') === '#' + entry.target.id) {
-          link.style.color = 'var(--green)';
+          link.style.color = 'var(--gold)';
         }
       });
     }
   });
 }, { threshold: 0.45 });
-
 sections.forEach(s => navObs.observe(s));
 
-// ---- SMOOTH SCROLL FOR ALL ANCHOR LINKS ----
+// ---- SMOOTH SCROLL ----
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function(e) {
     const target = document.querySelector(this.getAttribute('href'));
     if (target) {
       e.preventDefault();
-      const offset = 80; // navbar height
       window.scrollTo({
-        top: target.getBoundingClientRect().top + window.scrollY - offset,
+        top: target.getBoundingClientRect().top + window.scrollY - 90,
         behavior: 'smooth'
       });
     }
   });
 });
 
-// ---- LIVE TICKER UPDATE (simulated) ----
+// ---- LIVE TICKER UPDATE ----
 const tickerValues = [
   ['BTC/KES', 12589000, 0.06],
   ['ETH/KES', 455000, 0.04],
   ['NSE 20', 1847, 0.02],
   ['USD/KES', 129.5, 0.005],
 ];
-
 function updateTicker() {
   tickerValues.forEach(item => {
     const change = (Math.random() - 0.45) * item[1] * item[2];
@@ -222,3 +197,73 @@ function updateTicker() {
   });
 }
 setInterval(updateTicker, 5000);
+
+// ---- COUNTDOWN TIMER ----
+(function startCountdown() {
+  // Store target in sessionStorage so it persists on reload but resets on new session
+  const KEY = 'kv_cd_end';
+  let endTime = sessionStorage.getItem(KEY);
+  if (!endTime) {
+    // random between 6-23 hours from now
+    const hours = 6 + Math.floor(Math.random() * 18);
+    endTime = Date.now() + hours * 3600 * 1000;
+    sessionStorage.setItem(KEY, endTime);
+  }
+  endTime = parseInt(endTime);
+
+  function tick() {
+    const diff = endTime - Date.now();
+    if (diff <= 0) {
+      // Reset
+      sessionStorage.removeItem(KEY);
+      startCountdown();
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cdH').textContent = String(h).padStart(2, '0');
+    document.getElementById('cdM').textContent = String(m).padStart(2, '0');
+    document.getElementById('cdS').textContent = String(s).padStart(2, '0');
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+// ---- LIVE PAYOUT NOTIFICATIONS ----
+const payoutData = [
+  { name: 'Grace W. — Nairobi',    amt: 'KES 8,200'  },
+  { name: 'Peter M. — Mombasa',    amt: 'KES 15,500' },
+  { name: 'Amina K. — Kisumu',     amt: 'KES 5,750'  },
+  { name: 'David O. — Nakuru',     amt: 'KES 22,400' },
+  { name: 'Faith N. — Eldoret',    amt: 'KES 9,900'  },
+  { name: 'James R. — Thika',      amt: 'KES 31,000' },
+  { name: 'Mercy W. — Nyeri',      amt: 'KES 6,300'  },
+  { name: 'Collins A. — Kitale',   amt: 'KES 18,700' },
+  { name: 'Tabitha K. — Machakos', amt: 'KES 12,100' },
+  { name: 'Brian O. — Nairobi',    amt: 'KES 45,000' },
+];
+
+function showPayoutPopup() {
+  const popup = document.getElementById('payoutPopup');
+  const entry = payoutData[Math.floor(Math.random() * payoutData.length)];
+  document.getElementById('ppName').textContent = entry.name;
+  document.getElementById('ppAmt').textContent  = entry.amt;
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 5500);
+}
+
+// Show first payout after 4 seconds, then every 12-18 seconds
+setTimeout(() => {
+  showPayoutPopup();
+  setInterval(() => {
+    showPayoutPopup();
+  }, 12000 + Math.random() * 6000);
+}, 4000);
+
+// ---- PWA SERVICE WORKER ----
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
