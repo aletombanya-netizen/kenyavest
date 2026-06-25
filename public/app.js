@@ -102,10 +102,25 @@ async function submitLog(e) {
     showToast('❌ Network error');
   }
 }
-function submitContact(e) {
+async function submitContact(e) {
   e.preventDefault();
-  e.target.reset();
-  showToast('✅ Message sent! We\'ll reply within 24 hours.');
+  const form = e.target;
+  const name = form.querySelector('input[name="name"], input[placeholder*="name" i], input[placeholder*="Name"]')?.value || form.querySelector('input[type="text"]')?.value;
+  const email = form.querySelector('input[type="email"]')?.value;
+  const message = form.querySelector('textarea')?.value;
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message })
+    });
+    const data = await res.json();
+    form.reset();
+    showToast(res.ok ? `✅ ${data.message}` : `❌ ${data.message || 'Failed to send message'}`);
+  } catch (err) {
+    showToast('❌ Network error. Please try again.');
+  }
 }
 
 // ---- PASSWORD TOGGLE ----

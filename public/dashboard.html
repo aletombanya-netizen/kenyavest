@@ -52,8 +52,14 @@
     <div class="balance-display">KES <span id="balanceAmount">0.00</span></div>
     <div class="action-buttons">
       <button class="btn btn-primary" id="openDepositModal">Deposit via M-Pesa</button>
-      <button class="btn btn-primary" style="background: transparent; border: 1px solid #F4C430; color: #F4C430;">Withdraw</button>
+      <button class="btn btn-primary" id="openWithdrawModal" style="background: transparent; border: 1px solid #F4C430; color: #F4C430;">Withdraw</button>
+      <button class="btn btn-primary" id="openInvestModal" style="background: linear-gradient(135deg, #1a7a4a, #22a05a);">Invest Now</button>
     </div>
+  </div>
+
+  <div class="card">
+    <h2>Active Investments</h2>
+    <div id="investmentsList"><p style="color:#aaa">Loading...</p></div>
   </div>
 
   <div class="card">
@@ -81,6 +87,51 @@
       <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Initiate Payment</button>
     </form>
     <div id="depositMsg" style="margin-top: 15px; font-size: 0.9rem; text-align: center;"></div>
+  </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div class="modal" id="withdrawModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeWithdrawModal">&times;</span>
+    <h2 style="margin-top: 0; color: #F4C430;">Withdraw to M-Pesa</h2>
+    <form id="withdrawForm">
+      <div class="form-group">
+        <label for="withdrawAmount">Amount (KES)</label>
+        <input type="number" id="withdrawAmount" min="50" placeholder="e.g. 500" required>
+      </div>
+      <div class="form-group">
+        <label for="withdrawPhone">M-Pesa Phone Number</label>
+        <input type="text" id="withdrawPhone" placeholder="e.g. 0712345678" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Request Withdrawal</button>
+    </form>
+    <div id="withdrawMsg" style="margin-top: 15px; font-size: 0.9rem; text-align: center;"></div>
+  </div>
+</div>
+
+<!-- Invest Modal -->
+<div class="modal" id="investModal">
+  <div class="modal-content" style="max-width: 480px;">
+    <span class="close-modal" id="closeInvestModal">&times;</span>
+    <h2 style="margin-top: 0; color: #F4C430;">Start Investing</h2>
+    <form id="investForm">
+      <div class="form-group">
+        <label for="investPlan">Select Plan</label>
+        <select id="investPlan" style="width:100%; padding:10px; border:1px solid #333; border-radius:6px; background:#0B1120; color:#fff; box-sizing:border-box;">
+          <option value="starter">Starter — 3% daily (KES 500 – 4,999)</option>
+          <option value="pro">Pro — 5% daily (KES 5,000 – 49,999)</option>
+          <option value="elite">Elite — 8% daily (KES 50,000+)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="investAmount">Amount (KES)</label>
+        <input type="number" id="investAmount" min="500" placeholder="e.g. 5000" required>
+      </div>
+      <p id="roiPreview" style="color: #4ade80; text-align: center; font-size: 0.9rem; min-height: 1.5em;"></p>
+      <button type="submit" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #1a7a4a, #22a05a);">Activate Plan</button>
+    </form>
+    <div id="investMsg" style="margin-top: 15px; font-size: 0.9rem; text-align: center;"></div>
   </div>
 </div>
 

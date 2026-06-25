@@ -105,8 +105,52 @@ const getTransactions = async (req, res) => {
   }
 };
 
+// @desc    Request a withdrawal
+// @route   POST /api/payments/withdraw
+// @access  Private
+const requestWithdrawal = async (req, res) => {
+  try {
+    const { amount, phone } = req.body;
+
+    if (!amount || amount < 50) {
+      return res.status(400).json({ message: 'Minimum withdrawal amount is KES 50' });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.balance < amount) {
+      return res.status(400).json({ message: 'Insufficient balance' });
+    }
+
+    // Generate unique reference
+    const reference = `WD-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+
+    // Create pending withdrawal transaction
+    const transaction = await Transaction.create({
+      user: user._id,
+      amount,
+      type: 'withdrawal',
+      status: 'pending',
+      reference,
+      phone: phone || user.phone,
+    });
+
+    res.status(200).json({
+      message: 'Withdrawal request submitted successfully. Awaiting admin approval.',
+      transaction,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error during withdrawal request' });
+  }
+};
+
 module.exports = {
   initiateDeposit,
   payheroCallback,
   getTransactions,
+  requestWithdrawal,
 };

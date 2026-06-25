@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
+const Contact = require('../models/Contact');
 
 // @desc    Get all users
 // @route   GET /api/admin/users
@@ -100,9 +101,22 @@ const updateUserBalance = async (req, res) => {
   }
 };
 
+// @desc    Get all contact messages
+// @route   GET /api/admin/contacts
+// @access  Private/Admin
+const getContactMessages = async (req, res) => {
+  try {
+    const messages = await Contact.find({}).sort({ createdAt: -1 });
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getAllTransactions,
   updateTransactionStatus,
   updateUserBalance,
+  getContactMessages,
 };
