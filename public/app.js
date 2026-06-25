@@ -48,15 +48,59 @@ function switchTab(tab) {
 }
 
 // ---- FORM SUBMISSIONS ----
-function submitReg(e) {
+async function submitReg(e) {
   e.preventDefault();
-  closeModal();
-  showToast('✅ Account created! Welcome to KenyaVest 🎉');
+  const form = e.target;
+  const name = form.querySelector('input[type="text"]').value;
+  const phone = form.querySelector('input[type="tel"]').value;
+  const password = form.querySelector('input[type="password"]').value;
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      closeModal();
+      showToast('✅ Account created! Redirecting to dashboard...');
+      setTimeout(() => window.location.href = '/dashboard.html', 1500);
+    } else {
+      showToast('❌ ' + (data.message || 'Registration failed'));
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+  }
 }
-function submitLog(e) {
+
+async function submitLog(e) {
   e.preventDefault();
-  closeModal();
-  showToast('✅ Login successful! Redirecting to dashboard…');
+  const form = e.target;
+  const phone = form.querySelector('input[type="tel"]').value;
+  const password = form.querySelector('input[type="password"]').value;
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      closeModal();
+      showToast('✅ Login successful! Redirecting to dashboard...');
+      setTimeout(() => window.location.href = '/dashboard.html', 1500);
+    } else {
+      showToast('❌ ' + (data.message || 'Login failed'));
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+  }
 }
 function submitContact(e) {
   e.preventDefault();
