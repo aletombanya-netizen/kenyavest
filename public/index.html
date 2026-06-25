@@ -224,6 +224,24 @@
     <div class="plans-grid">
 
       <div class="plan-card">
+        <div class="plan-tier">Micro</div>
+        <div class="plan-ico">&#x1F33F;</div>
+        <h3>Micro Plan</h3>
+        <div class="plan-range">KES 500 &ndash; KES 999</div>
+        <div class="plan-rate"><span class="rate-num">3%</span><span class="rate-lbl">Daily Return</span></div>
+        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+        <ul class="plan-list">
+          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+          <li><span class="ck">&#10003;</span> 10% referral commission</li>
+          <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
+          <li><span class="ck">&#10003;</span> Basic Support</li>
+        </ul>
+        <div class="plan-ret">Total Return: <strong>121%</strong></div>
+        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      </div>
+
+      <div class="plan-card">
         <div class="plan-tier">Starter</div>
         <div class="plan-ico">&#x1F331;</div>
         <h3>Starter Plan</h3>
@@ -300,7 +318,7 @@
         <div class="plan-tier">VIP</div>
         <div class="plan-ico">&#x1F451;</div>
         <h3>VIP Plan</h3>
-        <div class="plan-range">KES 100,000+</div>
+        <div class="plan-range">KES 100,000 &ndash; KES 249,999</div>
         <div class="plan-rate"><span class="rate-num">20%</span><span class="rate-lbl">Daily Return</span></div>
         <div class="plan-dur">Duration: <strong>7 Days</strong></div>
         <ul class="plan-list">
@@ -312,6 +330,24 @@
         </ul>
         <div class="plan-ret">Total Return: <strong>240%</strong></div>
         <button class="btn btn-plan btn-plan-vip" onclick="openModal('register')">Invest Now</button>
+      </div>
+
+      <div class="plan-card plan-vip">
+        <div class="plan-tier" style="color: #00F0FF;">Elite</div>
+        <div class="plan-ico">&#x1F48E;</div>
+        <h3>Elite Plan</h3>
+        <div class="plan-range">KES 250,000+</div>
+        <div class="plan-rate"><span class="rate-num">25%</span><span class="rate-lbl">Daily Return</span></div>
+        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+        <ul class="plan-list">
+          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+          <li><span class="ck">&#10003;</span> 10% referral commission</li>
+          <li><span class="ck">&#10003;</span> Priority withdrawals</li>
+          <li><span class="ck">&#10003;</span> Exclusive events</li>
+        </ul>
+        <div class="plan-ret">Total Return: <strong>275%</strong></div>
+        <button class="btn btn-plan btn-plan-vip" style="border-color: #00F0FF; color: #00F0FF;" onclick="openModal('register')">Invest Now</button>
       </div>
 
     </div>
@@ -338,16 +374,18 @@
       <div class="calc-inputs">
         <div class="c-field">
           <label>Investment Amount (KES)</label>
-          <input type="number" id="cAmount" value="10000" min="1000" step="500" oninput="calcProfit()">
+          <input type="number" id="cAmount" value="10000" min="500" step="500" oninput="calcProfit()">
         </div>
         <div class="c-field">
           <label>Select Plan</label>
           <select id="cPlan" onchange="calcProfit()">
+            <option value="3,7">Micro &ndash; 3% Daily / 7 Days</option>
             <option value="5,7">Starter &ndash; 5% Daily / 7 Days</option>
             <option value="7,7" selected>Basic &ndash; 7% Daily / 7 Days</option>
             <option value="10,7">Standard &ndash; 10% Daily / 7 Days</option>
             <option value="15,7">Premium &ndash; 15% Daily / 7 Days</option>
             <option value="20,7">VIP &ndash; 20% Daily / 7 Days</option>
+            <option value="25,7">Elite &ndash; 25% Daily / 7 Days</option>
           </select>
         </div>
       </div>
