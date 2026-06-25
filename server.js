@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Catch-all route to serve the main index.html for SPA-like behavior (optional, but good for future React/Vue)
-app.get('*', (req, res) => {
+// Catch-all route to serve the main index.html for SPA-like behavior
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
