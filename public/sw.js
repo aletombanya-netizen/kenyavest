@@ -2,13 +2,18 @@
    KenyaVest – Service Worker (sw.js)
    ================================ */
 
-const CACHE_NAME = 'kenyavest-v2';
+const CACHE_NAME = 'kenyavest-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/app.js',
   '/manifest.json',
+  '/dashboard.html',
+  '/js/dashboard.js',
+  '/login.html',
+  '/register.html',
+  '/js/auth.js',
 ];
 
 // Install: cache static assets
