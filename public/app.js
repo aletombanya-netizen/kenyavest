@@ -50,10 +50,15 @@ function switchTab(tab) {
 // ---- FORM SUBMISSIONS ----
 async function submitReg(e) {
   e.preventDefault();
-  const form = e.target;
-  const name = form.querySelector('input[type="text"]').value;
-  const phone = form.querySelector('input[type="tel"]').value;
-  const password = form.querySelector('input[type="password"]').value;
+  const firstName = document.getElementById('regFirstName').value.trim();
+  const lastName  = document.getElementById('regLastName').value.trim();
+  const name      = `${firstName} ${lastName}`.trim();
+  const phone     = document.getElementById('regPhone').value.trim();
+  const password  = document.getElementById('pw1').value;
+
+  if (!firstName || !phone || !password) {
+    return showToast('❌ Please fill in all required fields');
+  }
 
   try {
     const res = await fetch('/api/auth/register', {
@@ -72,7 +77,7 @@ async function submitReg(e) {
       showToast('❌ ' + (data.message || 'Registration failed'));
     }
   } catch (err) {
-    showToast('❌ Network error');
+    showToast('❌ Network error. Please try again.');
   }
 }
 

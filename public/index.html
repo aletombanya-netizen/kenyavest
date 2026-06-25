@@ -689,15 +689,13 @@
       <div class="m-head"><h2>Create Free Account</h2><p>Start earning daily returns in minutes</p></div>
       <form onsubmit="submitReg(event)">
         <div class="form-row">
-          <div class="form-group"><label>First Name</label><input type="text" placeholder="John" required></div>
-          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe" required></div>
+          <div class="form-group"><label>First Name</label><input id="regFirstName" type="text" placeholder="John" required></div>
+          <div class="form-group"><label>Last Name</label><input id="regLastName" type="text" placeholder="Doe" required></div>
         </div>
-        <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@example.com" required></div>
-        <div class="form-group"><label>Phone Number (M-Pesa)</label><input type="tel" placeholder="+254 7XX XXX XXX" required></div>
+        <div class="form-group"><label>Phone Number (M-Pesa)</label><input id="regPhone" type="tel" placeholder="0712345678" required></div>
         <div class="form-group"><label>Password</label>
           <div class="pw-wrap"><input type="password" id="pw1" placeholder="Min. 8 characters" required><button type="button" class="eye-btn" onclick="togglePw('pw1')">&#x1F441;</button></div>
         </div>
-        <div class="form-group"><label>Referral Code (Optional)</label><input type="text" placeholder="Enter referral code if you have one"></div>
         <div class="form-chk"><input type="checkbox" id="chkT" required><label for="chkT">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label></div>
         <button type="submit" class="btn btn-primary btn-lg w100">Create Account &rarr;</button>
         <p class="m-foot">Already have an account? <a href="#" onclick="switchTab('login')">Login here</a></p>
