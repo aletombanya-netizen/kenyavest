@@ -15,8 +15,18 @@ const initiateSTKPush = async (amount, phone, reference) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Basic ${process.env.PAYHERO_API_KEY}`,
+          ...(process.env.PAYHERO_API_KEY && {
+            Authorization: process.env.PAYHERO_API_KEY.startsWith('Basic ')
+              ? process.env.PAYHERO_API_KEY
+              : `Basic ${Buffer.from(process.env.PAYHERO_API_KEY).toString('base64')}`,
+          }),
         },
+        ...(process.env.PAYHERO_USERNAME && process.env.PAYHERO_PASSWORD && {
+          auth: {
+            username: process.env.PAYHERO_USERNAME,
+            password: process.env.PAYHERO_PASSWORD,
+          },
+        }),
       }
     );
 
