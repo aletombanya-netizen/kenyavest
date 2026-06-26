@@ -11,6 +11,7 @@ const paymentRoutes = require('./src/routes/paymentRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const investmentRoutes = require('./src/routes/investmentRoutes');
 const contactRoutes = require('./src/routes/contactRoutes');
+const publicRoutes = require('./src/routes/publicRoutes');
 const { startDailyROICron } = require('./src/services/cronJobs');
 const { apiLimiter, authLimiter } = require('./src/middleware/rateLimiter');
 
@@ -80,6 +81,7 @@ app.use('/api/payments', apiLimiter, paymentRoutes);
 app.use('/api/admin', apiLimiter, adminRoutes);
 app.use('/api/investments', apiLimiter, investmentRoutes);
 app.use('/api/contact', apiLimiter, contactRoutes);
+app.use('/api/public', apiLimiter, publicRoutes);
 
 // ── Static Files ──────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));

@@ -60,6 +60,7 @@ const payheroCallback = async (req, res) => {
         const user = await User.findById(transaction.user);
         if (user) {
           user.balance += Number(transaction.amount);
+          user.accumulatedDeposits = (user.accumulatedDeposits || 0) + Number(transaction.amount);
 
           // ── Referral Bonus (first deposit only) ───────────────
           if (!user.hasDeposited && user.referredBy) {

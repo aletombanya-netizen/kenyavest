@@ -158,7 +158,10 @@
     <a href="/profile.html" style="text-decoration:none;padding:7px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:#8b9ab8;font-size:13px;font-weight:600;transition:all .2s" onmouseover="this.style.borderColor='#F4C430';this.style.color='#F4C430'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#8b9ab8'">👤 Profile</a>
     <div class="user-pill">
       <div class="user-pill-avatar" id="avatarInitial">U</div>
-      <span class="user-pill-name" id="userNameDisplay">Loading...</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-start;">
+        <span class="user-pill-name" id="userNameDisplay" style="line-height:1.2;">Loading...</span>
+        <span id="vipTierDisplay" style="font-size:10px;font-weight:700;color:#F4C430;text-transform:uppercase;line-height:1;">BRONZE</span>
+      </div>
     </div>
     <button class="btn-logout" id="logoutBtn">Logout</button>
   </div>
@@ -286,9 +289,9 @@
       <div class="form-group">
         <label>Select Plan</label>
         <select id="investPlan" onchange="updateROIPreview()">
-          <option value="starter">Starter — 3%/day (KES 500–4,999)</option>
-          <option value="pro">Pro — 5%/day (KES 5,000–49,999)</option>
-          <option value="elite">Elite — 8%/day (KES 50,000+)</option>
+          <option value="starter">Starter — 3%/day (7 Days Lock, KES 500–4k)</option>
+          <option value="pro">Pro — 5%/day (14 Days Lock, KES 5k–49k)</option>
+          <option value="elite">Elite — 8%/day (30 Days Lock, KES 50k+)</option>
         </select>
       </div>
       <div class="form-group"><label>Amount (KES)</label><input type="number" id="investAmount" min="500" placeholder="e.g. 5000" oninput="updateROIPreview()" required /></div>

@@ -279,7 +279,18 @@ const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
-    res.json(user);
+    
+    // Calculate VIP Tier dynamically
+    let vipTier = 'Bronze';
+    const acc = user.accumulatedDeposits || 0;
+    if (acc >= 100000) vipTier = 'Platinum';
+    else if (acc >= 50000) vipTier = 'Gold';
+    else if (acc >= 10000) vipTier = 'Silver';
+    
+    const userObj = user.toObject();
+    userObj.vipTier = vipTier;
+    
+    res.json(userObj);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

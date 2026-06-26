@@ -69,6 +69,7 @@ const updateTransactionStatus = async (req, res) => {
     if (transaction.type === 'deposit') {
       if (status === 'completed' && user) {
         user.balance += Number(transaction.amount);
+        user.accumulatedDeposits = (user.accumulatedDeposits || 0) + Number(transaction.amount);
         
         // ── Referral Bonus (first deposit only) ───────────────
         if (!user.hasDeposited && user.referredBy) {

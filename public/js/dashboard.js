@@ -51,6 +51,13 @@ async function loadDashboard() {
 function renderProfile(user) {
   document.getElementById('userNameDisplay').textContent = user.name || 'User';
   document.getElementById('avatarInitial').textContent   = (user.name || 'U')[0].toUpperCase();
+  
+  const vipColors = { Bronze: '#cd7f32', Silver: '#e2e8f0', Gold: '#F4C430', Platinum: '#a855f7' };
+  const vipEl = document.getElementById('vipTierDisplay');
+  if (vipEl) {
+    vipEl.textContent = user.vipTier || 'BRONZE';
+    vipEl.style.color = vipColors[user.vipTier] || '#cd7f32';
+  }
 }
 
 // ── Stats ────────────────────────────────────────────
@@ -155,20 +162,28 @@ function renderInvestments(investments) {
   }
   el.innerHTML = active.map(inv => {
     const start     = new Date(inv.createdAt);
+    const end       = new Date(inv.endDate);
     const now       = new Date();
-    const daysElapsed = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-    const planDuration = 30; // default duration (days)
-    const pct       = Math.min(100, Math.round((daysElapsed / planDuration) * 100));
+    
+    let daysElapsed = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    let planDuration = inv.durationDays || 30;
+    
+    if (daysElapsed < 0) daysElapsed = 0;
+    if (daysElapsed > planDuration) daysElapsed = planDuration;
+    
+    const daysRemaining = planDuration - daysElapsed;
+    const pct = Math.min(100, Math.round((daysElapsed / planDuration) * 100));
+    
     return `
       <div class="invest-item">
         <div class="invest-top">
-          <span class="invest-plan">📦 ${inv.planName} Plan</span>
+          <span class="invest-plan">📦 ${inv.planName} Plan (Locked)</span>
           <span class="invest-roi">+KES ${(inv.dailyReturn || 0).toLocaleString('en-KE')}/day</span>
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
         <div class="invest-meta">
           <span>KES ${(inv.amountInvested || 0).toLocaleString('en-KE')} invested</span>
-          <span>Day ${daysElapsed} of ${planDuration}</span>
+          <span style="color:#F4C430">${daysRemaining} days remaining</span>
         </div>
       </div>`;
   }).join('');

@@ -120,3 +120,108 @@ window.addEventListener('DOMContentLoaded', () => {
   document.head.insertAdjacentHTML('beforeend', \`<style>\${waCSS}</style>\`);
   document.body.insertAdjacentHTML('beforeend', waHTML);
 });
+
+// ── Social Proof "Recent Payouts" Widget ──────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const toastCSS = `
+    .sp-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(17, 22, 34, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-left: 4px solid #4ade80;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #e8eaf0;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transform: translateY(150%);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 9998;
+      max-width: 320px;
+    }
+    .sp-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .sp-icon {
+      font-size: 20px;
+      background: rgba(74, 222, 128, 0.1);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sp-content p { margin: 0; font-size: 13px; font-weight: 500; }
+    .sp-content span { font-size: 11px; color: #8b9ab8; }
+    @media (max-width: 768px) {
+      .sp-toast {
+        bottom: 80px; /* Above WhatsApp widget */
+        left: 16px;
+        right: 16px;
+        max-width: none;
+      }
+    }
+  `;
+  document.head.insertAdjacentHTML('beforeend', \`<style>\${toastCSS}</style>\`);
+  
+  const toastContainer = document.createElement('div');
+  toastContainer.className = 'sp-toast';
+  toastContainer.innerHTML = `
+    <div class="sp-icon" id="spIcon">🚀</div>
+    <div class="sp-content">
+      <p id="spText">Someone just withdrew KES 5,000</p>
+      <span id="spTime">Just now</span>
+    </div>
+  `;
+  document.body.appendChild(toastContainer);
+
+  let activities = [];
+  let currentIndex = 0;
+
+  async function fetchActivities() {
+    try {
+      const res = await fetch('/api/public/recent-activity');
+      if (res.ok) {
+        activities = await res.json();
+      }
+    } catch (e) { }
+  }
+
+  function showNextActivity() {
+    if (!activities || activities.length === 0) return;
+    
+    const tx = activities[currentIndex];
+    const isDep = tx.type === 'deposit';
+    
+    document.getElementById('spIcon').textContent = isDep ? '💰' : '🚀';
+    document.getElementById('spText').innerHTML = \`<strong>\${tx.name}</strong> just \${isDep ? 'deposited' : 'withdrew'} <span style="color:\${isDep ? '#F4C430' : '#4ade80'}">KES \${tx.amount.toLocaleString()}</span>\`;
+    document.getElementById('spTime').textContent = tx.timeAgo <= 0 ? 'Just now' : \`\${tx.timeAgo} mins ago\`;
+    
+    toastContainer.classList.add('show');
+    
+    setTimeout(() => {
+      toastContainer.classList.remove('show');
+    }, 5000); // hide after 5 seconds
+
+    currentIndex = (currentIndex + 1) % activities.length;
+    
+    // Refresh list every full cycle
+    if (currentIndex === 0) fetchActivities();
+  }
+
+  // Initial load
+  fetchActivities().then(() => {
+    if (activities.length > 0) {
+      setTimeout(showNextActivity, 5000); // show first after 5s
+      setInterval(showNextActivity, 20000); // show every 20s
+    }
+  });
+});

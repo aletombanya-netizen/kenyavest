@@ -23,6 +23,19 @@ const investmentSchema = mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    durationDays: {
+      type: Number,
+      required: true,
+      default: 7,
+    },
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    isCapitalReturned: {
+      type: Boolean,
+      default: false,
+    },
     status: {
       type: String,
       required: true,

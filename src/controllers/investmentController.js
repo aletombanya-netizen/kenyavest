@@ -5,9 +5,9 @@ const crypto = require('crypto');
 
 // Investment plans configuration
 const PLANS = {
-  starter: { name: 'Starter', dailyReturnRate: 0.03, minAmount: 500, maxAmount: 4999 },
-  pro:     { name: 'Pro',     dailyReturnRate: 0.05, minAmount: 5000, maxAmount: 49999 },
-  elite:   { name: 'Elite',   dailyReturnRate: 0.08, minAmount: 50000, maxAmount: Infinity },
+  starter: { name: 'Starter', dailyReturnRate: 0.03, minAmount: 500, maxAmount: 4999, durationDays: 7 },
+  pro:     { name: 'Pro',     dailyReturnRate: 0.05, minAmount: 5000, maxAmount: 49999, durationDays: 14 },
+  elite:   { name: 'Elite',   dailyReturnRate: 0.08, minAmount: 50000, maxAmount: Infinity, durationDays: 30 },
 };
 
 // @desc    Create a new investment
@@ -42,6 +42,10 @@ const createInvestment = async (req, res) => {
 
     const dailyReturn = parseFloat((investAmount * plan.dailyReturnRate).toFixed(2));
 
+    // Calculate End Date
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + plan.durationDays);
+
     // Create the investment
     const investment = await Investment.create({
       user: user._id,
@@ -49,6 +53,8 @@ const createInvestment = async (req, res) => {
       amountInvested: investAmount,
       dailyReturn,
       status: 'active',
+      durationDays: plan.durationDays,
+      endDate: endDate,
     });
 
     // Log a transaction for this investment
