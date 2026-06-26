@@ -1,0 +1,44 @@
+{
+  "name": "KenyaVest – Smart Investments",
+  "short_name": "KenyaVest",
+  "description": "Kenya's premier online investment platform. Grow your money with daily returns via M-Pesa.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0B1120",
+  "theme_color": "#F4C430",
+  "lang": "en",
+  "categories": ["finance", "business"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Go to your investment dashboard",
+      "url": "/dashboard.html",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Login",
+      "short_name": "Login",
+      "description": "Login to your account",
+      "url": "/login.html",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": []
+}

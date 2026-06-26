@@ -12,6 +12,12 @@
 
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
   <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#F4C430" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="KenyaVest" />
 </head>
 <body>
 
@@ -61,6 +67,7 @@
     <div class="nav-actions">
       <button class="btn btn-ghost" id="loginBtn">Login</button>
       <button class="btn btn-primary" id="registerNavBtn">Get Started</button>
+      <button class="btn pwa-install-btn" id="navInstallBtn" onclick="triggerInstall()" style="display:none;align-items:center;gap:6px;background:rgba(244,196,48,0.12);border:1px solid rgba(244,196,48,0.4);color:#F4C430;font-weight:600;border-radius:10px;padding:8px 16px;cursor:pointer;transition:all .2s" title="Install KenyaVest App">&#x2B07; Install App</button>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -755,6 +762,7 @@
 <button id="btt" class="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#x2191;</button>
 
 <script src="app.js"></script>
+<script src="/js/pwa.js"></script>
 
 <!-- WhatsApp Floating Button -->
 <a href="https://wa.me/254700000000?text=Hello%20KenyaVest%2C%20I%27m%20interested%20in%20investing"

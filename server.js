@@ -29,12 +29,14 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'cdn.jsdelivr.net'],
         scriptSrcAttr: ["'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com'],
         fontSrc: ["'self'", 'fonts.gstatic.com'],
         imgSrc: ["'self'", 'data:', 'blob:'],
         connectSrc: ["'self'", 'https://kashflowvest.onrender.com'],
+        workerSrc: ["'self'"],
+        manifestSrc: ["'self'"],
       },
     },
     crossOriginEmbedderPolicy: false,
