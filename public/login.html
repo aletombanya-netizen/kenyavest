@@ -200,13 +200,13 @@
 
   // ── LOGIN ──────────────────────────────────────────────────────────
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const btn = document.getElementById('loginBtn');
-    btn.disabled = true; btn.textContent = 'Logging in…';
-
     try {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = true; btn.textContent = 'Logging in…';
+
       const res = await fetch('/api/auth/login', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -231,8 +231,10 @@
         btn.disabled = false; btn.textContent = 'Login to Dashboard →';
       }
     } catch (err) {
-      showMsg('❌ Network error. Please try again.', 'error');
-      btn.disabled = false; btn.textContent = 'Login to Dashboard →';
+      alert("Login Error: " + (err.message || "Network issue"));
+      showMsg('❌ Network error or JS error: ' + err.message, 'error');
+      const btn = document.getElementById('loginBtn');
+      if (btn) { btn.disabled = false; btn.textContent = 'Login to Dashboard →'; }
     }
   });
 

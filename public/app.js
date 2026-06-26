@@ -101,15 +101,15 @@ async function submitReg(e) {
 }
 
 async function submitLog(e) {
-  e.preventDefault();
-  const email    = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('pw2').value;
-
-  if (!email || !password) {
-    return showToast('❌ Please enter your email and password');
-  }
-
   try {
+    e.preventDefault();
+    const email    = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('pw2').value;
+
+    if (!email || !password) {
+      return showToast('❌ Please enter your email and password');
+    }
+
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -127,13 +127,13 @@ async function submitLog(e) {
       _currentEmail = data.email || email;
       showPanel('otpForm');
       showToast('⚠️ ' + data.message);
-      // If the server returned the code directly (no email), show it in the panel
       setOtpHint(data.message);
     } else {
       showToast('❌ ' + (data.message || 'Login failed'));
     }
   } catch (err) {
-    showToast('❌ Network error');
+    alert("Login Error: " + (err.message || "Network issue"));
+    showToast('❌ Network error or JS error: ' + err.message);
   }
 }
 
