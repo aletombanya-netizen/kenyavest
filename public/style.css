@@ -43,7 +43,7 @@ body {
   background-attachment: fixed;
   min-height: 100vh;
   color: var(--text);
-  overflow-x: hidden;
+  overflow-x: clip;
   line-height: 1.65;
 }
 
@@ -165,11 +165,11 @@ img { max-width: 100%; display: block; }
   transition: var(--transition);
 }
 .navbar.scrolled {
-  background: rgba(11,17,32,.96);
-  backdrop-filter: blur(18px);
+  background: rgba(6, 26, 28, 0.75);
+  backdrop-filter: blur(16px);
   padding: .6rem 0;
   border-bottom: 1px solid rgba(244,196,48,.12);
-  box-shadow: 0 4px 24px rgba(0,0,0,.5);
+  box-shadow: 0 4px 24px rgba(0,0,0,.3);
 }
 .nav-container {
   max-width: 1200px;
