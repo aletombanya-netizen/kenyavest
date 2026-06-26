@@ -1340,6 +1340,12 @@ img { max-width: 100%; display: block; }
 .plan-card {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.feat-card, .testi-card, .step-card {
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 /* --- WhatsApp Floating Button --- */

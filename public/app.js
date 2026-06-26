@@ -382,14 +382,26 @@ document.head.appendChild(style);
 
 // ---- VANILLA TILT 3D CARDS ----
 window.addEventListener('load', () => {
-  if (typeof VanillaTilt !== 'undefined') {
-    VanillaTilt.init(document.querySelectorAll('.plan-card, .feat-card, .testi-card, .step-card'), {
-      max: 8,
-      speed: 600,
+  if (typeof VanillaTilt !== 'undefined' && window.innerWidth > 768) {
+    // Plan cards — most dramatic effect
+    VanillaTilt.init(document.querySelectorAll('.plan-card'), {
+      max: 20,
+      speed: 400,
       glare: true,
-      'max-glare': 0.15,
+      'max-glare': 0.35,
+      scale: 1.05,
+      perspective: 600,
+      reset: true,
+    });
+    // Feature + Step + Testimonial cards — subtler effect
+    VanillaTilt.init(document.querySelectorAll('.feat-card, .testi-card, .step-card'), {
+      max: 12,
+      speed: 500,
+      glare: true,
+      'max-glare': 0.2,
       scale: 1.03,
-      perspective: 900,
+      perspective: 800,
+      reset: true,
     });
   }
 });
