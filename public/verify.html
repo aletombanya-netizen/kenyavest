@@ -149,15 +149,15 @@
 
   <div id="msgBox" class="msg"></div>
 
-  <!-- Step 1: Enter phone -->
+  <!-- Step 1: Enter email -->
   <div id="step1" class="section active">
-    <div class="step-icon phone">📱</div>
+    <div class="step-icon phone">&#x2709;&#xFE0F;</div>
     <h2>Verify Your Account</h2>
-    <p class="subtitle">Enter your registered phone number and we'll send you a 6-digit verification code.</p>
+    <p class="subtitle">Enter your registered email address and we'll send you a 6-digit verification code.</p>
     <form id="phoneForm">
       <div class="form-group">
-        <label for="phoneInput">Phone Number</label>
-        <input type="tel" id="phoneInput" placeholder="e.g. 0712345678" required autocomplete="tel">
+        <label for="emailInput">Email Address</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" required autocomplete="email">
       </div>
       <button type="submit" class="btn" id="sendBtn">Send Verification Code →</button>
     </form>
@@ -170,7 +170,7 @@
   <div id="step2" class="section">
     <div class="step-icon otp">✅</div>
     <h2>Enter OTP Code</h2>
-    <p class="subtitle" id="otpSubtitle">Enter the 6-digit code sent to your phone.</p>
+    <p class="subtitle" id="otpSubtitle">Enter the 6-digit code sent to your email.</p>
     <form id="otpForm">
       <div class="form-group">
         <label for="otpInput">Verification Code</label>
@@ -189,7 +189,7 @@
 </div>
 
 <script>
-  let currentPhone = '';
+  let currentEmail = '';
 
   function showMsg(text, type) {
     const box = document.getElementById('msgBox');
@@ -208,15 +208,15 @@
     document.getElementById('dot1').className = 'dot done';
     document.getElementById('line1').className = 'line done';
     document.getElementById('dot2').className = 'dot active';
-    document.getElementById('otpSubtitle').textContent = `Enter the 6-digit code sent to ${currentPhone}. Check the server logs for the code.`;
+    document.getElementById('otpSubtitle').textContent = `Enter the 6-digit code sent to ${currentEmail}.`;
     hideMsg();
   }
 
   // Step 1 – Send OTP
   document.getElementById('phoneForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const phone = document.getElementById('phoneInput').value.trim();
-    if (!phone) return showMsg('Please enter your phone number.', 'error');
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) return showMsg('Please enter your email address.', 'error');
 
     const btn = document.getElementById('sendBtn');
     btn.disabled = true;
@@ -226,13 +226,13 @@
       const res = await fetch('/api/auth/resend-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone })
+        body: JSON.stringify({ email })
       });
       const data = await res.json();
 
       if (res.ok) {
-        currentPhone = phone;
-        showMsg('✅ OTP sent! Check the server logs for the code.', 'success');
+        currentEmail = email;
+        showMsg('✅ OTP sent! Check your email for the code.', 'success');
         setTimeout(goToStep2, 800);
       } else {
         showMsg('❌ ' + (data.message || 'Failed to send OTP.'), 'error');
@@ -260,7 +260,7 @@
       const res = await fetch('/api/auth/verify-phone', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: currentPhone, code })
+        body: JSON.stringify({ email: currentEmail, code })
       });
       const data = await res.json();
 
@@ -283,17 +283,17 @@
 
   // Resend OTP
   async function resendCode() {
-    if (!currentPhone) return;
+    if (!currentEmail) return;
     hideMsg();
     try {
       const res = await fetch('/api/auth/resend-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: currentPhone })
+        body: JSON.stringify({ email: currentEmail })
       });
       const data = await res.json();
       if (res.ok) {
-        showMsg('✅ New OTP sent! Check the server logs.', 'success');
+        showMsg('✅ New OTP sent! Check your email.', 'success');
       } else {
         showMsg('❌ ' + (data.message || 'Failed to resend.'), 'error');
       }

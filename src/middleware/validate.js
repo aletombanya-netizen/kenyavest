@@ -19,6 +19,12 @@ const phoneValidator = body('phone')
   .notEmpty().withMessage('Phone number is required')
   .matches(/^(07|01|2547|2541)\d{8}$/).withMessage('Please enter a valid Kenyan phone number (e.g. 0712345678)');
 
+const emailValidator = body('email')
+  .trim()
+  .notEmpty().withMessage('Email address is required')
+  .isEmail().withMessage('Please enter a valid email address')
+  .toLowerCase();
+
 const passwordValidator = body('password')
   .isLength({ min: 8 }).withMessage('Password must be at least 8 characters');
 
@@ -33,11 +39,12 @@ const amountValidator = body('amount')
 const registerValidators = [
   nameValidator,
   phoneValidator,
+  emailValidator,
   passwordValidator,
 ];
 
 const loginValidators = [
-  phoneValidator,
+  emailValidator,
   body('password').notEmpty().withMessage('Password is required'),
 ];
 
