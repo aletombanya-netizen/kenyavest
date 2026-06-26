@@ -528,7 +528,7 @@ img { max-width: 100%; display: block; }
 .plans-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  grid-auto-rows: 1fr;
+  grid-auto-rows: 460px;
   gap: 1.2rem;
   margin-bottom: 3rem;
 }
@@ -1357,6 +1357,8 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
   /* Must have a defined height for absolute children */
   min-height: 460px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
 }
 .flip-inner {
   position: relative;
