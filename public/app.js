@@ -319,7 +319,11 @@ function toggleFaq(btn) {
 
 // ---- PROFIT CALCULATOR ----
 function calcProfit() {
-  const amount = parseFloat(document.getElementById('cAmount').value) || 0;
+  const amountEl = document.getElementById('cAmount');
+  const amount = parseFloat(amountEl.value) || 0;
+  // Update display label for slider
+  const display = document.getElementById('cAmountDisplay');
+  if (display) display.textContent = 'KES ' + Math.round(amount).toLocaleString('en-KE');
   const parts  = document.getElementById('cPlan').value.split(',');
   const rate   = parseFloat(parts[0]) / 100;
   const days   = parseInt(parts[1]);
@@ -376,6 +380,20 @@ const style = document.createElement('style');
 style.textContent = '.scroll-reveal.revealed { opacity:1 !important; transform:translateY(0) !important; }';
 document.head.appendChild(style);
 
+// ---- VANILLA TILT 3D CARDS ----
+window.addEventListener('load', () => {
+  if (typeof VanillaTilt !== 'undefined') {
+    VanillaTilt.init(document.querySelectorAll('.plan-card, .feat-card, .testi-card, .step-card'), {
+      max: 8,
+      speed: 600,
+      glare: true,
+      'max-glare': 0.15,
+      scale: 1.03,
+      perspective: 900,
+    });
+  }
+});
+
 // ---- ACTIVE NAV ON SCROLL ----
 const sections   = document.querySelectorAll('section[id], div[id]');
 const navLinksAll = document.querySelectorAll('.nav-link');
@@ -407,20 +425,79 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ---- LIVE TICKER UPDATE ----
+// ---- LIVE CRYPTO TICKER (CoinGecko) ----
+const TICKER_CACHE_KEY = 'kv_ticker_cache';
+const TICKER_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+async function fetchLivePrices() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(TICKER_CACHE_KEY) || 'null');
+    if (cached && Date.now() - cached.ts < TICKER_CACHE_TTL) {
+      return cached.data;
+    }
+    const res = await fetch(
+      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=kes&include_24hr_change=true'
+    );
+    if (!res.ok) throw new Error('CoinGecko error');
+    const raw = await res.json();
+    const data = [
+      { label: 'BTC/KES', price: raw.bitcoin.kes, change: raw.bitcoin.kes_24h_change },
+      { label: 'ETH/KES', price: raw.ethereum.kes, change: raw.ethereum.kes_24h_change },
+      { label: 'SOL/KES', price: raw.solana.kes, change: raw.solana.kes_24h_change },
+    ];
+    localStorage.setItem(TICKER_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+    return data;
+  } catch(e) {
+    // Return fallback simulated values on API failure
+    return null;
+  }
+}
+
 const tickerValues = [
   ['BTC/KES', 12589000, 0.06],
   ['ETH/KES', 455000, 0.04],
-  ['NSE 20', 1847, 0.02],
+  ['SOL/KES', 22000, 0.05],
   ['USD/KES', 129.5, 0.005],
 ];
-function updateTicker() {
-  tickerValues.forEach(item => {
-    const change = (Math.random() - 0.45) * item[1] * item[2];
-    item[1] = Math.max(1, item[1] + change);
-  });
+
+function updateTickerDOM(liveData) {
+  const track = document.querySelector('.ticker-track');
+  if (!track) return;
+  let items;
+  if (liveData) {
+    const fmt = (n) => n >= 1000 ? (n >= 1000000 ? (n/1000000).toFixed(2)+'M' : (n/1000).toFixed(1)+'K') : n.toFixed(2);
+    items = liveData.map(d => {
+      const sign = d.change >= 0 ? '+' : '';
+      const color = d.change >= 0 ? '#1DE9B6' : '#FF5252';
+      return `<span class="tick-item"><span class="tick-sym">${d.label}</span> <span class="tick-val" style="color:${color}">${fmt(d.price)} (${sign}${d.change.toFixed(2)}%)</span></span>`;
+    });
+  } else {
+    tickerValues.forEach(item => {
+      const change = (Math.random() - 0.45) * item[1] * item[2];
+      item[1] = Math.max(1, item[1] + change);
+    });
+    items = tickerValues.map(([sym, price]) => {
+      const fmt = (n) => n >= 1000000 ? (n/1000000).toFixed(2)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : n.toFixed(2);
+      return `<span class="tick-item"><span class="tick-sym">${sym}</span> <span class="tick-val">KES ${fmt(price)}</span></span>`;
+    });
+  }
+  // Duplicate for seamless scroll
+  const html = items.join('') + items.join('');
+  track.innerHTML = html;
 }
-setInterval(updateTicker, 5000);
+
+async function initTicker() {
+  const live = await fetchLivePrices();
+  updateTickerDOM(live);
+  // Refresh from API every 5 minutes
+  setInterval(async () => {
+    const fresh = await fetchLivePrices();
+    updateTickerDOM(fresh);
+  }, TICKER_CACHE_TTL);
+}
+
+initTicker();
+setInterval(() => updateTickerDOM(null), 5000); // fallback animation update
 
 // ---- COUNTDOWN TIMER ----
 (function startCountdown() {
