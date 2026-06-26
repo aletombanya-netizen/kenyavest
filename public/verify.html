@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Account - KenyaVest</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(135deg, #0B1120 0%, #0f1a2e 100%);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #1A2235;
+      border: 1px solid rgba(244,196,48,0.2);
+      border-radius: 16px;
+      padding: 44px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .logo a { text-decoration: none; }
+    .logo-text { font-size: 1.6rem; font-weight: 800; color: #fff; }
+    .logo-text span { color: #F4C430; }
+    .step-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px;
+      transition: all .3s;
+    }
+    .step-icon.phone { background: rgba(244,196,48,0.15); }
+    .step-icon.otp   { background: rgba(22,163,74,0.15); }
+    h2 {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #F4C430;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.88rem;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .msg {
+      text-align: center;
+      font-size: 0.88rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .msg.error   { background: rgba(239,68,68,.12); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
+    .msg.success { background: rgba(22,163,74,.12); color: #4ade80; border: 1px solid rgba(22,163,74,.3); }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-size: 0.83rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.5px; text-transform: uppercase; }
+    .form-group input {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid #2d3748;
+      border-radius: 8px;
+      background: #0B1120;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color .2s;
+      outline: none;
+    }
+    .form-group input:focus { border-color: #F4C430; }
+    .form-group input.otp-input {
+      font-size: 1.6rem;
+      letter-spacing: 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .btn {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, #F4C430, #D4A017);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn:hover { box-shadow: 0 0 20px rgba(244,196,48,0.45); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .links {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.88rem;
+      color: #94a3b8;
+    }
+    .links a { color: #F4C430; text-decoration: none; font-weight: 600; }
+    .links a:hover { text-decoration: underline; }
+    .resend-row { margin-top: 14px; text-align: center; font-size: 0.85rem; color: #94a3b8; }
+    .resend-row a { color: #F4C430; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .resend-row a:hover { text-decoration: underline; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #2d3748;
+      transition: all .3s;
+    }
+    .dot.active { background: #F4C430; transform: scale(1.3); }
+    .dot.done   { background: #16a34a; }
+    .line { width: 40px; height: 2px; background: #2d3748; transition: background .3s; }
+    .line.done { background: #16a34a; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <a href="/"><span class="logo-text">Kenya<span>Vest</span></span></a>
+  </div>
+
+  <!-- Progress dots -->
+  <div class="progress">
+    <div class="dot active" id="dot1"></div>
+    <div class="line" id="line1"></div>
+    <div class="dot" id="dot2"></div>
+  </div>
+
+  <div id="msgBox" class="msg"></div>
+
+  <!-- Step 1: Enter phone -->
+  <div id="step1" class="section active">
+    <div class="step-icon phone">📱</div>
+    <h2>Verify Your Account</h2>
+    <p class="subtitle">Enter your registered phone number and we'll send you a 6-digit verification code.</p>
+    <form id="phoneForm">
+      <div class="form-group">
+        <label for="phoneInput">Phone Number</label>
+        <input type="tel" id="phoneInput" placeholder="e.g. 0712345678" required autocomplete="tel">
+      </div>
+      <button type="submit" class="btn" id="sendBtn">Send Verification Code →</button>
+    </form>
+    <div class="links">
+      <a href="/login.html">← Back to Login</a>
+    </div>
+  </div>
+
+  <!-- Step 2: Enter OTP -->
+  <div id="step2" class="section">
+    <div class="step-icon otp">✅</div>
+    <h2>Enter OTP Code</h2>
+    <p class="subtitle" id="otpSubtitle">Enter the 6-digit code sent to your phone.</p>
+    <form id="otpForm">
+      <div class="form-group">
+        <label for="otpInput">Verification Code</label>
+        <input type="text" id="otpInput" class="otp-input" maxlength="6" placeholder="000000" required autocomplete="one-time-code">
+      </div>
+      <button type="submit" class="btn" id="verifyBtn">Verify Account →</button>
+    </form>
+    <div class="resend-row">
+      Didn't get the code? <a id="resendLink" onclick="resendCode()">Resend OTP</a>
+    </div>
+    <div class="links" style="margin-top:12px">
+      <a href="/login.html">← Back to Login</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentPhone = '';
+
+  function showMsg(text, type) {
+    const box = document.getElementById('msgBox');
+    box.textContent = text;
+    box.className = 'msg ' + type;
+    box.style.display = 'block';
+  }
+  function hideMsg() {
+    const box = document.getElementById('msgBox');
+    box.style.display = 'none';
+  }
+
+  function goToStep2() {
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('step2').classList.add('active');
+    document.getElementById('dot1').className = 'dot done';
+    document.getElementById('line1').className = 'line done';
+    document.getElementById('dot2').className = 'dot active';
+    document.getElementById('otpSubtitle').textContent = `Enter the 6-digit code sent to ${currentPhone}. Check the server logs for the code.`;
+    hideMsg();
+  }
+
+  // Step 1 – Send OTP
+  document.getElementById('phoneForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('phoneInput').value.trim();
+    if (!phone) return showMsg('Please enter your phone number.', 'error');
+
+    const btn = document.getElementById('sendBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        currentPhone = phone;
+        showMsg('✅ OTP sent! Check the server logs for the code.', 'success');
+        setTimeout(goToStep2, 800);
+      } else {
+        showMsg('❌ ' + (data.message || 'Failed to send OTP.'), 'error');
+        btn.disabled = false;
+        btn.textContent = 'Send Verification Code →';
+      }
+    } catch (err) {
+      showMsg('❌ Network error. Please try again.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Send Verification Code →';
+    }
+  });
+
+  // Step 2 – Verify OTP
+  document.getElementById('otpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = document.getElementById('otpInput').value.trim();
+    if (!code || code.length !== 6) return showMsg('❌ Enter the full 6-digit OTP.', 'error');
+
+    const btn = document.getElementById('verifyBtn');
+    btn.disabled = true;
+    btn.textContent = 'Verifying…';
+
+    try {
+      const res = await fetch('/api/auth/verify-phone', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: currentPhone, code })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        showMsg('✅ Account verified! Redirecting to dashboard…', 'success');
+        setTimeout(() => window.location.href = '/dashboard.html', 1500);
+      } else {
+        showMsg('❌ ' + (data.message || 'Verification failed.'), 'error');
+        btn.disabled = false;
+        btn.textContent = 'Verify Account →';
+      }
+    } catch (err) {
+      showMsg('❌ Network error. Please try again.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Verify Account →';
+    }
+  });
+
+  // Resend OTP
+  async function resendCode() {
+    if (!currentPhone) return;
+    hideMsg();
+    try {
+      const res = await fetch('/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: currentPhone })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showMsg('✅ New OTP sent! Check the server logs.', 'success');
+      } else {
+        showMsg('❌ ' + (data.message || 'Failed to resend.'), 'error');
+      }
+    } catch (err) {
+      showMsg('❌ Network error.', 'error');
+    }
+  }
+</script>
+
+</body>
+</html>
