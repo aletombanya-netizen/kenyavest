@@ -82,8 +82,10 @@ async function submitReg(e) {
     
     if (res.status === 201 && data.requiresVerification) {
       _currentEmail = data.email || email;
-      showToast('✅ Account created! Please verify your email.');
       showPanel('otpForm');
+      showToast('✅ ' + data.message);
+      // If the server returned the code directly (no email), show it in the panel
+      setOtpHint(data.message);
     } else if (res.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userInfo', JSON.stringify(data));
@@ -100,9 +102,12 @@ async function submitReg(e) {
 
 async function submitLog(e) {
   e.preventDefault();
-  const form = e.target;
-  const email = form.querySelector('input[type="email"]').value;
-  const password = form.querySelector('input[type="password"]').value;
+  const email    = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('pw2').value;
+
+  if (!email || !password) {
+    return showToast('❌ Please enter your email and password');
+  }
 
   try {
     const res = await fetch('/api/auth/login', {
@@ -120,13 +125,29 @@ async function submitLog(e) {
       setTimeout(() => window.location.href = '/dashboard.html', 1500);
     } else if (res.status === 403 && data.requiresVerification) {
       _currentEmail = data.email || email;
-      showToast('⚠️ Please verify your email first.');
       showPanel('otpForm');
+      showToast('⚠️ ' + data.message);
+      // If the server returned the code directly (no email), show it in the panel
+      setOtpHint(data.message);
     } else {
       showToast('❌ ' + (data.message || 'Login failed'));
     }
   } catch (err) {
     showToast('❌ Network error');
+  }
+}
+
+// Show OTP code hint in verification panel (used when email not configured)
+function setOtpHint(msg) {
+  let hint = document.getElementById('otpHint');
+  if (!hint) return;
+  // Extract a 6-digit code from the message if present
+  const match = msg.match(/\b(\d{6})\b/);
+  if (match) {
+    hint.textContent = '🔑 Your code: ' + match[1];
+    hint.style.display = 'block';
+  } else {
+    hint.style.display = 'none';
   }
 }
 

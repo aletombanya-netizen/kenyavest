@@ -32,10 +32,12 @@ const registerUser = async (req, res) => {
         console.log(`[OTP - Reregister] Email: ${email} | Code: ${code} | Purpose: verify`);
         
         // Send OTP email
-        await sendOTPEmail(user.email, code, 'verify');
+        const emailSent = await sendOTPEmail(user.email, code, 'verify');
 
         return res.status(201).json({
-          message: 'Account created! Please check your email for the verification code.',
+          message: emailSent
+            ? 'Account created! Please check your email for the verification code.'
+            : `Account created! Your verification code is: ${code} (email not configured)`,
           email: user.email,
           requiresVerification: true,
         });
@@ -74,14 +76,16 @@ const registerUser = async (req, res) => {
     });
 
     // Send OTP email
-    await sendOTPEmail(user.email, code, 'verify');
+    const emailSent = await sendOTPEmail(user.email, code, 'verify');
     console.log(`[OTP] Email: ${email} | Code: ${code} | Purpose: verify`);
 
     // Send welcome email if they provided an email (optional field)
     if (user.email) sendWelcomeEmail(user).catch(() => {});
 
     res.status(201).json({
-      message: 'Account created! Please check your email for the verification code.',
+      message: emailSent
+        ? 'Account created! Please check your email for the verification code.'
+        : `Account created! Your verification code is: ${code}`,
       email: user.email,
       requiresVerification: true,
     });
@@ -180,11 +184,13 @@ const loginUser = async (req, res) => {
       await OTP.create({ email, code, purpose: 'verify', expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
       
       // Send OTP email
-      await sendOTPEmail(user.email, code, 'verify');
+      const emailSent = await sendOTPEmail(user.email, code, 'verify');
       console.log(`[OTP - Login Attempt] Email: ${email} | Code: ${code}`);
       
       return res.status(403).json({
-        message: 'Please check your email for the verification code.',
+        message: emailSent
+          ? 'Please check your email for the verification code.'
+          : `Your verification code is: ${code}`,
         requiresVerification: true,
         email: user.email,
       });

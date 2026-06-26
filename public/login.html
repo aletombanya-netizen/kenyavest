@@ -120,6 +120,7 @@
     <div class="step-icon">✉️</div>
     <h2>Verify Your Email</h2>
     <p class="subtitle" id="otpSubtitle">A 6-digit code has been sent to your email.</p>
+    <div id="otpHint" style="display:none;background:rgba(244,196,48,0.1);border:1px solid rgba(244,196,48,0.3);border-radius:8px;padding:10px 14px;margin-bottom:16px;color:#F4C430;font-size:0.9rem;font-weight:600;text-align:center;letter-spacing:1px;"></div>
     <form id="otpForm">
       <div class="form-group">
         <label for="otpCode">OTP Code</label>
@@ -222,8 +223,9 @@
         currentEmail = data.email || email;
         document.getElementById('otpSubtitle').textContent =
           `A 6-digit code has been sent to ${currentEmail}.`;
-        showMsg('⚠️ Please verify your email to continue.', 'warning');
+        setOtpHint(data.message);
         showSection('otpSection');
+        showMsg('⚠️ Please verify your email to continue.', 'warning');
       } else {
         showMsg('❌ ' + (data.message || 'Login failed.'), 'error');
         btn.disabled = false; btn.textContent = 'Login to Dashboard →';
@@ -233,6 +235,19 @@
       btn.disabled = false; btn.textContent = 'Login to Dashboard →';
     }
   });
+
+  // Show OTP code in the hint box when email is not configured
+  function setOtpHint(msg) {
+    const hint = document.getElementById('otpHint');
+    if (!hint) return;
+    const match = msg && msg.match(/\b(\d{6})\b/);
+    if (match) {
+      hint.textContent = '🔑 Your code: ' + match[1];
+      hint.style.display = 'block';
+    } else {
+      hint.style.display = 'none';
+    }
+  }
 
   // ── OTP VERIFY ────────────────────────────────────────────────────
   document.getElementById('otpForm').addEventListener('submit', async (e) => {

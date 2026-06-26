@@ -22,12 +22,14 @@ const sendMail = async ({ to, subject, html }) => {
   const transporter = createTransporter();
   if (!transporter) {
     console.log(`[EMAIL - not configured] To: ${to} | Subject: ${subject}`);
-    return;
+    return false; // indicates email was NOT sent
   }
   try {
     await transporter.sendMail({ from: FROM, to, subject, html });
+    return true; // email sent successfully
   } catch (err) {
     console.error('[Email Error]', err.message);
+    return false;
   }
 };
 
