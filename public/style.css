@@ -30,7 +30,15 @@ html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
   font-family: 'Poppins', 'Inter', sans-serif;
-  background: linear-gradient(135deg, #00BFA5 0%, #009688 40%, #00796B 100%);
+  background-color: #061A1C;
+  background-image:
+    radial-gradient(ellipse at 70% 10%, rgba(0,229,195,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 90%, rgba(0,191,165,0.06) 0%, transparent 50%),
+    url('/bg-graph.svg');
+  background-size: auto, auto, cover;
+  background-position: center center, center center, center center;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
   color: var(--text);
   overflow-x: hidden;
