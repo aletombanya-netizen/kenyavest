@@ -337,6 +337,25 @@ const getLeaderboard = async (req, res) => {
   }
 };
 
+// ── Setup Admin (Temporary Route) ───────────────────────────────────
+// @route GET /api/auth/setup-admin?email=your_email@example.com
+const setupAdmin = async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.status(400).send('Please provide an email query parameter');
+    
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) return res.status(404).send('User not found. Please register first.');
+    
+    user.role = 'admin';
+    await user.save();
+    
+    res.send(`<h1>Success!</h1><p>${user.email} is now an Admin.</p><a href="/admin.html">Go to Admin Dashboard</a>`);
+  } catch (error) {
+    res.status(500).send('Server Error');
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -347,4 +366,5 @@ module.exports = {
   getUserProfile,
   getUserTransactions,
   getLeaderboard,
+  setupAdmin,
 };
