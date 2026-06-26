@@ -170,6 +170,56 @@ async function resendOTP() {
     showToast('❌ Network error');
   }
 }
+async function submitForgotPassword() {
+  const phone = document.getElementById('forgotPhone').value.trim();
+  if (!phone) return showToast('❌ Enter your phone number');
+
+  try {
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone })
+    });
+    const data = await res.json();
+    
+    if (res.ok) {
+      _currentPhone = phone;
+      showToast('✅ ' + (data.message || 'OTP sent!'));
+      showPanel('resetForm');
+    } else {
+      showToast('❌ ' + (data.message || 'Failed to send OTP'));
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+  }
+}
+
+async function submitResetPassword() {
+  const code = document.getElementById('resetOtp').value.trim();
+  const newPassword = document.getElementById('newPassword').value;
+
+  if (!code || code.length !== 6) return showToast('❌ Enter a valid 6-digit OTP');
+  if (!newPassword || newPassword.length < 8) return showToast('❌ Password must be at least 8 characters');
+
+  try {
+    const res = await fetch('/api/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: _currentPhone, code, newPassword })
+    });
+    const data = await res.json();
+    
+    if (res.ok) {
+      showToast('✅ ' + data.message);
+      showPanel('logForm');
+    } else {
+      showToast('❌ ' + (data.message || 'Failed to reset password'));
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+  }
+}
+
 async function submitContact(e) {
   e.preventDefault();
   const form = e.target;
@@ -388,9 +438,3 @@ setTimeout(() => {
   }, 12000 + Math.random() * 6000);
 }, 4000);
 
-// ---- PWA SERVICE WORKER ----
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  });
-}

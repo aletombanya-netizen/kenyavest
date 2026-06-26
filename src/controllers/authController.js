@@ -15,9 +15,27 @@ const registerUser = async (req, res) => {
   try {
     const { name, phone, password, referralCode } = req.body;
 
-    const userExists = await User.findOne({ phone });
-    if (userExists) {
-      return res.status(400).json({ message: 'An account with this phone number already exists' });
+    let user = await User.findOne({ phone });
+    if (user) {
+      if (user.isVerified) {
+        return res.status(400).json({ message: 'An account with this phone number already exists' });
+      } else {
+        // User exists but is not verified. Resend OTP.
+        await OTP.deleteMany({ phone, purpose: 'verify' });
+        const code = generateOTP();
+        await OTP.create({
+          phone: user.phone,
+          code,
+          purpose: 'verify',
+          expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+        });
+        console.log(`[OTP - Reregister] Phone: ${phone} | Code: ${code} | Purpose: verify`);
+        return res.status(201).json({
+          message: 'Account created! Please verify your phone number.',
+          phone: user.phone,
+          requiresVerification: true,
+        });
+      }
     }
 
     // Validate referral code if provided
@@ -27,7 +45,7 @@ const registerUser = async (req, res) => {
     }
 
     // Create user (isVerified = false until OTP confirmed)
-    const user = await User.create({
+    user = await User.create({
       name,
       phone,
       password,

@@ -40,6 +40,7 @@
       <button type="submit" class="btn">Login</button>
     </form>
     <div class="auth-links">
+      <a href="#" id="showForgotBtn">Forgot Password?</a><br><br>
       Don't have an account? <a href="/register.html">Sign Up</a>
     </div>
   </div>
@@ -57,6 +58,35 @@
       Didn't get the code? <a href="#" id="resendOtpBtn">Resend OTP</a><br><br>
       <a href="/login.html">Back to Login</a>
     </div>
+  </div>
+
+  <div id="forgotSection" style="display: none;">
+    <p style="text-align: center; margin-bottom: 20px;">Enter your registered phone number to receive an OTP.</p>
+    <form id="forgotForm">
+      <div class="form-group">
+        <label for="forgotPhone">Phone Number</label>
+        <input type="text" id="forgotPhone" placeholder="e.g. 0712345678" required>
+      </div>
+      <button type="submit" class="btn">Send OTP</button>
+    </form>
+    <div class="auth-links">
+      <a href="/login.html">Back to Login</a>
+    </div>
+  </div>
+
+  <div id="resetSection" style="display: none;">
+    <p style="text-align: center; margin-bottom: 20px;">Enter the OTP from the Render logs and your new password.</p>
+    <form id="resetForm">
+      <div class="form-group">
+        <label for="resetOtpCode">OTP Code</label>
+        <input type="text" id="resetOtpCode" maxlength="6" placeholder="6-digit OTP" style="letter-spacing:4px;text-align:center" required>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">New Password</label>
+        <input type="password" id="newPassword" placeholder="Min. 8 characters" required>
+      </div>
+      <button type="submit" class="btn">Reset Password</button>
+    </form>
   </div>
 </div>
 

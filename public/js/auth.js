@@ -2,12 +2,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
   const otpForm = document.getElementById('otpForm');
+  const forgotForm = document.getElementById('forgotForm');
+  const resetForm = document.getElementById('resetForm');
   const resendOtpBtn = document.getElementById('resendOtpBtn');
   const errorMsg = document.getElementById('errorMsg');
   
   const loginSection = document.getElementById('loginSection');
   const registerSection = document.getElementById('registerSection');
   const otpSection = document.getElementById('otpSection');
+  const forgotSection = document.getElementById('forgotSection');
+  const resetSection = document.getElementById('resetSection');
+  const showForgotBtn = document.getElementById('showForgotBtn');
+
+  if (showForgotBtn) {
+    showForgotBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (loginSection) loginSection.style.display = 'none';
+      if (forgotSection) forgotSection.style.display = 'block';
+    });
+  }
 
   let currentPhone = '';
 
@@ -58,8 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
           window.location.href = '/dashboard.html';
         } else if (res.status === 403 && data.requiresVerification) {
           currentPhone = data.phone || phone;
-          loginSection.style.display = 'none';
-          otpSection.style.display = 'block';
+          if (loginSection) loginSection.style.display = 'none';
+          if (otpSection) otpSection.style.display = 'block';
           showError('Please verify your phone number first.');
         } else {
           showError(data.message || 'Login failed');
@@ -87,8 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (res.status === 201 && data.requiresVerification) {
           currentPhone = data.phone || phone;
-          registerSection.style.display = 'none';
-          otpSection.style.display = 'block';
+          if (registerSection) registerSection.style.display = 'none';
+          if (otpSection) otpSection.style.display = 'block';
           showSuccess('Account created! Please verify your phone number.');
         } else if (res.ok) {
           localStorage.setItem('token', data.token);
@@ -146,6 +159,64 @@ document.addEventListener('DOMContentLoaded', () => {
           showSuccess(data.message || 'New OTP sent.');
         } else {
           showError(data.message || 'Failed to resend OTP');
+        }
+      } catch (err) {
+        showError('Network error');
+      }
+    });
+  }
+
+  if (forgotForm) {
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('forgotPhone').value.trim();
+      if (!phone) return showError('Enter your phone number');
+      
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          currentPhone = phone;
+          if (forgotSection) forgotSection.style.display = 'none';
+          if (resetSection) resetSection.style.display = 'block';
+          showSuccess(data.message || 'OTP sent!');
+        } else {
+          showError(data.message || 'Failed to send OTP');
+        }
+      } catch (err) {
+        showError('Network error');
+      }
+    });
+  }
+
+  if (resetForm) {
+    resetForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = document.getElementById('resetOtpCode').value.trim();
+      const newPassword = document.getElementById('newPassword').value;
+
+      if (!code || code.length !== 6) return showError('Enter a valid 6-digit OTP');
+      if (!newPassword || newPassword.length < 8) return showError('Password must be at least 8 characters');
+
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: currentPhone, code, newPassword })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          showSuccess(data.message || 'Password reset successful!');
+          if (resetSection) resetSection.style.display = 'none';
+          if (loginSection) loginSection.style.display = 'block';
+        } else {
+          showError(data.message || 'Failed to reset password');
         }
       } catch (err) {
         showError('Network error');
