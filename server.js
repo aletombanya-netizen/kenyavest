@@ -84,9 +84,19 @@ app.use('/api/contact', apiLimiter, contactRoutes);
 // ── Static Files ──────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ── Catch-all (SPA fallback) ──────────────────────────────────────
+// ── Smart Catch-all (404 for unknown routes, SPA fallback for known) ─
+const spaRoutes = ['/', '/index.html', '/login.html', '/register.html', '/dashboard.html', '/admin.html', '/verify.html', '/terms.html', '/privacy.html', '/404.html', '/transactions.html', '/profile.html'];
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  // API misses handled separately
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ message: 'API endpoint not found' });
+  }
+  // Known SPA pages
+  if (spaRoutes.includes(req.path)) {
+    return res.sendFile(path.join(__dirname, 'public', req.path === '/' ? 'index.html' : req.path.slice(1)));
+  }
+  // Everything else → 404 page
+  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
 });
 
 // ── Global Error Handler ──────────────────────────────────────────

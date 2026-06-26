@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page Not Found | KenyaVest</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#F4C430" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0B1120;
+      color: #e8eaf0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Ambient orbs */
+    .orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; }
+    .orb1 { width: 400px; height: 400px; background: rgba(244,196,48,0.06); top: -100px; right: -100px; }
+    .orb2 { width: 300px; height: 300px; background: rgba(74,222,128,0.04); bottom: -80px; left: -80px; }
+
+    .logo-link { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 48px; }
+    .logo-link img { width: 40px; height: 40px; border-radius: 10px; }
+    .logo-link span { font-size: 1.4rem; font-weight: 800; color: #F4C430; }
+
+    .code { font-size: clamp(5rem, 20vw, 9rem); font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, #F4C430, #D4A017, #F4C430);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; letter-spacing: -4px; }
+    .title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 700; margin: 16px 0 12px; }
+    .subtitle { color: #8b9ab8; font-size: 1rem; max-width: 400px; line-height: 1.6; margin-bottom: 40px; }
+
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn { padding: 12px 28px; border-radius: 12px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.95rem; cursor: pointer; text-decoration: none; border: none; transition: all 0.25s; }
+    .btn-primary { background: linear-gradient(135deg, #F4C430, #D4A017); color: #000; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(244,196,48,0.3); }
+    .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #e8eaf0; }
+    .btn-ghost:hover { border-color: #F4C430; color: #F4C430; }
+
+    .quick-links { margin-top: 48px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .quick-link { color: #8b9ab8; text-decoration: none; font-size: 13px; transition: color .2s; }
+    .quick-link:hover { color: #F4C430; }
+    .quick-link::before { content: '→ '; }
+  </style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<a href="/" class="logo-link">
+  <img src="/icon-192.png" alt="KFI" />
+  <span>KenyaVest</span>
+</a>
+
+<div class="code">404</div>
+<h1 class="title">Oops! Page not found</h1>
+<p class="subtitle">The page you're looking for doesn't exist or may have been moved. Let's get you back on track.</p>
+
+<div class="btn-group">
+  <a href="/" class="btn btn-primary">🏠 Go to Home</a>
+  <a href="/dashboard.html" class="btn btn-ghost">📊 Dashboard</a>
+</div>
+
+<div class="quick-links">
+  <a href="/login.html" class="quick-link">Login</a>
+  <a href="/#plans" class="quick-link">View Plans</a>
+  <a href="/#contact" class="quick-link">Contact Us</a>
+  <a href="/terms.html" class="quick-link">Terms</a>
+</div>
+
+<script src="/js/pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transaction History — KenyaVest</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#F4C430" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0d14; --bg2: #111622; --bg3: #181f30;
+      --border: rgba(255,255,255,0.08); --text: #e8eaf0; --text2: #8b9ab8;
+      --gold: #F4C430; --accent: #4ade80; --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ─ Header ─ */
+    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .header-logo { font-size: 18px; font-weight: 800; color: var(--gold); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .header-logo img { width: 30px; height: 30px; border-radius: 6px; }
+    .header-nav { display: flex; gap: 8px; }
+    .nav-btn { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); color: var(--text2); transition: all .2s; cursor: pointer; background: transparent; }
+    .nav-btn:hover, .nav-btn.active { border-color: var(--gold); color: var(--gold); }
+    .nav-btn.danger { border-color: rgba(239,68,68,0.3); color: var(--danger); }
+    .nav-btn.danger:hover { background: rgba(239,68,68,0.1); }
+
+    /* ─ Main ─ */
+    .main { max-width: 900px; margin: 0 auto; padding: 28px 20px 60px; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h1 { font-size: 1.5rem; font-weight: 800; }
+    .page-header p { color: var(--text2); font-size: 14px; margin-top: 4px; }
+
+    /* ─ Filter bar ─ */
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; }
+    .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .filter-btn.active { background: rgba(244,196,48,0.12); border-color: var(--gold); color: var(--gold); }
+
+    /* ─ Summary cards ─ */
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .sum-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .sum-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+    .sum-value { font-size: 1.2rem; font-weight: 700; }
+    .sum-value.green { color: var(--accent); }
+    .sum-value.red { color: var(--danger); }
+    .sum-value.gold { color: var(--gold); }
+
+    /* ─ Table ─ */
+    .table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .table-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .table-head h3 { font-size: 14px; font-weight: 600; }
+    .table-head span { font-size: 12px; color: var(--text2); }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th { padding: 12px 20px; text-align: left; font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    td { padding: 14px 20px; font-size: 14px; }
+
+    .tx-type { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px; }
+    .tx-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .type-deposit .tx-icon { background: rgba(74,222,128,0.1); }
+    .type-withdrawal .tx-icon { background: rgba(239,68,68,0.1); }
+    .type-roi .tx-icon { background: rgba(244,196,48,0.1); }
+    .type-investment .tx-icon { background: rgba(59,130,246,0.1); }
+    .type-referral .tx-icon { background: rgba(168,85,247,0.1); }
+
+    .amount { font-weight: 700; font-size: 15px; }
+    .amount.positive { color: var(--accent); }
+    .amount.negative { color: var(--danger); }
+    .amount.neutral { color: var(--gold); }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-completed { background: rgba(74,222,128,0.1); color: var(--accent); }
+    .badge-pending { background: rgba(245,158,11,0.1); color: var(--warning); }
+    .badge-failed { background: rgba(239,68,68,0.1); color: var(--danger); }
+    .badge-rejected { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+    .tx-ref { font-size: 11px; color: var(--text2); font-family: monospace; }
+    .tx-date { font-size: 12px; color: var(--text2); }
+
+    /* ─ Empty / Loading ─ */
+    .empty-state { text-align: center; padding: 60px 20px; }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+    .empty-state p { color: var(--text2); font-size: 14px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; margin: 60px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─ Responsive ─ */
+    @media (max-width: 640px) {
+      .header-nav .nav-btn:not(.danger) { display: none; }
+      thead th:nth-child(4), td:nth-child(4) { display: none; }
+      .summary { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-logo" href="/dashboard.html">
+    <img src="/icon-192.png" alt="KFI" />
+    KenyaVest
+  </a>
+  <div class="header-nav">
+    <a href="/dashboard.html" class="nav-btn">📊 Dashboard</a>
+    <a href="/profile.html" class="nav-btn">👤 Profile</a>
+    <button class="nav-btn danger" id="logoutBtn">Logout</button>
+  </div>
+</header>
+
+<div class="main">
+  <div class="page-header">
+    <h1>📋 Transaction History</h1>
+    <p>All deposits, withdrawals, ROI earnings, and referral bonuses</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary" id="summaryCards">
+    <div class="sum-card"><div class="sum-label">Total Deposits</div><div class="sum-value green" id="sumDeposits">—</div></div>
+    <div class="sum-card"><div class="sum-label">Total Withdrawals</div><div class="sum-value red" id="sumWithdrawals">—</div></div>
+    <div class="sum-card"><div class="sum-label">Total ROI Earned</div><div class="sum-value gold" id="sumRoi">—</div></div>
+    <div class="sum-card"><div class="sum-label">Referral Bonuses</div><div class="sum-value" id="sumReferral" style="color:#a855f7">—</div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterTx('all', this)">All</button>
+    <button class="filter-btn" onclick="filterTx('deposit', this)">💚 Deposits</button>
+    <button class="filter-btn" onclick="filterTx('withdrawal', this)">🔴 Withdrawals</button>
+    <button class="filter-btn" onclick="filterTx('roi', this)">🌟 ROI</button>
+    <button class="filter-btn" onclick="filterTx('investment', this)">🔵 Investments</button>
+    <button class="filter-btn" onclick="filterTx('referral', this)">🟣 Referrals</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-head">
+      <h3>Transactions</h3>
+      <span id="txCount">Loading...</span>
+    </div>
+    <div id="tableBody">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let TOKEN = null;
+  try { TOKEN = localStorage.getItem('token'); } catch(e) {}
+  if (!TOKEN) window.location.href = '/login.html';
+
+  let allTransactions = [];
+  let currentFilter = 'all';
+
+  const typeConfig = {
+    deposit:    { icon: '💚', label: 'Deposit',    cls: 'type-deposit',    sign: '+', amtClass: 'positive' },
+    withdrawal: { icon: '🔴', label: 'Withdrawal', cls: 'type-withdrawal', sign: '-', amtClass: 'negative' },
+    roi:        { icon: '⭐', label: 'ROI Earned', cls: 'type-roi',        sign: '+', amtClass: 'neutral' },
+    investment: { icon: '🔵', label: 'Investment', cls: 'type-investment', sign: '-', amtClass: 'negative' },
+    referral:   { icon: '🟣', label: 'Referral',   cls: 'type-referral',  sign: '+', amtClass: 'positive' },
+  };
+
+  function fmt(n) { return 'KES ' + Number(n).toLocaleString('en-KE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+  function fmtDate(d) {
+    const dt = new Date(d);
+    return dt.toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' }) + 
+           ' ' + dt.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  async function loadTransactions() {
+    try {
+      const res = await fetch('/api/auth/transactions', { headers: { Authorization: 'Bearer ' + TOKEN } });
+      if (!res.ok) throw new Error('Failed');
+      allTransactions = await res.json();
+      updateSummary(allTransactions);
+      renderTable(allTransactions);
+    } catch (e) {
+      document.getElementById('tableBody').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">⚠️</div>
+          <h3>Failed to load transactions</h3>
+          <p>Please try refreshing the page.</p>
+        </div>`;
+    }
+  }
+
+  function updateSummary(txs) {
+    const sum = (type) => txs.filter(t => t.type === type && t.status === 'completed').reduce((a,t) => a + t.amount, 0);
+    document.getElementById('sumDeposits').textContent = fmt(sum('deposit'));
+    document.getElementById('sumWithdrawals').textContent = fmt(sum('withdrawal'));
+    document.getElementById('sumRoi').textContent = fmt(sum('roi'));
+    document.getElementById('sumReferral').textContent = fmt(sum('referral'));
+  }
+
+  function filterTx(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = type === 'all' ? allTransactions : allTransactions.filter(t => t.type === type);
+    renderTable(filtered);
+  }
+
+  function renderTable(txs) {
+    document.getElementById('txCount').textContent = txs.length + ' transaction' + (txs.length !== 1 ? 's' : '');
+    if (txs.length === 0) {
+      document.getElementById('tableBody').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📭</div>
+          <h3>No transactions found</h3>
+          <p>${currentFilter === 'all' ? 'Make your first deposit to get started!' : 'No ' + currentFilter + ' transactions yet.'}</p>
+        </div>`;
+      return;
+    }
+    const rows = txs.map(tx => {
+      const cfg = typeConfig[tx.type] || { icon: '❓', label: tx.type, cls: '', sign: '', amtClass: '' };
+      const badge = `<span class="badge badge-${tx.status}">${tx.status}</span>`;
+      return `<tr>
+        <td>
+          <div class="tx-type ${cfg.cls}">
+            <div class="tx-icon">${cfg.icon}</div>
+            <div>
+              <div>${cfg.label}</div>
+              ${tx.description ? `<div class="tx-ref">${tx.description}</div>` : ''}
+            </div>
+          </div>
+        </td>
+        <td><span class="amount ${cfg.amtClass}">${cfg.sign}${fmt(tx.amount)}</span></td>
+        <td>${badge}</td>
+        <td class="tx-date">${fmtDate(tx.createdAt)}</td>
+        <td class="tx-ref">${tx.mpesaReceiptNumber || tx.reference || '—'}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('tableBody').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Type</th><th>Amount</th><th>Status</th><th>Date</th><th>Reference</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    try { localStorage.removeItem('token'); localStorage.removeItem('userInfo'); } catch(e){}
+    window.location.href = '/';
+  });
+
+  loadTransactions();
+</script>
+<script src="/js/pwa.js"></script>
+</body>
+</html>

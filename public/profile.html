@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile — KenyaVest</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#F4C430" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0d14; --bg2: #111622; --bg3: #181f30;
+      --border: rgba(255,255,255,0.08); --text: #e8eaf0; --text2: #8b9ab8;
+      --gold: #F4C430; --accent: #4ade80; --danger: #ef4444;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .header-logo { font-size: 18px; font-weight: 800; color: var(--gold); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .header-logo img { width: 30px; height: 30px; border-radius: 6px; }
+    .header-nav { display: flex; gap: 8px; }
+    .nav-btn { padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); color: var(--text2); transition: all .2s; cursor: pointer; background: transparent; font-family: 'Inter', sans-serif; }
+    .nav-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .nav-btn.danger { border-color: rgba(239,68,68,0.3); color: var(--danger); }
+    .nav-btn.danger:hover { background: rgba(239,68,68,0.1); }
+
+    .main { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* ─ Profile Hero ─ */
+    .profile-hero { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 28px; display: flex; align-items: center; gap: 20px; margin-bottom: 24px; position: relative; overflow: hidden; }
+    .profile-hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(244,196,48,0.08) 0%, transparent 70%); }
+    .avatar-big { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), #b8860b); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #000; flex-shrink: 0; }
+    .profile-info h2 { font-size: 1.3rem; font-weight: 800; }
+    .profile-info p { color: var(--text2); font-size: 14px; margin-top: 4px; }
+    .profile-badges { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-verified { background: rgba(74,222,128,0.1); color: var(--accent); border: 1px solid rgba(74,222,128,0.2); }
+    .badge-role { background: rgba(244,196,48,0.1); color: var(--gold); border: 1px solid rgba(244,196,48,0.2); }
+    .badge-member { background: rgba(139,154,184,0.1); color: var(--text2); border: 1px solid var(--border); }
+
+    /* ─ Stats Grid ─ */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .stat-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .stat-value { font-size: 1.2rem; font-weight: 700; }
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.green { color: var(--accent); }
+    .stat-value.purple { color: #a855f7; }
+
+    /* ─ Sections ─ */
+    .section-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 16px; overflow: hidden; }
+    .section-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .section-header h3 { font-size: 15px; font-weight: 700; }
+    .section-body { padding: 20px; }
+
+    .info-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .info-label { font-size: 13px; color: var(--text2); }
+    .info-value { font-size: 13px; font-weight: 600; }
+
+    /* ─ Referral box ─ */
+    .referral-box { background: rgba(244,196,48,0.04); border: 1px solid rgba(244,196,48,0.15); border-radius: 12px; padding: 16px; }
+    .ref-code { font-size: 1.4rem; font-weight: 800; color: var(--gold); letter-spacing: 4px; font-family: monospace; margin: 8px 0; }
+    .ref-link { font-size: 12px; color: var(--text2); word-break: break-all; margin-bottom: 12px; }
+    .copy-btn { background: rgba(244,196,48,0.12); border: 1px solid rgba(244,196,48,0.3); color: var(--gold); padding: 8px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all .2s; font-family: 'Inter', sans-serif; }
+    .copy-btn:hover { background: rgba(244,196,48,0.22); }
+
+    /* ─ Password form ─ */
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+    .form-group input { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; transition: border-color .2s; }
+    .form-group input:focus { outline: none; border-color: var(--gold); }
+    .btn-save { background: linear-gradient(135deg, var(--gold), #D4A017); color: #000; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s; }
+    .btn-save:hover { box-shadow: 0 4px 16px rgba(244,196,48,0.3); transform: translateY(-1px); }
+    .btn-save:disabled { opacity: 0.6; cursor: default; transform: none; }
+    .msg { font-size: 13px; margin-top: 10px; padding: 8px 12px; border-radius: 8px; display: none; }
+    .msg.success { background: rgba(74,222,128,0.1); color: var(--accent); display: block; }
+    .msg.error { background: rgba(239,68,68,0.1); color: var(--danger); display: block; }
+
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; margin: 40px auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .profile-hero { flex-direction: column; text-align: center; }
+      .profile-badges { justify-content: center; }
+      .header-nav .nav-btn:not(.danger) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-logo" href="/dashboard.html">
+    <img src="/icon-192.png" alt="KFI" />
+    KenyaVest
+  </a>
+  <div class="header-nav">
+    <a href="/dashboard.html" class="nav-btn">📊 Dashboard</a>
+    <a href="/transactions.html" class="nav-btn">📋 Transactions</a>
+    <button class="nav-btn danger" id="logoutBtn">Logout</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Loading spinner -->
+  <div id="loadingState"><div class="spinner"></div></div>
+
+  <!-- Profile content (hidden until loaded) -->
+  <div id="profileContent" style="display:none">
+
+    <!-- Hero -->
+    <div class="profile-hero">
+      <div class="avatar-big" id="avatarLetter">?</div>
+      <div class="profile-info">
+        <h2 id="profileName">—</h2>
+        <p id="profileEmail">—</p>
+        <div class="profile-badges">
+          <span class="badge badge-verified">✓ Verified</span>
+          <span class="badge badge-role" id="profileRole">User</span>
+          <span class="badge badge-member" id="profileSince">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card"><div class="stat-label">Account Balance</div><div class="stat-value gold" id="statBalance">—</div></div>
+      <div class="stat-card"><div class="stat-label">Referral Earnings</div><div class="stat-value purple" id="statRefEarnings">—</div></div>
+    </div>
+
+    <!-- Account Info -->
+    <div class="section-card">
+      <div class="section-header"><span>👤</span><h3>Account Information</h3></div>
+      <div class="section-body">
+        <div class="info-row"><span class="info-label">Full Name</span><span class="info-value" id="infoName">—</span></div>
+        <div class="info-row"><span class="info-label">Email Address</span><span class="info-value" id="infoEmail">—</span></div>
+        <div class="info-row"><span class="info-label">Phone (M-Pesa)</span><span class="info-value" id="infoPhone">—</span></div>
+        <div class="info-row"><span class="info-label">Account Role</span><span class="info-value" id="infoRole">—</span></div>
+        <div class="info-row"><span class="info-label">Member Since</span><span class="info-value" id="infoSince">—</span></div>
+        <div class="info-row"><span class="info-label">Verification Status</span><span class="info-value" style="color:var(--accent)">✓ Verified</span></div>
+      </div>
+    </div>
+
+    <!-- Referral -->
+    <div class="section-card">
+      <div class="section-header"><span>🔗</span><h3>Referral Program</h3></div>
+      <div class="section-body">
+        <p style="color:var(--text2);font-size:13px;margin-bottom:14px;">Share your referral code and earn <strong style="color:var(--gold)">10% of your friend's first deposit</strong> instantly!</p>
+        <div class="referral-box">
+          <div class="stat-label">Your Referral Code</div>
+          <div class="ref-code" id="refCode">——</div>
+          <div class="ref-link" id="refLink">—</div>
+          <button class="copy-btn" onclick="copyRef()">📋 Copy Referral Link</button>
+        </div>
+        <div class="info-row" style="margin-top:16px"><span class="info-label">Total Referral Earnings</span><span class="info-value purple" id="refEarningsDetail">—</span></div>
+      </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="section-card">
+      <div class="section-header"><span>🔒</span><h3>Change Password</h3></div>
+      <div class="section-body">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" id="currentPw" placeholder="Enter current password" autocomplete="current-password" />
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" id="newPw" placeholder="Min. 8 characters" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" id="confirmPw" placeholder="Repeat new password" autocomplete="new-password" />
+        </div>
+        <button class="btn-save" id="changePwBtn" onclick="changePassword()">Update Password</button>
+        <div class="msg" id="pwMsg"></div>
+      </div>
+    </div>
+
+  </div><!-- end #profileContent -->
+</div>
+
+<script>
+  let TOKEN = null;
+  try { TOKEN = localStorage.getItem('token'); } catch(e) {}
+  if (!TOKEN) window.location.href = '/login.html';
+
+  function fmt(n) { return 'KES ' + Number(n).toLocaleString('en-KE', { minimumFractionDigits: 0 }); }
+
+  async function loadProfile() {
+    try {
+      const res = await fetch('/api/auth/profile', { headers: { Authorization: 'Bearer ' + TOKEN } });
+      if (!res.ok) throw new Error('Unauthorized');
+      const u = await res.json();
+      const initials = u.name ? u.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2) : 'U';
+      const since = new Date(u.createdAt).toLocaleDateString('en-KE', { month: 'long', year: 'numeric' });
+      const refUrl = `${window.location.origin}/?ref=${u.referralCode}`;
+
+      document.getElementById('avatarLetter').textContent = initials;
+      document.getElementById('profileName').textContent = u.name;
+      document.getElementById('profileEmail').textContent = u.email;
+      document.getElementById('profileRole').textContent = u.role === 'admin' ? '⭐ Admin' : '👤 Investor';
+      document.getElementById('profileSince').textContent = 'Member since ' + since;
+
+      document.getElementById('statBalance').textContent = fmt(u.balance);
+      document.getElementById('statRefEarnings').textContent = fmt(u.referralEarnings);
+
+      document.getElementById('infoName').textContent = u.name;
+      document.getElementById('infoEmail').textContent = u.email;
+      document.getElementById('infoPhone').textContent = u.phone;
+      document.getElementById('infoRole').textContent = u.role.charAt(0).toUpperCase() + u.role.slice(1);
+      document.getElementById('infoSince').textContent = since;
+
+      document.getElementById('refCode').textContent = u.referralCode;
+      document.getElementById('refLink').textContent = refUrl;
+      document.getElementById('refEarningsDetail').textContent = fmt(u.referralEarnings);
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('profileContent').style.display = 'block';
+    } catch(e) {
+      try { localStorage.removeItem('token'); } catch(ex) {}
+      window.location.href = '/login.html';
+    }
+  }
+
+  function copyRef() {
+    const link = document.getElementById('refLink').textContent;
+    try {
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy Referral Link', 2000);
+      });
+    } catch(e) {
+      prompt('Copy this link:', link);
+    }
+  }
+
+  async function changePassword() {
+    const current = document.getElementById('currentPw').value;
+    const newPw = document.getElementById('newPw').value;
+    const confirm = document.getElementById('confirmPw').value;
+    const msg = document.getElementById('pwMsg');
+    const btn = document.getElementById('changePwBtn');
+
+    msg.className = 'msg'; msg.textContent = '';
+
+    if (!current || !newPw || !confirm) {
+      msg.className = 'msg error'; msg.textContent = '❌ Please fill in all password fields.'; return;
+    }
+    if (newPw !== confirm) {
+      msg.className = 'msg error'; msg.textContent = '❌ New passwords do not match.'; return;
+    }
+    if (newPw.length < 8) {
+      msg.className = 'msg error'; msg.textContent = '❌ New password must be at least 8 characters.'; return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Updating…';
+
+    // Use the forgot-password / reset flow since there's no direct change-password endpoint
+    // We'll first verify old password via login, then reset
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+      const email = userInfo.email;
+
+      // Step 1: verify current password via login
+      const loginRes = await fetch('/api/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: current })
+      });
+      if (!loginRes.ok) {
+        msg.className = 'msg error'; msg.textContent = '❌ Current password is incorrect.';
+        btn.disabled = false; btn.textContent = 'Update Password'; return;
+      }
+
+      // Step 2: request OTP
+      await fetch('/api/auth/forgot-password', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      msg.className = 'msg success';
+      msg.textContent = '📧 A verification code has been sent to your email. Use the Reset Password flow on the login page to complete the change.';
+    } catch(e) {
+      msg.className = 'msg error'; msg.textContent = '❌ Network error. Please try again.';
+    }
+    btn.disabled = false; btn.textContent = 'Update Password';
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    try { localStorage.removeItem('token'); localStorage.removeItem('userInfo'); } catch(e) {}
+    window.location.href = '/';
+  });
+
+  loadProfile();
+</script>
+<script src="/js/pwa.js"></script>
+</body>
+</html>
