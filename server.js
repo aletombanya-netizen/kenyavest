@@ -1,4 +1,5 @@
 const express = require('express');
+const https = require('https');
 const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -83,6 +84,11 @@ app.use('/api/investments', apiLimiter, investmentRoutes);
 app.use('/api/contact', apiLimiter, contactRoutes);
 app.use('/api/public', apiLimiter, publicRoutes);
 
+// ── Health Check / Keep-Alive Ping ──────────────────────────────
+app.get('/ping', (req, res) => {
+  res.status(200).json({ status: 'alive', time: new Date() });
+});
+
 // ── Static Files ──────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -111,4 +117,18 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+
+  // ── Keep-Alive: Prevent Render Free Tier from Sleeping ───────────
+  const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
+  if (RENDER_URL) {
+    const pingUrl = `${RENDER_URL}/ping`;
+    setInterval(() => {
+      https.get(pingUrl, (res) => {
+        console.log(`[Keep-Alive] Pinged ${pingUrl} → ${res.statusCode}`);
+      }).on('error', (err) => {
+        console.error('[Keep-Alive] Ping failed:', err.message);
+      });
+    }, 14 * 60 * 1000); // every 14 minutes
+    console.log(`[Keep-Alive] Self-ping active → ${pingUrl}`);
+  }
 });
