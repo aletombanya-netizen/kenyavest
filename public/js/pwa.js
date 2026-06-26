@@ -117,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   `;
 
-  document.head.insertAdjacentHTML('beforeend', \`<style>\${waCSS}</style>\`);
+  document.head.insertAdjacentHTML('beforeend', '<style>' + waCSS + '</style>');
   document.body.insertAdjacentHTML('beforeend', waHTML);
 });
 

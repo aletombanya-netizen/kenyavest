@@ -3,7 +3,7 @@
    Provides offline support and asset caching
    ===================================================== */
 
-const CACHE_NAME = 'kenyavest-v3';
+const CACHE_NAME = 'kenyavest-v4';
 const OFFLINE_URL = '/';
 
 // Assets to cache immediately on install
@@ -60,6 +60,9 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(fetch(event.request));
     return;
   }
+
+  // Skip cross-origin requests (fonts, CDNs) — let browser handle them normally
+  if (url.origin !== self.location.origin) return;
 
   // Static assets: Cache-first strategy
   event.respondWith(
