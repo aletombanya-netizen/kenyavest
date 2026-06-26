@@ -30,13 +30,13 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'cdn.jsdelivr.net'],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
         scriptSrcAttr: ["'unsafe-inline'"],
-        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com'],
-        fontSrc: ["'self'", 'fonts.gstatic.com'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com', 'cdn.jsdelivr.net'],
+        fontSrc: ["'self'", 'fonts.gstatic.com', 'data:'],
         imgSrc: ["'self'", 'data:', 'blob:'],
-        connectSrc: ["'self'", 'https://kashflowvest.onrender.com'],
-        workerSrc: ["'self'"],
+        connectSrc: ["'self'", 'https://kashflowvest.onrender.com', 'https://fonts.googleapis.com', 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net'],
+        workerSrc: ["'self'", 'blob:'],
         manifestSrc: ["'self'"],
       },
     },
