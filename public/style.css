@@ -547,10 +547,16 @@ img { max-width: 100%; display: block; }
 .plan-popular:hover { transform: scale(1.04) translateY(-6px); }
 
 .plan-vip {
-  border-color: rgba(244,196,48,.3);
-  background: linear-gradient(180deg, rgba(37,99,235,.07) 0%, var(--card) 100%);
+  border-color: rgba(29,233,182,.3);
+  background: linear-gradient(180deg, rgba(29,233,182,.07) 0%, var(--card) 100%);
 }
-.plan-vip:hover { border-color: var(--accent); box-shadow: 0 16px 50px rgba(37,99,235,.1); }
+.plan-vip:hover { border-color: var(--accent); box-shadow: 0 16px 50px rgba(29,233,182,.1); }
+
+.plan-elite {
+  border-color: rgba(0,240,255,.3);
+  background: linear-gradient(180deg, rgba(0,240,255,.07) 0%, var(--card) 100%);
+}
+.plan-elite:hover { border-color: #00F0FF; box-shadow: 0 16px 50px rgba(0,240,255,.1); }
 
 .pop-ribbon {
   position: absolute;
@@ -576,6 +582,7 @@ img { max-width: 100%; display: block; }
 }
 .plan-popular .plan-tier { color: var(--gold); }
 .plan-vip .plan-tier { color: var(--accent); }
+.plan-elite .plan-tier { color: #00F0FF; }
 
 .plan-ico { font-size: 2rem; }
 
@@ -636,11 +643,18 @@ img { max-width: 100%; display: block; }
 }
 .btn-plan-hot:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--gold-glow); }
 .btn-plan-vip {
-  background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(37,99,235,.08));
-  border: 1px solid rgba(37,99,235,.35);
-  color: #6fa3ff;
+  background: linear-gradient(135deg, rgba(29,233,182,.15), rgba(29,233,182,.08));
+  border: 1px solid rgba(29,233,182,.35);
+  color: var(--accent);
 }
-.btn-plan-vip:hover { background: var(--accent); color: #fff; }
+.btn-plan-vip:hover { background: var(--accent); color: var(--navy); }
+
+.btn-plan-elite {
+  background: linear-gradient(135deg, rgba(0,240,255,.15), rgba(0,240,255,.08));
+  border: 1px solid rgba(0,240,255,.35);
+  color: #00F0FF;
+}
+.btn-plan-elite:hover { background: #00F0FF; color: var(--navy); }
 
 .ref-banner {
   background: linear-gradient(135deg, rgba(244,196,48,.07), rgba(37,99,235,.05));
