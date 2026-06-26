@@ -6,23 +6,23 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  /* --- Inves theme palette --- */
-  --gold:       #F4C430;
-  --gold-dark:  #c99b00;
-  --gold-glow:  rgba(244,196,48,.30);
-  --navy:       #0B1120;
-  --navy2:      #111928;
-  --navy3:      #162035;
-  --card:       rgba(17,25,40,.88);
-  --border:     rgba(255,255,255,.08);
-  --accent:     #2563EB;
-  --accent-glow:rgba(37,99,235,.25);
-  --text:       #E2EAF4;
-  --muted:      #7E8FA6;
+  /* --- Teal / Cyan theme palette (inspired by reference) --- */
+  --gold:       #00E5C3;
+  --gold-dark:  #00BFA5;
+  --gold-glow:  rgba(0,229,195,.30);
+  --navy:       #009688;
+  --navy2:      #00796B;
+  --navy3:      #00695C;
+  --card:       rgba(0,121,107,.45);
+  --border:     rgba(255,255,255,.15);
+  --accent:     #1DE9B6;
+  --accent-glow:rgba(29,233,182,.30);
+  --text:       #E0F7F4;
+  --muted:      #B2DFDB;
   --white:      #ffffff;
   --radius:     12px;
   --radius-lg:  18px;
-  --shadow:     0 8px 32px rgba(0,0,0,.5);
+  --shadow:     0 8px 32px rgba(0,77,64,.40);
   --transition: .28s cubic-bezier(.4,0,.2,1);
 }
 
@@ -30,7 +30,8 @@ html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
   font-family: 'Poppins', 'Inter', sans-serif;
-  background: var(--navy);
+  background: linear-gradient(135deg, #00BFA5 0%, #009688 40%, #00796B 100%);
+  min-height: 100vh;
   color: var(--text);
   overflow-x: hidden;
   line-height: 1.65;
@@ -43,7 +44,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- TYPOGRAPHY ---------- */
 .grad-text {
-  background: linear-gradient(135deg, var(--gold), #fff 60%, var(--gold));
+  background: linear-gradient(135deg, #ffffff, #1DE9B6 60%, #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -74,8 +75,8 @@ img { max-width: 100%; display: block; }
 }
 .btn-lg { padding: .85rem 2rem; font-size: 1.05rem; }
 .btn-primary {
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: #0B1120;
+  background: linear-gradient(135deg, #1DE9B6, #00BFA5);
+  color: #003d33;
   font-weight: 700;
   box-shadow: 0 4px 20px var(--gold-glow);
 }
