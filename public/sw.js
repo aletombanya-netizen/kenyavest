@@ -3,7 +3,7 @@
    Provides offline support and asset caching
    ===================================================== */
 
-const CACHE_NAME = 'kenyavest-v11';
+const CACHE_NAME = 'kenyavest-v12';
 const OFFLINE_URL = '/';
 
 // Assets to cache immediately on install
