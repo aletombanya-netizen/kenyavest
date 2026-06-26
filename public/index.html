@@ -161,134 +161,241 @@
     </div>
     <div class="plans-grid">
 
-      <div class="plan-card">
-        <div class="plan-tier">Micro</div>
-        <div class="plan-ico">&#x1F33F;</div>
-        <h3>Micro Plan</h3>
-        <div class="plan-range">KES 500 &ndash; KES 999</div>
-        <div class="plan-rate"><span class="rate-num">3%</span><span class="rate-lbl">Daily Return</span></div>
-        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
-        <ul class="plan-list">
-          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
-          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
-          <li><span class="ck">&#10003;</span> 10% referral commission</li>
-          <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
-          <li><span class="ck">&#10003;</span> Basic Support</li>
-        </ul>
-        <div class="plan-ret">Total Return: <strong>121%</strong></div>
-        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      <!-- MICRO -->
+      <div class="flip-wrapper" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front plan-card">
+            <div class="plan-tier">Micro</div>
+            <div class="plan-ico">&#x1F33F;</div>
+            <h3>Micro Plan</h3>
+            <div class="plan-range">KES 500 &ndash; KES 999</div>
+            <div class="plan-rate"><span class="rate-num">3%</span><span class="rate-lbl">Daily Return</span></div>
+            <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+            <ul class="plan-list">
+              <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+              <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+              <li><span class="ck">&#10003;</span> 10% referral commission</li>
+              <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
+              <li><span class="ck">&#10003;</span> Basic Support</li>
+            </ul>
+            <div class="plan-ret">Total Return: <strong>121%</strong></div>
+            <div class="flip-hint">&#x1F4F1; Tap to flip</div>
+          </div>
+          <div class="flip-back plan-card">
+            <div class="flip-back-ico">&#x1F33F;</div>
+            <h3 class="flip-back-title">Micro Plan</h3>
+            <div class="flip-stat"><span>Min. Deposit</span><strong>KES 500</strong></div>
+            <div class="flip-stat"><span>Daily Return</span><strong>3%</strong></div>
+            <div class="flip-stat"><span>Duration</span><strong>7 Days</strong></div>
+            <div class="flip-stat"><span>Total Return</span><strong class="gold">121%</strong></div>
+            <div class="flip-stat"><span>Referral Bonus</span><strong>10%</strong></div>
+            <button class="btn btn-plan flip-cta" onclick="event.stopPropagation(); openModal('register')">&#x1F680; Invest Now</button>
+          </div>
+        </div>
       </div>
 
-      <div class="plan-card">
-        <div class="plan-tier">Starter</div>
-        <div class="plan-ico">&#x1F331;</div>
-        <h3>Starter Plan</h3>
-        <div class="plan-range">KES 1,000 &ndash; KES 4,999</div>
-        <div class="plan-rate"><span class="rate-num">5%</span><span class="rate-lbl">Daily Return</span></div>
-        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
-        <ul class="plan-list">
-          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
-          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
-          <li><span class="ck">&#10003;</span> 10% referral commission</li>
-          <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
-          <li><span class="ck">&#10003;</span> 24/7 Support</li>
-        </ul>
-        <div class="plan-ret">Total Return: <strong>135%</strong></div>
-        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      <!-- STARTER -->
+      <div class="flip-wrapper" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front plan-card">
+            <div class="plan-tier">Starter</div>
+            <div class="plan-ico">&#x1F331;</div>
+            <h3>Starter Plan</h3>
+            <div class="plan-range">KES 1,000 &ndash; KES 4,999</div>
+            <div class="plan-rate"><span class="rate-num">5%</span><span class="rate-lbl">Daily Return</span></div>
+            <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+            <ul class="plan-list">
+              <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+              <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+              <li><span class="ck">&#10003;</span> 10% referral commission</li>
+              <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
+              <li><span class="ck">&#10003;</span> 24/7 Support</li>
+            </ul>
+            <div class="plan-ret">Total Return: <strong>135%</strong></div>
+            <div class="flip-hint">&#x1F4F1; Tap to flip</div>
+          </div>
+          <div class="flip-back plan-card">
+            <div class="flip-back-ico">&#x1F331;</div>
+            <h3 class="flip-back-title">Starter Plan</h3>
+            <div class="flip-stat"><span>Min. Deposit</span><strong>KES 1,000</strong></div>
+            <div class="flip-stat"><span>Daily Return</span><strong>5%</strong></div>
+            <div class="flip-stat"><span>Duration</span><strong>7 Days</strong></div>
+            <div class="flip-stat"><span>Total Return</span><strong class="gold">135%</strong></div>
+            <div class="flip-stat"><span>Referral Bonus</span><strong>10%</strong></div>
+            <button class="btn btn-plan flip-cta" onclick="event.stopPropagation(); openModal('register')">&#x1F680; Invest Now</button>
+          </div>
+        </div>
       </div>
 
-      <div class="plan-card">
-        <div class="plan-tier">Basic</div>
-        <div class="plan-ico">&#x1F4C8;</div>
-        <h3>Basic Plan</h3>
-        <div class="plan-range">KES 5,000 &ndash; KES 19,999</div>
-        <div class="plan-rate"><span class="rate-num">7%</span><span class="rate-lbl">Daily Return</span></div>
-        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
-        <ul class="plan-list">
-          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
-          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
-          <li><span class="ck">&#10003;</span> 10% referral commission</li>
-          <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
-          <li><span class="ck">&#10003;</span> Priority Support</li>
-        </ul>
-        <div class="plan-ret">Total Return: <strong>149%</strong></div>
-        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      <!-- BASIC -->
+      <div class="flip-wrapper" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front plan-card">
+            <div class="plan-tier">Basic</div>
+            <div class="plan-ico">&#x1F4C8;</div>
+            <h3>Basic Plan</h3>
+            <div class="plan-range">KES 5,000 &ndash; KES 19,999</div>
+            <div class="plan-rate"><span class="rate-num">7%</span><span class="rate-lbl">Daily Return</span></div>
+            <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+            <ul class="plan-list">
+              <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+              <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+              <li><span class="ck">&#10003;</span> 10% referral commission</li>
+              <li><span class="ck">&#10003;</span> M-Pesa withdrawals</li>
+              <li><span class="ck">&#10003;</span> Priority Support</li>
+            </ul>
+            <div class="plan-ret">Total Return: <strong>149%</strong></div>
+            <div class="flip-hint">&#x1F4F1; Tap to flip</div>
+          </div>
+          <div class="flip-back plan-card">
+            <div class="flip-back-ico">&#x1F4C8;</div>
+            <h3 class="flip-back-title">Basic Plan</h3>
+            <div class="flip-stat"><span>Min. Deposit</span><strong>KES 5,000</strong></div>
+            <div class="flip-stat"><span>Daily Return</span><strong>7%</strong></div>
+            <div class="flip-stat"><span>Duration</span><strong>7 Days</strong></div>
+            <div class="flip-stat"><span>Total Return</span><strong class="gold">149%</strong></div>
+            <div class="flip-stat"><span>Referral Bonus</span><strong>10%</strong></div>
+            <button class="btn btn-plan flip-cta" onclick="event.stopPropagation(); openModal('register')">&#x1F680; Invest Now</button>
+          </div>
+        </div>
       </div>
 
-      <div class="plan-card plan-popular">
-        <div class="pop-ribbon">Most Popular</div>
-        <div class="plan-tier">Standard</div>
-        <div class="plan-ico">&#x1F48E;</div>
-        <h3>Standard Plan</h3>
-        <div class="plan-range">KES 20,000 &ndash; KES 49,999</div>
-        <div class="plan-rate"><span class="rate-num">10%</span><span class="rate-lbl">Daily Return</span></div>
-        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
-        <ul class="plan-list">
-          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
-          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
-          <li><span class="ck">&#10003;</span> 10% referral commission</li>
-          <li><span class="ck">&#10003;</span> Instant M-Pesa payouts</li>
-          <li><span class="ck">&#10003;</span> Dedicated account manager</li>
-        </ul>
-        <div class="plan-ret">Total Return: <strong>170%</strong></div>
-        <button class="btn btn-plan btn-plan-hot" onclick="openModal('register')">Invest Now</button>
+      <!-- STANDARD -->
+      <div class="flip-wrapper" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front plan-card plan-popular">
+            <div class="pop-ribbon">Most Popular</div>
+            <div class="plan-tier">Standard</div>
+            <div class="plan-ico">&#x1F48E;</div>
+            <h3>Standard Plan</h3>
+            <div class="plan-range">KES 20,000 &ndash; KES 49,999</div>
+            <div class="plan-rate"><span class="rate-num">10%</span><span class="rate-lbl">Daily Return</span></div>
+            <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+            <ul class="plan-list">
+              <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+              <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+              <li><span class="ck">&#10003;</span> 10% referral commission</li>
+              <li><span class="ck">&#10003;</span> Instant M-Pesa payouts</li>
+              <li><span class="ck">&#10003;</span> Dedicated account manager</li>
+            </ul>
+            <div class="plan-ret">Total Return: <strong>170%</strong></div>
+            <div class="flip-hint">&#x1F4F1; Tap to flip</div>
+          </div>
+          <div class="flip-back plan-card plan-popular">
+            <div class="pop-ribbon">Most Popular</div>
+            <div class="flip-back-ico">&#x1F48E;</div>
+            <h3 class="flip-back-title">Standard Plan</h3>
+            <div class="flip-stat"><span>Min. Deposit</span><strong>KES 20,000</strong></div>
+            <div class="flip-stat"><span>Daily Return</span><strong>10%</strong></div>
+            <div class="flip-stat"><span>Duration</span><strong>7 Days</strong></div>
+            <div class="flip-stat"><span>Total Return</span><strong class="gold">170%</strong></div>
+            <div class="flip-stat"><span>Referral Bonus</span><strong>10%</strong></div>
+            <button class="btn btn-plan btn-plan-hot flip-cta" onclick="event.stopPropagation(); openModal('register')">&#x1F680; Invest Now</button>
+          </div>
+        </div>
       </div>
 
-      <div class="plan-card">
-        <div class="plan-tier">Premium</div>
-        <div class="plan-ico">&#x1F3C6;</div>
-        <h3>Premium Plan</h3>
-        <div class="plan-range">KES 50,000 &ndash; KES 99,999</div>
-        <div class="plan-rate"><span class="rate-num">15%</span><span class="rate-lbl">Daily Return</span></div>
-        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
-        <ul class="plan-list">
-          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
-          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
-          <li><span class="ck">&#10003;</span> 10% referral commission</li>
-          <li><span class="ck">&#10003;</span> Priority instant payouts</li>
-          <li><span class="ck">&#10003;</span> VIP account manager</li>
-        </ul>
-        <div class="plan-ret">Total Return: <strong>205%</strong></div>
-        <button class="btn btn-plan" onclick="openModal('register')">Invest Now</button>
+      <!-- PREMIUM -->
+      <div class="flip-wrapper" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front plan-card">
+            <div class="plan-tier">Premium</div>
+            <div class="plan-ico">&#x1F3C6;</div>
+            <h3>Premium Plan</h3>
+            <div class="plan-range">KES 50,000 &ndash; KES 99,999</div>
+            <div class="plan-rate"><span class="rate-num">15%</span><span class="rate-lbl">Daily Return</span></div>
+            <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+            <ul class="plan-list">
+              <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+              <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+              <li><span class="ck">&#10003;</span> 10% referral commission</li>
+              <li><span class="ck">&#10003;</span> Priority instant payouts</li>
+              <li><span class="ck">&#10003;</span> VIP account manager</li>
+            </ul>
+            <div class="plan-ret">Total Return: <strong>205%</strong></div>
+            <div class="flip-hint">&#x1F4F1; Tap to flip</div>
+          </div>
+          <div class="flip-back plan-card">
+            <div class="flip-back-ico">&#x1F3C6;</div>
+            <h3 class="flip-back-title">Premium Plan</h3>
+            <div class="flip-stat"><span>Min. Deposit</span><strong>KES 50,000</strong></div>
+            <div class="flip-stat"><span>Daily Return</span><strong>15%</strong></div>
+            <div class="flip-stat"><span>Duration</span><strong>7 Days</strong></div>
+            <div class="flip-stat"><span>Total Return</span><strong class="gold">205%</strong></div>
+            <div class="flip-stat"><span>Referral Bonus</span><strong>10%</strong></div>
+            <button class="btn btn-plan flip-cta" onclick="event.stopPropagation(); openModal('register')">&#x1F680; Invest Now</button>
+          </div>
+        </div>
       </div>
 
-      <div class="plan-card plan-vip">
-        <div class="plan-tier">VIP</div>
-        <div class="plan-ico">&#x1F451;</div>
-        <h3>VIP Plan</h3>
-        <div class="plan-range">KES 100,000 &ndash; KES 249,999</div>
-        <div class="plan-rate"><span class="rate-num">20%</span><span class="rate-lbl">Daily Return</span></div>
-        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
-        <ul class="plan-list">
-          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
-          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
-          <li><span class="ck">&#10003;</span> 10% referral commission</li>
-          <li><span class="ck">&#10003;</span> Guaranteed instant payouts</li>
-          <li><span class="ck">&#10003;</span> Personal wealth manager</li>
-        </ul>
-        <div class="plan-ret">Total Return: <strong>240%</strong></div>
-        <button class="btn btn-plan btn-plan-vip" onclick="openModal('register')">Invest Now</button>
+      <!-- VIP -->
+      <div class="flip-wrapper" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front plan-card plan-vip">
+            <div class="plan-tier">VIP</div>
+            <div class="plan-ico">&#x1F451;</div>
+            <h3>VIP Plan</h3>
+            <div class="plan-range">KES 100,000 &ndash; KES 249,999</div>
+            <div class="plan-rate"><span class="rate-num">20%</span><span class="rate-lbl">Daily Return</span></div>
+            <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+            <ul class="plan-list">
+              <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+              <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+              <li><span class="ck">&#10003;</span> 10% referral commission</li>
+              <li><span class="ck">&#10003;</span> Guaranteed instant payouts</li>
+              <li><span class="ck">&#10003;</span> Personal wealth manager</li>
+            </ul>
+            <div class="plan-ret">Total Return: <strong>240%</strong></div>
+            <div class="flip-hint">&#x1F4F1; Tap to flip</div>
+          </div>
+          <div class="flip-back plan-card plan-vip">
+            <div class="flip-back-ico">&#x1F451;</div>
+            <h3 class="flip-back-title">VIP Plan</h3>
+            <div class="flip-stat"><span>Min. Deposit</span><strong>KES 100,000</strong></div>
+            <div class="flip-stat"><span>Daily Return</span><strong>20%</strong></div>
+            <div class="flip-stat"><span>Duration</span><strong>7 Days</strong></div>
+            <div class="flip-stat"><span>Total Return</span><strong class="gold">240%</strong></div>
+            <div class="flip-stat"><span>Referral Bonus</span><strong>10%</strong></div>
+            <button class="btn btn-plan btn-plan-vip flip-cta" onclick="event.stopPropagation(); openModal('register')">&#x1F680; Invest Now</button>
+          </div>
+        </div>
       </div>
 
-      <div class="plan-card plan-elite">
-        <div class="plan-tier">Elite</div>
-        <div class="plan-ico">&#x1F48E;</div>
-        <h3>Elite Plan</h3>
-        <div class="plan-range">KES 250,000+</div>
-        <div class="plan-rate"><span class="rate-num">25%</span><span class="rate-lbl">Daily Return</span></div>
-        <div class="plan-dur">Duration: <strong>7 Days</strong></div>
-        <ul class="plan-list">
-          <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
-          <li><span class="ck">&#10003;</span> Daily earnings credited</li>
-          <li><span class="ck">&#10003;</span> 10% referral commission</li>
-          <li><span class="ck">&#10003;</span> Priority withdrawals</li>
-          <li><span class="ck">&#10003;</span> Exclusive events</li>
-        </ul>
-        <div class="plan-ret">Total Return: <strong>275%</strong></div>
-        <button class="btn btn-plan btn-plan-elite" onclick="openModal('register')">Invest Now</button>
+      <!-- ELITE -->
+      <div class="flip-wrapper" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front plan-card plan-elite">
+            <div class="plan-tier">Elite</div>
+            <div class="plan-ico">&#x1F48E;</div>
+            <h3>Elite Plan</h3>
+            <div class="plan-range">KES 250,000+</div>
+            <div class="plan-rate"><span class="rate-num">25%</span><span class="rate-lbl">Daily Return</span></div>
+            <div class="plan-dur">Duration: <strong>7 Days</strong></div>
+            <ul class="plan-list">
+              <li><span class="ck">&#10003;</span> Capital returned at maturity</li>
+              <li><span class="ck">&#10003;</span> Daily earnings credited</li>
+              <li><span class="ck">&#10003;</span> 10% referral commission</li>
+              <li><span class="ck">&#10003;</span> Priority withdrawals</li>
+              <li><span class="ck">&#10003;</span> Exclusive events</li>
+            </ul>
+            <div class="plan-ret">Total Return: <strong>275%</strong></div>
+            <div class="flip-hint">&#x1F4F1; Tap to flip</div>
+          </div>
+          <div class="flip-back plan-card plan-elite">
+            <div class="flip-back-ico">&#x1F48E;</div>
+            <h3 class="flip-back-title">Elite Plan</h3>
+            <div class="flip-stat"><span>Min. Deposit</span><strong>KES 250,000</strong></div>
+            <div class="flip-stat"><span>Daily Return</span><strong>25%</strong></div>
+            <div class="flip-stat"><span>Duration</span><strong>7 Days</strong></div>
+            <div class="flip-stat"><span>Total Return</span><strong class="gold">275%</strong></div>
+            <div class="flip-stat"><span>Referral Bonus</span><strong>10%</strong></div>
+            <button class="btn btn-plan btn-plan-elite flip-cta" onclick="event.stopPropagation(); openModal('register')">&#x1F680; Invest Now</button>
+          </div>
+        </div>
       </div>
 
     </div>
+
 
     <div class="ref-banner">
       <div class="ref-ico">&#x1F465;</div>

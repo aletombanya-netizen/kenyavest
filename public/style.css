@@ -1348,6 +1348,120 @@ img { max-width: 100%; display: block; }
   will-change: transform;
 }
 
+/* ======================================================
+   3D FLIP CARD SYSTEM
+   ====================================================== */
+.flip-wrapper {
+  perspective: 1000px;
+  cursor: pointer;
+}
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  transition: transform 0.75s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-wrapper.flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+.flip-front,
+.flip-back {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  min-height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+}
+.flip-back {
+  transform: rotateY(180deg);
+  justify-content: center;
+  align-items: center;
+  gap: .7rem;
+  padding: 1.8rem 1.4rem;
+}
+.flip-hint {
+  font-size: .72rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: auto;
+  padding-top: .5rem;
+  letter-spacing: .04em;
+  opacity: .7;
+}
+.flip-back-ico {
+  font-size: 3rem;
+  margin-bottom: .3rem;
+}
+.flip-back-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: .5rem;
+  text-align: center;
+}
+.flip-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: .45rem .7rem;
+  background: rgba(255,255,255,.06);
+  border-radius: 8px;
+  font-size: .85rem;
+}
+.flip-stat span { color: var(--muted); }
+.flip-stat strong { color: #fff; font-weight: 700; }
+.flip-stat strong.gold { color: var(--gold); }
+.flip-cta {
+  width: 100%;
+  margin-top: .8rem;
+  font-size: .95rem;
+}
+
+/* ======================================================
+   BACK NAVIGATION (inner pages)
+   ====================================================== */
+.back-nav {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background: rgba(0,77,64,.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  padding: .6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.back-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: var(--gold);
+  font-size: .88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity .2s;
+}
+.back-nav a:hover { opacity: .75; }
+.back-nav-sep {
+  color: var(--muted);
+  font-size: .8rem;
+}
+.back-nav-title {
+  color: var(--text);
+  font-size: .88rem;
+  font-weight: 500;
+}
+
+
 /* --- WhatsApp Floating Button --- */
 .whatsapp-btn {
   position: fixed;
