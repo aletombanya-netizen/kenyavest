@@ -185,6 +185,19 @@
       <div class="panel" id="panel-users">
         <div class="card"><div class="card-header"><span class="card-title">👥 All Users</span><input class="search-bar" placeholder="🔍 Search..." oninput="filterTable('usrTable',this.value)" /></div><div id="usrTable"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
       </div>
+      
+      <!-- Edit Balance Modal -->
+      <div id="balanceModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center">
+        <div style="background:var(--bg2);padding:24px;border-radius:12px;width:300px;border:1px solid var(--border)">
+          <h3 style="margin-bottom:16px;font-size:16px">Edit Balance</h3>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:8px" id="balModalUser"></p>
+          <input type="number" id="newBalInput" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:white;padding:10px;border-radius:6px;margin-bottom:16px" />
+          <div style="display:flex;gap:10px">
+            <button onclick="saveBalance()" class="btn-approve" style="flex:1">Save</button>
+            <button onclick="document.getElementById('balanceModal').style.display='none'" class="btn-reject" style="flex:1">Cancel</button>
+          </div>
+        </div>
+      </div>
       <div class="panel" id="panel-transactions">
         <div class="card"><div class="card-header"><span class="card-title">📋 All Transactions</span><input class="search-bar" placeholder="🔍 Search..." oninput="filterTable('allTxTable',this.value)" /></div><div id="allTxTable"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
       </div>
@@ -327,15 +340,42 @@
     if (!users) return;
     if (!users.length) return document.getElementById('usrTable').innerHTML = empty('👥','No users found');
     const rows = users.map(u => `
-      <tr>
-        <td><strong>${u.name}</strong></td>
+      <tr style="${u.isBanned ? 'opacity:0.5' : ''}">
+        <td><strong>${u.name}</strong> ${u.isBanned ? '<span class="badge badge-danger">BANNED</span>' : ''}</td>
         <td>${u.phone}</td>
         <td>${u.email||'—'}</td>
-        <td style="color:var(--accent);font-weight:600">KES ${(u.balance||0).toLocaleString()}</td>
+        <td style="color:var(--accent);font-weight:600">
+          KES ${(u.balance||0).toLocaleString()} 
+          <button style="background:none;border:none;cursor:pointer;font-size:12px" onclick="openBalanceModal('${u._id}','${u.name}',${u.balance})">✏️</button>
+        </td>
         <td><span class="badge ${u.role==='admin'?'badge-purple':'badge-info'}">${u.role}</span></td>
-        <td>${fmt(u.createdAt)}</td>
+        <td>
+          ${u.role !== 'admin' ? `<button class="${u.isBanned ? 'btn-approve' : 'btn-reject'}" style="padding:4px 8px;font-size:11px" onclick="toggleBan('${u._id}')">${u.isBanned ? 'Unban' : 'Ban'}</button>` : '—'}
+        </td>
       </tr>`).join('');
-    document.getElementById('usrTable').innerHTML = `<table id="usrTable"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Role</th><th>Joined</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById('usrTable').innerHTML = `<table id="usrTable"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Role</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  let editingUser = null;
+  function openBalanceModal(id, name, bal) {
+    editingUser = id;
+    document.getElementById('balModalUser').textContent = name;
+    document.getElementById('newBalInput').value = bal;
+    document.getElementById('balanceModal').style.display = 'flex';
+  }
+  
+  async function saveBalance() {
+    const bal = document.getElementById('newBalInput').value;
+    const data = await apiPut(`/api/admin/users/${editingUser}/balance`, { balance: bal });
+    document.getElementById('balanceModal').style.display = 'none';
+    showToast('Balance updated');
+    loadUsers();
+  }
+
+  async function toggleBan(id) {
+    const data = await apiPut(`/api/admin/users/${id}/ban`, {});
+    showToast(data.message);
+    loadUsers();
   }
 
   /* ── Transactions ── */
@@ -357,7 +397,7 @@
         <td style="font-weight:600">KES ${(t.amount||0).toLocaleString()}</td>
         <td><span class="badge ${sc[t.status]||'badge-info'}">${t.status}</span></td>
         <td>${fmt(t.createdAt)}</td>
-        ${showActions ? `<td>${t.status==='pending'&&t.type==='withdrawal'?`<button class="btn-approve" onclick="updateTx('${t._id}','completed')">✅</button><button class="btn-reject" onclick="updateTx('${t._id}','rejected')">❌</button>`:'—'}</td>`:'' }
+        ${showActions ? `<td>${(t.status==='pending' && (t.type==='withdrawal' || t.type==='deposit')) ? `<button class="btn-approve" onclick="updateTx('${t._id}','completed')">✅</button><button class="btn-reject" onclick="updateTx('${t._id}','rejected')">❌</button>` : '—'}</td>`:'' }
       </tr>`).join('');
     document.getElementById(container).innerHTML = `<table id="${container}"><thead><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th>${showActions?'<th>Action</th>':''}</tr></thead><tbody>${rows}</tbody></table>`;
   }

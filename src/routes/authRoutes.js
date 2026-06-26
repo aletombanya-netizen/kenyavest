@@ -9,6 +9,7 @@ const {
   resetPassword,
   getUserProfile,
   getUserTransactions,
+  getLeaderboard,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 const { validate, registerValidators, loginValidators } = require('../middleware/validate');
@@ -24,5 +25,6 @@ router.post('/reset-password',  resetPassword);
 // Private
 router.get('/profile',      protect, getUserProfile);
 router.get('/transactions', protect, getUserTransactions);
+router.get('/leaderboard', getLeaderboard);
 
 module.exports = router;

@@ -78,7 +78,11 @@ const payheroCallback = async (req, res) => {
                 reference: `REF-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
                 description: `Referral bonus from ${user.name}`,
               });
-              console.log(`[REFERRAL] Credited KES ${bonus} to ${referrer.phone}`);
+              // Send referral email
+              if (referrer.email) {
+                const { sendReferralBonusEmail } = require('../services/emailService');
+                sendReferralBonusEmail(referrer, bonus, user.name).catch(() => {});
+              }
             }
           }
 

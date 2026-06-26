@@ -297,6 +297,31 @@ const getUserTransactions = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
+// ── Get Leaderboard ───────────────────────────────────────────────
+// @route GET /api/auth/leaderboard
+const getLeaderboard = async (req, res) => {
+  try {
+    const topReferrers = await User.find({ referralEarnings: { $gt: 0 } })
+      .select('name referralEarnings')
+      .sort({ referralEarnings: -1 })
+      .limit(10);
+    
+    // Anonymize names slightly for privacy (e.g. John Doe -> John D.)
+    const formatted = topReferrers.map(user => {
+      const nameParts = user.name.trim().split(' ');
+      const displayName = nameParts.length > 1 
+        ? `${nameParts[0]} ${nameParts[nameParts.length - 1][0]}.` 
+        : user.name;
+      return {
+        name: displayName,
+        earnings: user.referralEarnings
+      };
+    });
+
+    res.json(formatted);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
 module.exports = {
@@ -308,4 +333,5 @@ module.exports = {
   resetPassword,
   getUserProfile,
   getUserTransactions,
+  getLeaderboard,
 };

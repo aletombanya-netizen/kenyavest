@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Exclude private app routes from indexing
+Disallow: /dashboard.html
+Disallow: /admin.html
+Disallow: /profile.html
+Disallow: /transactions.html
+Disallow: /api/
+
+Sitemap: https://kenyavest.onrender.com/sitemap.xml

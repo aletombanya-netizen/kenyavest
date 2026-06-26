@@ -133,10 +133,48 @@ const sendWithdrawalUpdateEmail = (user, amount, status) =>
       </div>`,
   });
 
+const sendDepositApprovedEmail = (user, amount) =>
+  sendMail({
+    to: user.email,
+    subject: '✅ Deposit Approved and Credited — KenyaVest',
+    html: `
+      <div style="font-family:Inter,sans-serif;max-width:560px;margin:auto;background:#111622;color:#e8eaf0;border-radius:16px;overflow:hidden">
+        <div style="padding:30px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <h2 style="color:#4ade80;margin:0">Deposit Approved ✅</h2>
+        </div>
+        <div style="padding:32px">
+          <p>Hi ${user.name}, your deposit of <strong style="color:#F4C430">KES ${amount.toLocaleString()}</strong> has been approved and credited to your balance.</p>
+          <p>You can now use these funds to invest in our plans.</p>
+          <a href="${process.env.APP_URL || 'https://kenyavest.onrender.com'}/dashboard.html" style="display:inline-block;margin-top:16px;background:linear-gradient(135deg,#F4C430,#D4A017);color:#000;padding:12px 28px;border-radius:10px;font-weight:700;text-decoration:none">View Dashboard →</a>
+        </div>
+      </div>`,
+  });
+
+const sendReferralBonusEmail = (referrer, amount, referredName) =>
+  sendMail({
+    to: referrer.email,
+    subject: '🎉 Referral Bonus Earned! — KenyaVest',
+    html: `
+      <div style="font-family:Inter,sans-serif;max-width:560px;margin:auto;background:#111622;color:#e8eaf0;border-radius:16px;overflow:hidden">
+        <div style="padding:30px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <h2 style="color:#a855f7;margin:0">Referral Bonus Earned! 🎉</h2>
+        </div>
+        <div style="padding:32px">
+          <p>Great news, ${referrer.name}!</p>
+          <p>Your friend <strong>${referredName}</strong> just made their first deposit.</p>
+          <p>You have been credited with a referral bonus of <strong style="color:#F4C430">KES ${amount.toLocaleString()}</strong>.</p>
+          <p>Keep sharing your referral link to earn more!</p>
+          <a href="${process.env.APP_URL || 'https://kenyavest.onrender.com'}/dashboard.html" style="display:inline-block;margin-top:16px;background:linear-gradient(135deg,#F4C430,#D4A017);color:#000;padding:12px 28px;border-radius:10px;font-weight:700;text-decoration:none">View Dashboard →</a>
+        </div>
+      </div>`,
+  });
+
 module.exports = {
   sendWelcomeEmail,
   sendOTPEmail,
   sendDepositConfirmation,
   sendROICreditEmail,
   sendWithdrawalUpdateEmail,
+  sendDepositApprovedEmail,
+  sendReferralBonusEmail,
 };

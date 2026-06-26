@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referral Leaderboard — KenyaVest</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#F4C430" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B1120; --bg2: #111622; --bg3: #181f30;
+      --border: rgba(255,255,255,0.08); --text: #e8eaf0; --text2: #8b9ab8;
+      --gold: #F4C430; --accent: #4ade80; --purple: #a855f7;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+    /* Ambient background */
+    .bg-glow { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 60%); top: -200px; right: -200px; pointer-events: none; z-index: 0; }
+
+    /* Header */
+    .header { background: rgba(17,22,34,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+    .header a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--gold); font-weight: 800; font-size: 18px; }
+    .header img { width: 32px; height: 32px; border-radius: 6px; }
+    .header-nav { margin-left: auto; display: flex; gap: 12px; }
+    .nav-link { color: var(--text2); font-size: 14px; font-weight: 500; text-decoration: none; padding: 6px 14px; border-radius: 8px; transition: all .2s; }
+    .nav-link:hover { color: var(--gold); background: rgba(244,196,48,0.1); }
+    .nav-btn { background: linear-gradient(135deg, var(--gold), #D4A017); color: #000; font-weight: 700; padding: 6px 16px; border-radius: 8px; text-decoration: none; transition: transform .2s; }
+    .nav-btn:hover { transform: translateY(-1px); }
+
+    .main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; position: relative; z-index: 10; }
+    
+    .hero { text-align: center; margin-bottom: 40px; }
+    .hero-icon { font-size: 3rem; margin-bottom: 16px; display: inline-block; animation: bounce 2s infinite ease-in-out; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .hero h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+    .hero h1 span { background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+    .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .lb-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
+    .lb-title { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+    .lb-meta { font-size: 12px; color: var(--text2); }
+
+    .lb-list { display: flex; flex-direction: column; }
+    .lb-item { display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); transition: background .2s; }
+    .lb-item:hover { background: rgba(255,255,255,0.02); }
+    .lb-item:last-child { border-bottom: none; }
+    
+    .rank { width: 36px; font-weight: 800; font-size: 1.1rem; color: var(--text2); }
+    .rank-1 { color: #F4C430; font-size: 1.4rem; text-shadow: 0 0 10px rgba(244,196,48,0.4); }
+    .rank-2 { color: #e2e8f0; font-size: 1.3rem; }
+    .rank-3 { color: #cd7f32; font-size: 1.2rem; }
+    
+    .user { flex: 1; display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--gold); border: 1px solid var(--border); }
+    .rank-1 .avatar { background: rgba(244,196,48,0.1); border-color: var(--gold); }
+    .name { font-weight: 600; font-size: 15px; }
+    
+    .earnings { text-align: right; }
+    .earnings-val { font-weight: 800; font-size: 1.1rem; color: var(--purple); }
+    .earnings-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .empty { padding: 48px 24px; text-align: center; color: var(--text2); }
+    
+    .promo { margin-top: 32px; background: rgba(244,196,48,0.05); border: 1px solid rgba(244,196,48,0.2); border-radius: 16px; padding: 24px; text-align: center; }
+    .promo h3 { color: var(--gold); margin-bottom: 8px; font-size: 1.1rem; }
+    .promo p { color: var(--text); font-size: 14px; margin-bottom: 16px; }
+    .promo a { display: inline-block; background: var(--gold); color: #000; padding: 10px 24px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 14px; }
+
+    @media (max-width: 600px) {
+      .header-nav .nav-link { display: none; }
+      .lb-item { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<header class="header">
+  <a href="/">
+    <img src="/icon-192.png" alt="KFI" />
+    KenyaVest
+  </a>
+  <div class="header-nav" id="navLinks">
+    <a href="/login.html" class="nav-link">Login</a>
+    <a href="/register.html" class="nav-btn">Start Investing</a>
+  </div>
+</header>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-icon">🏆</div>
+    <h1>Top <span>Referrers</span></h1>
+    <p>See who's earning the most by inviting their friends to KenyaVest. You earn 10% instantly on every first deposit!</p>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-header">
+      <div class="lb-title">🚀 All-Time Leaders</div>
+      <div class="lb-meta">Top 10</div>
+    </div>
+    <div class="lb-list" id="lbList">
+      <div class="empty">Loading leaderboard...</div>
+    </div>
+  </div>
+
+  <div class="promo">
+    <h3>Want to see your name here?</h3>
+    <p>Share your unique referral link with friends. When they make their first deposit, you instantly receive 10% as a bonus!</p>
+    <a href="/dashboard.html" id="promoBtn">Get Your Referral Link</a>
+  </div>
+</div>
+
+<script>
+  // Auth state check to update header
+  const token = localStorage.getItem('token');
+  if (token) {
+    document.getElementById('navLinks').innerHTML = `
+      <a href="/dashboard.html" class="nav-btn">Go to Dashboard →</a>
+    `;
+    document.getElementById('promoBtn').textContent = 'Share Your Link Now';
+  }
+
+  function fmt(n) { return 'KES ' + Number(n).toLocaleString('en-KE', { minimumFractionDigits: 0 }); }
+
+  async function loadLeaderboard() {
+    try {
+      const res = await fetch('/api/auth/leaderboard');
+      const data = await res.json();
+      
+      const list = document.getElementById('lbList');
+      if (!data || data.length === 0) {
+        list.innerHTML = '<div class="empty">No referral earnings yet. Be the first!</div>';
+        return;
+      }
+
+      list.innerHTML = data.map((user, i) => {
+        const rank = i + 1;
+        const rClass = rank <= 3 ? `rank-${rank}` : '';
+        const icon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+        const initials = user.name.substring(0, 2).toUpperCase();
+
+        return `
+          <div class="lb-item">
+            <div class="rank ${rClass}">${icon}</div>
+            <div class="user">
+              <div class="avatar">${initials}</div>
+              <div class="name">${user.name}</div>
+            </div>
+            <div class="earnings">
+              <div class="earnings-val">${fmt(user.earnings)}</div>
+              <div class="earnings-label">Earned</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      document.getElementById('lbList').innerHTML = '<div class="empty">Failed to load leaderboard.</div>';
+    }
+  }
+
+  loadLeaderboard();
+</script>
+<script src="/js/pwa.js"></script>
+</body>
+</html>
