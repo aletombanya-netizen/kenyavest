@@ -297,6 +297,8 @@ const getUserTransactions = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
+};
+
 // ── Get Leaderboard ───────────────────────────────────────────────
 // @route GET /api/auth/leaderboard
 const getLeaderboard = async (req, res) => {
