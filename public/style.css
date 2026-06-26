@@ -528,6 +528,7 @@ img { max-width: 100%; display: block; }
 .plans-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-auto-rows: 1fr;
   gap: 1.2rem;
   margin-bottom: 3rem;
 }
@@ -1354,12 +1355,14 @@ img { max-width: 100%; display: block; }
 .flip-wrapper {
   perspective: 1000px;
   cursor: pointer;
+  /* Must have a defined height for absolute children */
+  min-height: 460px;
 }
 .flip-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 420px;
+  min-height: 460px;
   transition: transform 0.75s cubic-bezier(0.4, 0.2, 0.2, 1);
   transform-style: preserve-3d;
 }
@@ -1371,19 +1374,20 @@ img { max-width: 100%; display: block; }
   position: absolute;
   top: 0; left: 0;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-lg);
+  box-sizing: border-box;
 }
 .flip-back {
   transform: rotateY(180deg);
   justify-content: center;
   align-items: center;
-  gap: .7rem;
-  padding: 1.8rem 1.4rem;
+  gap: .65rem;
+  padding: 1.6rem 1.2rem;
 }
 .flip-hint {
   font-size: .72rem;
