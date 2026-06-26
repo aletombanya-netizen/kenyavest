@@ -170,7 +170,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
   `;
-  document.head.insertAdjacentHTML('beforeend', \`<style>\${toastCSS}</style>\`);
+  document.head.insertAdjacentHTML('beforeend', '<style>' + toastCSS + '</style>');
   
   const toastContainer = document.createElement('div');
   toastContainer.className = 'sp-toast';
@@ -202,8 +202,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const isDep = tx.type === 'deposit';
     
     document.getElementById('spIcon').textContent = isDep ? '💰' : '🚀';
-    document.getElementById('spText').innerHTML = \`<strong>\${tx.name}</strong> just \${isDep ? 'deposited' : 'withdrew'} <span style="color:\${isDep ? '#F4C430' : '#4ade80'}">KES \${tx.amount.toLocaleString()}</span>\`;
-    document.getElementById('spTime').textContent = tx.timeAgo <= 0 ? 'Just now' : \`\${tx.timeAgo} mins ago\`;
+    document.getElementById('spText').innerHTML = '<strong>' + tx.name + '</strong> just ' + (isDep ? 'deposited' : 'withdrew') + ' <span style="color:' + (isDep ? '#F4C430' : '#4ade80') + '">KES ' + tx.amount.toLocaleString() + '</span>';
+    document.getElementById('spTime').textContent = tx.timeAgo <= 0 ? 'Just now' : tx.timeAgo + ' mins ago';
     
     toastContainer.classList.add('show');
     
