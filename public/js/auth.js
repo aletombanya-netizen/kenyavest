@@ -12,13 +12,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const otpSection = document.getElementById('otpSection');
   const forgotSection = document.getElementById('forgotSection');
   const resetSection = document.getElementById('resetSection');
+  const verifyPhoneSection = document.getElementById('verifyPhoneSection');
+  
   const showForgotBtn = document.getElementById('showForgotBtn');
+  const showVerifyBtn = document.getElementById('showVerifyBtn');
+  const verifyPhoneForm = document.getElementById('verifyPhoneForm');
 
   if (showForgotBtn) {
     showForgotBtn.addEventListener('click', (e) => {
       e.preventDefault();
       if (loginSection) loginSection.style.display = 'none';
       if (forgotSection) forgotSection.style.display = 'block';
+    });
+  }
+
+  if (showVerifyBtn) {
+    showVerifyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (loginSection) loginSection.style.display = 'none';
+      if (verifyPhoneSection) verifyPhoneSection.style.display = 'block';
     });
   }
 
@@ -217,6 +229,34 @@ document.addEventListener('DOMContentLoaded', () => {
           if (loginSection) loginSection.style.display = 'block';
         } else {
           showError(data.message || 'Failed to reset password');
+        }
+      } catch (err) {
+        showError('Network error');
+      }
+    });
+  }
+
+  if (verifyPhoneForm) {
+    verifyPhoneForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('verifyPhoneInput').value.trim();
+      if (!phone) return showError('Enter your phone number');
+      
+      try {
+        const res = await fetch('/api/auth/resend-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          currentPhone = phone;
+          if (verifyPhoneSection) verifyPhoneSection.style.display = 'none';
+          if (otpSection) otpSection.style.display = 'block';
+          showSuccess(data.message || 'Verification OTP sent!');
+        } else {
+          showError(data.message || 'Failed to send OTP');
         }
       } catch (err) {
         showError('Network error');

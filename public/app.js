@@ -42,7 +42,7 @@ document.getElementById('heroRegBtn').addEventListener('click',     () => openMo
 let _currentPhone = '';
 
 function showPanel(id) {
-  ['regForm','logForm','otpForm','forgotForm','resetForm'].forEach(p => {
+  ['regForm','logForm','otpForm','forgotForm','resetForm','verifyPhonePanel'].forEach(p => {
     const el = document.getElementById(p);
     if (el) el.style.display = p === id ? 'block' : 'none';
   });
@@ -56,6 +56,7 @@ function switchTab(tab) {
 }
 
 function openForgotPassword() { showPanel('forgotForm'); }
+function openVerifyPhone() { showPanel('verifyPhonePanel'); }
 
 // ---- FORM SUBMISSIONS ----
 async function submitReg(e) {
@@ -165,6 +166,30 @@ async function resendOTP() {
       showToast('✅ ' + data.message);
     } else {
       showToast('❌ ' + (data.message || 'Failed to resend OTP'));
+    }
+  } catch (err) {
+    showToast('❌ Network error');
+  }
+}
+
+async function submitVerifyPhone() {
+  const phone = document.getElementById('verifyPhoneInputModal').value.trim();
+  if (!phone) return showToast('❌ Enter your phone number');
+
+  try {
+    const res = await fetch('/api/auth/resend-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone })
+    });
+    const data = await res.json();
+    
+    if (res.ok) {
+      _currentPhone = phone;
+      showToast('✅ Verification OTP sent!');
+      showPanel('otpForm');
+    } else {
+      showToast('❌ ' + (data.message || 'Failed to send OTP'));
     }
   } catch (err) {
     showToast('❌ Network error');

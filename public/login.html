@@ -41,7 +41,22 @@
     </form>
     <div class="auth-links">
       <a href="#" id="showForgotBtn">Forgot Password?</a><br><br>
+      <a href="#" id="showVerifyBtn">Verify Account</a><br><br>
       Don't have an account? <a href="/register.html">Sign Up</a>
+    </div>
+  </div>
+
+  <div id="verifyPhoneSection" style="display: none;">
+    <p style="text-align: center; margin-bottom: 20px;">Enter your phone number to receive a verification OTP.</p>
+    <form id="verifyPhoneForm">
+      <div class="form-group">
+        <label for="verifyPhoneInput">Phone Number</label>
+        <input type="text" id="verifyPhoneInput" placeholder="e.g. 0712345678" required>
+      </div>
+      <button type="submit" class="btn">Send Verification OTP</button>
+    </form>
+    <div class="auth-links">
+      <a href="/login.html">Back to Login</a>
     </div>
   </div>
 
