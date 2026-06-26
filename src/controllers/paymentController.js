@@ -122,14 +122,28 @@ const getTransactions = async (req, res) => {
 // @route POST /api/payments/withdraw
 const requestWithdrawal = async (req, res) => {
   try {
-    const { amount, phone } = req.body;
+    const { amount, phone, pin } = req.body;
 
     if (!amount || amount < 50) {
       return res.status(400).json({ message: 'Minimum withdrawal amount is KES 50' });
     }
+    if (!pin || pin.length !== 4) {
+      return res.status(400).json({ message: 'A 4-digit PIN is required for withdrawals' });
+    }
 
     const user = await User.findById(req.user._id);
     if (!user) return res.status(404).json({ message: 'User not found' });
+    
+    // Verify PIN
+    if (!user.withdrawalPin) {
+      return res.status(400).json({ message: 'You must set a withdrawal PIN first' });
+    }
+    const bcrypt = require('bcryptjs');
+    const isMatch = await bcrypt.compare(pin, user.withdrawalPin);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid withdrawal PIN' });
+    }
+
     if (user.balance < amount) {
       return res.status(400).json({ message: 'Insufficient balance' });
     }

@@ -28,6 +28,10 @@ const userSchema = mongoose.Schema(
       required: true,
       minlength: 8,
     },
+    withdrawalPin: {
+      type: String,
+      default: null,
+    },
     balance: {
       type: Number,
       default: 0,

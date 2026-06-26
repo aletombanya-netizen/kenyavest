@@ -233,9 +233,9 @@ const forgotPassword = async (req, res) => {
     });
     
     // Send OTP email
-    await sendOTPEmail(user.email, code, 'reset');
+    const emailSent = await sendOTPEmail(user.email, code, 'reset');
     console.log(`[OTP - PASSWORD RESET] Email: ${email} | Code: ${code}`);
-    res.json({ message: 'OTP sent. Check the Render logs for the code.' });
+    res.json({ message: emailSent ? 'Password reset code sent to your email.' : `Your reset code is: ${code}` });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -356,6 +356,36 @@ const setupAdmin = async (req, res) => {
   }
 };
 
+// ── Set Withdrawal PIN ──────────────────────────────────────────────
+// @route POST /api/auth/set-pin
+const setPin = async (req, res) => {
+  try {
+    const { pin } = req.body;
+    if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+      return res.status(400).json({ message: 'PIN must be exactly 4 digits' });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    
+    if (user.withdrawalPin) {
+      return res.status(400).json({ message: 'PIN is already set. Contact support to reset it.' });
+    }
+
+    // Hash the PIN (reusing password hashing mechanism from User model is overkill for a 4 digit PIN, 
+    // but standard practice is to hash it. For simplicity we'll hash it, or simply use bcrypt here).
+    const bcrypt = require('bcryptjs');
+    const salt = await bcrypt.genSalt(10);
+    user.withdrawalPin = await bcrypt.hash(pin, salt);
+    
+    await user.save();
+    res.json({ message: 'Withdrawal PIN set successfully' });
+  } catch (error) {
+    console.error('[Set PIN Error]', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -367,4 +397,5 @@ module.exports = {
   getUserTransactions,
   getLeaderboard,
   setupAdmin,
+  setPin,
 };

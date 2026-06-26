@@ -302,10 +302,11 @@ document.getElementById('withdrawForm').addEventListener('submit', async e => {
   const msgEl  = document.getElementById('withdrawMsg');
   const amount = parseFloat(document.getElementById('withdrawAmount').value);
   const phone  = document.getElementById('withdrawPhone').value.trim();
+  const pin    = document.getElementById('withdrawPin').value.trim();
   msgEl.textContent = 'Submitting request...';
   msgEl.className   = 'modal-msg';
   try {
-    const data = await api('POST', '/api/payments/withdraw', { amount, phone });
+    const data = await api('POST', '/api/payments/withdraw', { amount, phone, pin });
     if (data.transaction || data.message?.includes('submitted')) {
       msgEl.textContent = '✅ ' + (data.message || 'Withdrawal request submitted!');
       msgEl.className   = 'modal-msg success';
@@ -313,6 +314,41 @@ document.getElementById('withdrawForm').addEventListener('submit', async e => {
       setTimeout(() => { closeAllModals(); loadDashboard(); }, 2500);
     } else {
       msgEl.textContent = '❌ ' + (data.message || 'Failed');
+      msgEl.className   = 'modal-msg error';
+    }
+  } catch {
+    msgEl.textContent = '❌ Network error. Please try again.';
+    msgEl.className   = 'modal-msg error';
+  }
+});
+
+// ── Set PIN Form ─────────────────────────────────────
+document.getElementById('setPinForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const msgEl = document.getElementById('setPinMsg');
+  const pin   = document.getElementById('pinInput').value.trim();
+  const conf  = document.getElementById('pinConfirm').value.trim();
+  if (pin !== conf) {
+    msgEl.textContent = '❌ PINs do not match';
+    msgEl.className   = 'modal-msg error';
+    return;
+  }
+  if (!/^\d{4}$/.test(pin)) {
+    msgEl.textContent = '❌ PIN must be exactly 4 digits';
+    msgEl.className   = 'modal-msg error';
+    return;
+  }
+  msgEl.textContent = 'Saving PIN...';
+  msgEl.className   = 'modal-msg';
+  try {
+    const data = await api('POST', '/api/auth/set-pin', { pin });
+    if (data.message?.toLowerCase().includes('success')) {
+      msgEl.textContent = '✅ PIN set successfully! You can now make withdrawals.';
+      msgEl.className   = 'modal-msg success';
+      e.target.reset();
+      setTimeout(() => closeAllModals(), 2500);
+    } else {
+      msgEl.textContent = '❌ ' + (data.message || 'Failed to set PIN');
       msgEl.className   = 'modal-msg error';
     }
   } catch {

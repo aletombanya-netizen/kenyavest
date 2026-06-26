@@ -11,6 +11,7 @@ const {
   getUserTransactions,
   getLeaderboard,
   setupAdmin,
+  setPin,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 const { validate, registerValidators, loginValidators } = require('../middleware/validate');
@@ -23,6 +24,7 @@ router.post('/resend-otp',      resendOTP);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password',  resetPassword);
 router.get('/setup-admin',      setupAdmin);
+router.post('/set-pin',         protect, setPin);
 
 // Private
 router.get('/profile',      protect, getUserProfile);

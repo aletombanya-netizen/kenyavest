@@ -274,6 +274,11 @@
     <form id="withdrawForm">
       <div class="form-group"><label>Amount (KES)</label><input type="number" id="withdrawAmount" min="50" placeholder="e.g. 500" required /></div>
       <div class="form-group"><label>M-Pesa Phone</label><input type="tel" id="withdrawPhone" placeholder="e.g. 0712345678" required /></div>
+      <div class="form-group">
+        <label>🔐 4-Digit Withdrawal PIN</label>
+        <input type="password" id="withdrawPin" maxlength="4" placeholder="••••" inputmode="numeric" pattern="\d{4}" required style="letter-spacing:6px; font-size:18px; text-align:center;" />
+        <div style="font-size:11px;color:var(--text2);margin-top:4px;">Haven't set a PIN yet? <span style="color:var(--gold);cursor:pointer;" onclick="closeAllModals(); document.getElementById('setPinModal').classList.add('open')">Set it now →</span></div>
+      </div>
       <button type="submit" class="modal-btn" style="background:linear-gradient(135deg,#f59e0b,#b45309)">Request Withdrawal →</button>
     </form>
     <div class="modal-msg" id="withdrawMsg"></div>
@@ -303,6 +308,27 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ─ Set PIN Modal ─ -->
+<div class="modal" id="setPinModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAllModals()">×</button>
+    <div class="modal-title">🔐 Set Withdrawal PIN</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:20px;">Set a 4-digit PIN to secure your withdrawals. You will be asked for this PIN every time you request a withdrawal.</p>
+    <form id="setPinForm">
+      <div class="form-group">
+        <label>Enter 4-Digit PIN</label>
+        <input type="password" id="pinInput" maxlength="4" placeholder="••••" inputmode="numeric" pattern="\d{4}" required style="letter-spacing:6px; font-size:24px; text-align:center;" />
+      </div>
+      <div class="form-group">
+        <label>Confirm PIN</label>
+        <input type="password" id="pinConfirm" maxlength="4" placeholder="••••" inputmode="numeric" pattern="\d{4}" required style="letter-spacing:6px; font-size:24px; text-align:center;" />
+      </div>
+      <button type="submit" class="modal-btn">Save PIN →</button>
+    </form>
+    <div class="modal-msg" id="setPinMsg"></div>
+  </div>
+</div>
 
 <script src="/js/dashboard.js"></script>
 <script src="/js/pwa.js"></script>

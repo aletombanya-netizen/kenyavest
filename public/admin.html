@@ -11,6 +11,7 @@
   <meta name="theme-color" content="#F4C430" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -177,6 +178,18 @@
     <div class="content">
       <div class="panel active" id="panel-dashboard">
         <div class="stats-grid" id="statsGrid"><div class="loading"><span class="spinner"></span> Loading stats...</div></div>
+        
+        <div style="display:flex; gap:20px; margin-bottom:28px; flex-wrap:wrap;">
+          <div class="card" style="flex:2; min-width:300px;">
+            <div class="card-header"><span class="card-title">Deposits (Last 30 Days)</span></div>
+            <div style="height:300px; padding:16px"><canvas id="depositsChart"></canvas></div>
+          </div>
+          <div class="card" style="flex:1; min-width:300px;">
+            <div class="card-header"><span class="card-title">Transactions Overview</span></div>
+            <div style="height:300px; padding:16px"><canvas id="statusChart"></canvas></div>
+          </div>
+        </div>
+
         <div class="card"><div class="card-header"><span class="card-title">Recent Transactions</span></div><div id="recentTxTable"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
       </div>
       <div class="panel" id="panel-withdrawals">
@@ -290,6 +303,9 @@
     ({ dashboard: loadDashboard, withdrawals: loadWithdrawals, users: loadUsers, transactions: loadTransactions, messages: loadMessages })[currentPanel]?.();
   }
 
+  let depChart = null;
+  let stChart = null;
+
   /* ── Dashboard ── */
   async function loadDashboard() {
     const [users, txs] = await Promise.all([api('/api/admin/users'), api('/api/admin/transactions')]);
@@ -306,6 +322,77 @@
     `;
     const recent = [...txs].sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).slice(0,10);
     renderTxHTML('recentTxTable', recent, false);
+
+    // ── Charts ──
+    renderAdminCharts(txs);
+  }
+
+  function renderAdminCharts(txs) {
+    if (depChart) depChart.destroy();
+    if (stChart) stChart.destroy();
+    
+    // Process Data for Deposits Line Chart (Last 30 Days)
+    const deposits = txs.filter(t => t.type === 'deposit' && t.status === 'completed');
+    const last30Days = [...Array(30)].map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (29 - i));
+      return d.toISOString().split('T')[0];
+    });
+    
+    const depositData = last30Days.map(date => {
+      return deposits
+        .filter(t => t.createdAt.startsWith(date))
+        .reduce((sum, t) => sum + t.amount, 0);
+    });
+
+    const ctxDep = document.getElementById('depositsChart').getContext('2d');
+    depChart = new Chart(ctxDep, {
+      type: 'line',
+      data: {
+        labels: last30Days.map(d => d.slice(5)), // MM-DD
+        datasets: [{
+          label: 'Deposits (KES)',
+          data: depositData,
+          borderColor: '#4ade80',
+          backgroundColor: 'rgba(74,222,128,0.1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b9ab8' } },
+          y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b9ab8' } }
+        }
+      }
+    });
+
+    // Process Data for Status Doughnut
+    const types = { 'deposit': 0, 'withdrawal': 0, 'roi': 0 };
+    txs.forEach(t => { if(types[t.type] !== undefined) types[t.type] += t.amount; });
+
+    const ctxSt = document.getElementById('statusChart').getContext('2d');
+    stChart = new Chart(ctxSt, {
+      type: 'doughnut',
+      data: {
+        labels: ['Deposits', 'Withdrawals', 'ROI Paid'],
+        datasets: [{
+          data: [types.deposit, types.withdrawal, types.roi],
+          backgroundColor: ['#4ade80', '#ef4444', '#a855f7'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#e8eaf0' } }
+        }
+      }
+    });
   }
 
   /* ── Withdrawals ── */
