@@ -30,6 +30,8 @@ html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
   font-family: 'Poppins', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background-color: #061A1C;
   background-image:
     radial-gradient(ellipse at 70% 10%, rgba(0,229,195,0.07) 0%, transparent 55%),
