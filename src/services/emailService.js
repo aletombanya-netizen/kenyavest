@@ -109,10 +109,10 @@ const sendWithdrawalUpdateEmail = (user, amount, status) =>
       </div>`,
   });
 
-const sendOTPEmail = (phone, code, purpose) =>
+const sendOTPEmail = (email, code, purpose) =>
   sendMail({
-    to: phone, // fallback — normally would be email
-    subject: `${purpose === 'reset' ? '🔑 Password Reset' : '📱 Phone Verification'} — KenyaVest`,
+    to: email,
+    subject: `${purpose === 'reset' ? '🔑 Password Reset' : '✉️ Email Verification'} — KenyaVest`,
     html: `
       <div style="font-family:Inter,sans-serif;max-width:560px;margin:auto;background:#111622;color:#e8eaf0;border-radius:16px;overflow:hidden">
         <div style="padding:32px;text-align:center">

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  let currentPhone = '';
+  let currentEmail = '';
 
   // Check if already logged in
   if (localStorage.getItem('token') && (loginForm || registerForm)) {
@@ -66,14 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email') ? document.getElementById('email').value : '';
       const password = document.getElementById('password').value;
 
       try {
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone, password })
+          body: JSON.stringify({ email, password })
         });
         const data = await res.json();
 
@@ -82,10 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem('userInfo', JSON.stringify(data));
           window.location.href = '/dashboard.html';
         } else if (res.status === 403 && data.requiresVerification) {
-          currentPhone = data.phone || phone;
+          currentEmail = data.email || email;
           if (loginSection) loginSection.style.display = 'none';
           if (otpSection) otpSection.style.display = 'block';
-          showError('Please verify your phone number first.');
+          showError('Please verify your email address first.');
         } else {
           showError(data.message || 'Login failed');
         }
@@ -100,21 +100,22 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const name = document.getElementById('name').value;
       const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
       try {
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, phone, password })
+          body: JSON.stringify({ name, phone, email, password })
         });
         const data = await res.json();
 
         if (res.status === 201 && data.requiresVerification) {
-          currentPhone = data.phone || phone;
+          currentEmail = data.email || email;
           if (registerSection) registerSection.style.display = 'none';
           if (otpSection) otpSection.style.display = 'block';
-          showSuccess('Account created! Please verify your phone number.');
+          showSuccess('Account created! Please verify your email.');
         } else if (res.ok) {
           localStorage.setItem('token', data.token);
           localStorage.setItem('userInfo', JSON.stringify(data));
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('/api/auth/verify-phone', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: currentPhone, code })
+          body: JSON.stringify({ email: currentEmail, code })
         });
         const data = await res.json();
 
@@ -163,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('/api/auth/resend-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: currentPhone })
+          body: JSON.stringify({ email: currentEmail })
         });
         const data = await res.json();
         
@@ -181,22 +182,22 @@ document.addEventListener('DOMContentLoaded', () => {
   if (forgotForm) {
     forgotForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const phone = document.getElementById('forgotPhone').value.trim();
-      if (!phone) return showError('Enter your phone number');
+      const email = document.getElementById('forgotEmail') ? document.getElementById('forgotEmail').value.trim() : document.getElementById('forgotPhone').value.trim();
+      if (!email) return showError('Enter your email address');
       
       try {
         const res = await fetch('/api/auth/forgot-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone })
+          body: JSON.stringify({ email })
         });
         const data = await res.json();
         
         if (res.ok) {
-          currentPhone = phone;
+          currentEmail = email;
           if (forgotSection) forgotSection.style.display = 'none';
           if (resetSection) resetSection.style.display = 'block';
-          showSuccess(data.message || 'OTP sent!');
+          showSuccess(data.message || 'OTP sent to your email!');
         } else {
           showError(data.message || 'Failed to send OTP');
         }
@@ -219,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('/api/auth/reset-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: currentPhone, code, newPassword })
+          body: JSON.stringify({ email: currentEmail, code, newPassword })
         });
         const data = await res.json();
         
@@ -239,22 +240,22 @@ document.addEventListener('DOMContentLoaded', () => {
   if (verifyPhoneForm) {
     verifyPhoneForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const phone = document.getElementById('verifyPhoneInput').value.trim();
-      if (!phone) return showError('Enter your phone number');
+      const email = document.getElementById('verifyPhoneInput') ? document.getElementById('verifyPhoneInput').value.trim() : '';
+      if (!email) return showError('Enter your email');
       
       try {
         const res = await fetch('/api/auth/resend-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone })
+          body: JSON.stringify({ email })
         });
         const data = await res.json();
         
         if (res.ok) {
-          currentPhone = phone;
+          currentEmail = email;
           if (verifyPhoneSection) verifyPhoneSection.style.display = 'none';
           if (otpSection) otpSection.style.display = 'block';
-          showSuccess(data.message || 'Verification OTP sent!');
+          showSuccess(data.message || 'Verification OTP sent to your email!');
         } else {
           showError(data.message || 'Failed to send OTP');
         }

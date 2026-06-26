@@ -98,8 +98,8 @@
     <p class="subtitle">Login to access your investment dashboard</p>
     <form id="loginForm">
       <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" placeholder="e.g. 0712345678" required autocomplete="tel">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
@@ -117,9 +117,9 @@
 
   <!-- OTP SECTION (auto-shown for unverified users) -->
   <div id="otpSection" class="section">
-    <div class="step-icon">📱</div>
-    <h2>Verify Your Phone</h2>
-    <p class="subtitle" id="otpSubtitle">A 6-digit code has been sent to your phone. Check the server logs for the code.</p>
+    <div class="step-icon">✉️</div>
+    <h2>Verify Your Email</h2>
+    <p class="subtitle" id="otpSubtitle">A 6-digit code has been sent to your email.</p>
     <form id="otpForm">
       <div class="form-group">
         <label for="otpCode">OTP Code</label>
@@ -139,11 +139,11 @@
   <div id="forgotSection" class="section">
     <div class="step-icon">🔑</div>
     <h2>Reset Password</h2>
-    <p class="subtitle">Enter your registered phone number to receive an OTP.</p>
+    <p class="subtitle">Enter your registered email address to receive an OTP.</p>
     <form id="forgotForm">
       <div class="form-group">
-        <label for="forgotPhone">Phone Number</label>
-        <input type="tel" id="forgotPhone" placeholder="e.g. 0712345678" required>
+        <label for="forgotEmail">Email Address</label>
+        <input type="email" id="forgotEmail" placeholder="you@example.com" required>
       </div>
       <button type="submit" class="btn" id="forgotBtn">Send OTP →</button>
     </form>
@@ -154,7 +154,7 @@
   <div id="resetSection" class="section">
     <div class="step-icon">✅</div>
     <h2>Set New Password</h2>
-    <p class="subtitle">Enter the OTP from the server logs and your new password.</p>
+    <p class="subtitle">Enter the OTP from your email and your new password.</p>
     <form id="resetForm">
       <div class="form-group">
         <label for="resetOtpCode">OTP Code</label>
@@ -172,7 +172,7 @@
 </div>
 
 <script>
-  let currentPhone = '';
+  let currentEmail = '';
 
   // If already logged in, redirect
   if (localStorage.getItem('token')) {
@@ -200,7 +200,7 @@
   // ── LOGIN ──────────────────────────────────────────────────────────
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
     const btn = document.getElementById('loginBtn');
     btn.disabled = true; btn.textContent = 'Logging in…';
@@ -208,7 +208,7 @@
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, password })
+        body: JSON.stringify({ email, password })
       });
       const data = await res.json();
 
@@ -219,10 +219,10 @@
         setTimeout(() => window.location.href = '/dashboard.html', 1000);
       } else if (res.status === 403 && data.requiresVerification) {
         // Unverified user — auto-show OTP window
-        currentPhone = data.phone || phone;
+        currentEmail = data.email || email;
         document.getElementById('otpSubtitle').textContent =
-          `A 6-digit code has been sent to ${currentPhone}. Check the server logs for the code.`;
-        showMsg('⚠️ Please verify your phone number to continue.', 'warning');
+          `A 6-digit code has been sent to ${currentEmail}.`;
+        showMsg('⚠️ Please verify your email to continue.', 'warning');
         showSection('otpSection');
       } else {
         showMsg('❌ ' + (data.message || 'Login failed.'), 'error');
@@ -245,7 +245,7 @@
     try {
       const res = await fetch('/api/auth/verify-phone', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: currentPhone, code })
+        body: JSON.stringify({ email: currentEmail, code })
       });
       const data = await res.json();
 
@@ -266,14 +266,14 @@
 
   // ── RESEND OTP ────────────────────────────────────────────────────
   document.getElementById('resendOtpLink').addEventListener('click', async () => {
-    if (!currentPhone) return;
+    if (!currentEmail) return;
     try {
       const res = await fetch('/api/auth/resend-otp', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: currentPhone })
+        body: JSON.stringify({ email: currentEmail })
       });
       const data = await res.json();
-      showMsg(res.ok ? '✅ New OTP sent! Check the server logs.' : '❌ ' + (data.message || 'Failed to resend.'), res.ok ? 'success' : 'error');
+      showMsg(res.ok ? '✅ New OTP sent! Check your email.' : '❌ ' + (data.message || 'Failed to resend.'), res.ok ? 'success' : 'error');
     } catch (err) {
       showMsg('❌ Network error.', 'error');
     }
@@ -287,21 +287,21 @@
 
   document.getElementById('forgotForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const phone = document.getElementById('forgotPhone').value.trim();
-    if (!phone) return showMsg('❌ Enter your phone number.', 'error');
+    const email = document.getElementById('forgotEmail').value.trim();
+    if (!email) return showMsg('❌ Enter your email address.', 'error');
     const btn = document.getElementById('forgotBtn');
     btn.disabled = true; btn.textContent = 'Sending…';
 
     try {
       const res = await fetch('/api/auth/forgot-password', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone })
+        body: JSON.stringify({ email })
       });
       const data = await res.json();
 
       if (res.ok) {
-        currentPhone = phone;
-        showMsg('✅ OTP sent! Check the server logs.', 'success');
+        currentEmail = email;
+        showMsg('✅ OTP sent! Check your email.', 'success');
         setTimeout(() => showSection('resetSection'), 800);
       } else {
         showMsg('❌ ' + (data.message || 'Failed to send OTP.'), 'error');
@@ -326,7 +326,7 @@
     try {
       const res = await fetch('/api/auth/reset-password', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: currentPhone, code, newPassword })
+        body: JSON.stringify({ email: currentEmail, code, newPassword })
       });
       const data = await res.json();
 

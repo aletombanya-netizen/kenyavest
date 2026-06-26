@@ -39,7 +39,7 @@ document.getElementById('registerNavBtn').addEventListener('click', () => openMo
 document.getElementById('heroRegBtn').addEventListener('click',     () => openModal('register'));
 
 // ---- TAB SWITCH (includes extra panels) ----
-let _currentPhone = '';
+let _currentEmail = '';
 
 function showPanel(id) {
   ['regForm','logForm','otpForm','forgotForm','resetForm','verifyPhonePanel'].forEach(p => {
@@ -65,9 +65,10 @@ async function submitReg(e) {
   const lastName  = document.getElementById('regLastName').value.trim();
   const name      = `${firstName} ${lastName}`.trim();
   const phone     = document.getElementById('regPhone').value.trim();
+  const email     = document.getElementById('regEmail').value.trim();
   const password  = document.getElementById('pw1').value;
 
-  if (!firstName || !phone || !password) {
+  if (!firstName || !phone || !email || !password) {
     return showToast('❌ Please fill in all required fields');
   }
 
@@ -75,13 +76,13 @@ async function submitReg(e) {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, password })
+      body: JSON.stringify({ name, phone, email, password })
     });
     const data = await res.json();
     
     if (res.status === 201 && data.requiresVerification) {
-      _currentPhone = data.phone || phone;
-      showToast('✅ Account created! Please verify your phone number.');
+      _currentEmail = data.email || email;
+      showToast('✅ Account created! Please verify your email.');
       showPanel('otpForm');
     } else if (res.ok) {
       localStorage.setItem('token', data.token);
@@ -100,14 +101,14 @@ async function submitReg(e) {
 async function submitLog(e) {
   e.preventDefault();
   const form = e.target;
-  const phone = form.querySelector('input[type="tel"]').value;
+  const email = form.querySelector('input[type="email"]').value;
   const password = form.querySelector('input[type="password"]').value;
 
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, password })
+      body: JSON.stringify({ email, password })
     });
     const data = await res.json();
     
@@ -118,8 +119,8 @@ async function submitLog(e) {
       showToast('✅ Login successful! Redirecting to dashboard...');
       setTimeout(() => window.location.href = '/dashboard.html', 1500);
     } else if (res.status === 403 && data.requiresVerification) {
-      _currentPhone = data.phone || phone;
-      showToast('⚠️ Please verify your phone number first.');
+      _currentEmail = data.email || email;
+      showToast('⚠️ Please verify your email first.');
       showPanel('otpForm');
     } else {
       showToast('❌ ' + (data.message || 'Login failed'));
@@ -137,7 +138,7 @@ async function submitOTP() {
     const res = await fetch('/api/auth/verify-phone', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: _currentPhone, code })
+      body: JSON.stringify({ email: _currentEmail, code })
     });
     const data = await res.json();
     if (res.ok) {
@@ -159,7 +160,7 @@ async function resendOTP() {
     const res = await fetch('/api/auth/resend-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: _currentPhone })
+      body: JSON.stringify({ email: _currentEmail })
     });
     const data = await res.json();
     if (res.ok) {
@@ -173,19 +174,19 @@ async function resendOTP() {
 }
 
 async function submitVerifyPhone() {
-  const phone = document.getElementById('verifyPhoneInputModal').value.trim();
-  if (!phone) return showToast('❌ Enter your phone number');
+  const email = document.getElementById('verifyPhoneInputModal').value.trim();
+  if (!email) return showToast('❌ Enter your email address');
 
   try {
     const res = await fetch('/api/auth/resend-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone })
+      body: JSON.stringify({ email })
     });
     const data = await res.json();
     
     if (res.ok) {
-      _currentPhone = phone;
+      _currentEmail = email;
       showToast('✅ Verification OTP sent!');
       showPanel('otpForm');
     } else {
@@ -196,19 +197,19 @@ async function submitVerifyPhone() {
   }
 }
 async function submitForgotPassword() {
-  const phone = document.getElementById('forgotPhone').value.trim();
-  if (!phone) return showToast('❌ Enter your phone number');
+  const email = document.getElementById('forgotPhone').value.trim();
+  if (!email) return showToast('❌ Enter your email address');
 
   try {
     const res = await fetch('/api/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone })
+      body: JSON.stringify({ email })
     });
     const data = await res.json();
     
     if (res.ok) {
-      _currentPhone = phone;
+      _currentEmail = email;
       showToast('✅ ' + (data.message || 'OTP sent!'));
       showPanel('resetForm');
     } else {
@@ -230,7 +231,7 @@ async function submitResetPassword() {
     const res = await fetch('/api/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: _currentPhone, code, newPassword })
+      body: JSON.stringify({ email: _currentEmail, code, newPassword })
     });
     const data = await res.json();
     
