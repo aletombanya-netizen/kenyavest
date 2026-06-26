@@ -4,107 +4,350 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - KenyaVest</title>
-  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { background-color: #0B1120; color: #fff; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-    .auth-container { background-color: #1A2235; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid rgba(244,196,48,0.2); }
-    .auth-container h2 { text-align: center; color: #F4C430; margin-top: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(135deg, #0B1120 0%, #0f1a2e 100%);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #1A2235;
+      border: 1px solid rgba(244,196,48,0.2);
+      border-radius: 16px;
+      padding: 44px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .logo { text-align: center; margin-bottom: 28px; }
+    .logo a { text-decoration: none; }
+    .logo-text { font-size: 1.6rem; font-weight: 800; color: #fff; }
+    .logo-text span { color: #F4C430; }
+    .step-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(244,196,48,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px;
+    }
+    h2 { text-align: center; font-size: 1.35rem; font-weight: 700; color: #F4C430; margin-bottom: 6px; }
+    .subtitle { text-align: center; color: #94a3b8; font-size: 0.88rem; margin-bottom: 28px; line-height: 1.5; }
+    .msg {
+      text-align: center; font-size: 0.88rem;
+      padding: 10px 14px; border-radius: 8px;
+      margin-bottom: 20px; display: none;
+    }
+    .msg.error   { background: rgba(239,68,68,.12); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
+    .msg.success { background: rgba(22,163,74,.12); color: #4ade80; border: 1px solid rgba(22,163,74,.3); }
+    .msg.warning { background: rgba(234,179,8,.1); color: #facc15; border: 1px solid rgba(234,179,8,.3); }
     .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #aaa; }
-    .form-group input { width: 100%; padding: 12px; border: 1px solid #333; border-radius: 6px; background-color: #0B1120; color: #fff; box-sizing: border-box; }
-    .form-group input:focus { outline: none; border-color: #F4C430; }
-    .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #F4C430, #D4A017); color: #000; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-    .btn:hover { box-shadow: 0 0 15px rgba(244,196,48,0.5); }
-    .auth-links { text-align: center; margin-top: 20px; font-size: 0.9rem; }
-    .auth-links a { color: #F4C430; text-decoration: none; }
-    .auth-links a:hover { text-decoration: underline; }
-    #errorMsg { color: #ff4c4c; text-align: center; margin-bottom: 15px; font-size: 0.9rem; display: none; }
+    .form-group label { display: block; margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.5px; text-transform: uppercase; }
+    .form-group input {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid #2d3748; border-radius: 8px;
+      background: #0B1120; color: #fff;
+      font-size: 0.95rem; font-family: 'Poppins', sans-serif;
+      transition: border-color .2s; outline: none;
+    }
+    .form-group input:focus { border-color: #F4C430; }
+    .otp-input { font-size: 1.8rem !important; letter-spacing: 14px !important; text-align: center !important; font-weight: 700 !important; }
+    .forgot-row { display: flex; justify-content: flex-end; margin-top: -12px; margin-bottom: 20px; }
+    .forgot-row a { font-size: 0.83rem; color: #F4C430; text-decoration: none; }
+    .forgot-row a:hover { text-decoration: underline; }
+    .btn {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, #F4C430, #D4A017);
+      color: #000; border: none; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      transition: all .2s; font-family: 'Poppins', sans-serif;
+    }
+    .btn:hover { box-shadow: 0 0 20px rgba(244,196,48,0.45); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .links { text-align: center; margin-top: 22px; font-size: 0.88rem; color: #94a3b8; }
+    .links a { color: #F4C430; font-weight: 600; text-decoration: none; }
+    .links a:hover { text-decoration: underline; }
+    .resend-row { text-align: center; margin-top: 14px; font-size: 0.85rem; color: #94a3b8; }
+    .resend-row a { color: #F4C430; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .resend-row a:hover { text-decoration: underline; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .divider { border: none; border-top: 1px solid #2d3748; margin: 20px 0; }
   </style>
 </head>
 <body>
 
-<div class="auth-container">
-  <h2>Welcome Back</h2>
-  <div id="errorMsg"></div>
-  <div id="loginSection">
+<div class="card">
+  <div class="logo">
+    <a href="/"><span class="logo-text">Kenya<span>Vest</span></span></a>
+  </div>
+
+  <div id="msgBox" class="msg"></div>
+
+  <!-- LOGIN SECTION -->
+  <div id="loginSection" class="section active">
+    <div class="step-icon">🔐</div>
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to access your investment dashboard</p>
     <form id="loginForm">
       <div class="form-group">
         <label for="phone">Phone Number</label>
-        <input type="text" id="phone" placeholder="e.g. 0712345678" required>
+        <input type="tel" id="phone" placeholder="e.g. 0712345678" required autocomplete="tel">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="••••••••" required>
+        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
       </div>
-      <button type="submit" class="btn">Login</button>
+      <div class="forgot-row">
+        <a href="#" id="showForgotBtn">Forgot Password?</a>
+      </div>
+      <button type="submit" class="btn" id="loginBtn">Login to Dashboard →</button>
     </form>
-    <div class="auth-links">
-      <a href="#" id="showForgotBtn">Forgot Password?</a><br><br>
-      <a href="/verify.html">Verify Account</a><br><br>
-      Don't have an account? <a href="/register.html">Sign Up</a>
+    <div class="links">
+      Don't have an account? <a href="/register.html">Sign Up Free</a>
     </div>
   </div>
 
-  <div id="verifyPhoneSection" style="display: none;">
-    <p style="text-align: center; margin-bottom: 20px;">Enter your phone number to receive a verification OTP.</p>
-    <form id="verifyPhoneForm">
-      <div class="form-group">
-        <label for="verifyPhoneInput">Phone Number</label>
-        <input type="text" id="verifyPhoneInput" placeholder="e.g. 0712345678" required>
-      </div>
-      <button type="submit" class="btn">Send Verification OTP</button>
-    </form>
-    <div class="auth-links">
-      <a href="/login.html">Back to Login</a>
-    </div>
-  </div>
-
-  <div id="otpSection" style="display: none;">
-    <p style="text-align: center; margin-bottom: 20px;">Enter the 6-digit OTP sent to your phone. Check the Render logs during testing.</p>
+  <!-- OTP SECTION (auto-shown for unverified users) -->
+  <div id="otpSection" class="section">
+    <div class="step-icon">📱</div>
+    <h2>Verify Your Phone</h2>
+    <p class="subtitle" id="otpSubtitle">A 6-digit code has been sent to your phone. Check the server logs for the code.</p>
     <form id="otpForm">
       <div class="form-group">
         <label for="otpCode">OTP Code</label>
-        <input type="text" id="otpCode" maxlength="6" placeholder="Enter 6-digit code" style="font-size:22px;letter-spacing:8px;text-align:center" required>
+        <input type="text" id="otpCode" class="otp-input" maxlength="6" placeholder="000000" required autocomplete="one-time-code">
       </div>
-      <button type="submit" class="btn">Verify Phone</button>
+      <button type="submit" class="btn" id="verifyBtn">Verify &amp; Login →</button>
     </form>
-    <div class="auth-links">
-      Didn't get the code? <a href="#" id="resendOtpBtn">Resend OTP</a><br><br>
-      <a href="/login.html">Back to Login</a>
+    <div class="resend-row">
+      Didn't get the code? <a id="resendOtpLink">Resend OTP</a>
+    </div>
+    <div class="links" style="margin-top:14px">
+      <a href="#" id="backToLoginBtn">← Back to Login</a>
     </div>
   </div>
 
-  <div id="forgotSection" style="display: none;">
-    <p style="text-align: center; margin-bottom: 20px;">Enter your registered phone number to receive an OTP.</p>
+  <!-- FORGOT PASSWORD SECTION -->
+  <div id="forgotSection" class="section">
+    <div class="step-icon">🔑</div>
+    <h2>Reset Password</h2>
+    <p class="subtitle">Enter your registered phone number to receive an OTP.</p>
     <form id="forgotForm">
       <div class="form-group">
         <label for="forgotPhone">Phone Number</label>
-        <input type="text" id="forgotPhone" placeholder="e.g. 0712345678" required>
+        <input type="tel" id="forgotPhone" placeholder="e.g. 0712345678" required>
       </div>
-      <button type="submit" class="btn">Send OTP</button>
+      <button type="submit" class="btn" id="forgotBtn">Send OTP →</button>
     </form>
-    <div class="auth-links">
-      <a href="/login.html">Back to Login</a>
-    </div>
+    <div class="links"><a href="#" id="backToLoginBtn2">← Back to Login</a></div>
   </div>
 
-  <div id="resetSection" style="display: none;">
-    <p style="text-align: center; margin-bottom: 20px;">Enter the OTP from the Render logs and your new password.</p>
+  <!-- RESET PASSWORD SECTION -->
+  <div id="resetSection" class="section">
+    <div class="step-icon">✅</div>
+    <h2>Set New Password</h2>
+    <p class="subtitle">Enter the OTP from the server logs and your new password.</p>
     <form id="resetForm">
       <div class="form-group">
         <label for="resetOtpCode">OTP Code</label>
-        <input type="text" id="resetOtpCode" maxlength="6" placeholder="6-digit OTP" style="letter-spacing:4px;text-align:center" required>
+        <input type="text" id="resetOtpCode" class="otp-input" maxlength="6" placeholder="000000" required>
       </div>
       <div class="form-group">
         <label for="newPassword">New Password</label>
         <input type="password" id="newPassword" placeholder="Min. 8 characters" required>
       </div>
-      <button type="submit" class="btn">Reset Password</button>
+      <button type="submit" class="btn" id="resetBtn">Reset Password →</button>
     </form>
+    <div class="links"><a href="#" id="backToLoginBtn3">← Back to Login</a></div>
   </div>
+
 </div>
 
-<script src="/js/auth.js"></script>
+<script>
+  let currentPhone = '';
+
+  // If already logged in, redirect
+  if (localStorage.getItem('token')) {
+    window.location.href = '/dashboard.html';
+  }
+
+  function showSection(id) {
+    ['loginSection','otpSection','forgotSection','resetSection'].forEach(s => {
+      document.getElementById(s).classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+    hideMsg();
+  }
+
+  function showMsg(text, type) {
+    const box = document.getElementById('msgBox');
+    box.textContent = text;
+    box.className = 'msg ' + type;
+    box.style.display = 'block';
+  }
+  function hideMsg() {
+    document.getElementById('msgBox').style.display = 'none';
+  }
+
+  // ── LOGIN ──────────────────────────────────────────────────────────
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.textContent = 'Logging in…';
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        showMsg('✅ Login successful! Redirecting…', 'success');
+        setTimeout(() => window.location.href = '/dashboard.html', 1000);
+      } else if (res.status === 403 && data.requiresVerification) {
+        // Unverified user — auto-show OTP window
+        currentPhone = data.phone || phone;
+        document.getElementById('otpSubtitle').textContent =
+          `A 6-digit code has been sent to ${currentPhone}. Check the server logs for the code.`;
+        showMsg('⚠️ Please verify your phone number to continue.', 'warning');
+        showSection('otpSection');
+      } else {
+        showMsg('❌ ' + (data.message || 'Login failed.'), 'error');
+        btn.disabled = false; btn.textContent = 'Login to Dashboard →';
+      }
+    } catch (err) {
+      showMsg('❌ Network error. Please try again.', 'error');
+      btn.disabled = false; btn.textContent = 'Login to Dashboard →';
+    }
+  });
+
+  // ── OTP VERIFY ────────────────────────────────────────────────────
+  document.getElementById('otpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = document.getElementById('otpCode').value.trim();
+    if (!code || code.length !== 6) return showMsg('❌ Enter the full 6-digit code.', 'error');
+    const btn = document.getElementById('verifyBtn');
+    btn.disabled = true; btn.textContent = 'Verifying…';
+
+    try {
+      const res = await fetch('/api/auth/verify-phone', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: currentPhone, code })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        showMsg('✅ Verified! Redirecting to dashboard…', 'success');
+        setTimeout(() => window.location.href = '/dashboard.html', 1200);
+      } else {
+        showMsg('❌ ' + (data.message || 'Verification failed.'), 'error');
+        btn.disabled = false; btn.textContent = 'Verify & Login →';
+      }
+    } catch (err) {
+      showMsg('❌ Network error. Please try again.', 'error');
+      btn.disabled = false; btn.textContent = 'Verify & Login →';
+    }
+  });
+
+  // ── RESEND OTP ────────────────────────────────────────────────────
+  document.getElementById('resendOtpLink').addEventListener('click', async () => {
+    if (!currentPhone) return;
+    try {
+      const res = await fetch('/api/auth/resend-otp', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: currentPhone })
+      });
+      const data = await res.json();
+      showMsg(res.ok ? '✅ New OTP sent! Check the server logs.' : '❌ ' + (data.message || 'Failed to resend.'), res.ok ? 'success' : 'error');
+    } catch (err) {
+      showMsg('❌ Network error.', 'error');
+    }
+  });
+
+  // ── FORGOT PASSWORD ───────────────────────────────────────────────
+  document.getElementById('showForgotBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection('forgotSection');
+  });
+
+  document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('forgotPhone').value.trim();
+    if (!phone) return showMsg('❌ Enter your phone number.', 'error');
+    const btn = document.getElementById('forgotBtn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        currentPhone = phone;
+        showMsg('✅ OTP sent! Check the server logs.', 'success');
+        setTimeout(() => showSection('resetSection'), 800);
+      } else {
+        showMsg('❌ ' + (data.message || 'Failed to send OTP.'), 'error');
+        btn.disabled = false; btn.textContent = 'Send OTP →';
+      }
+    } catch (err) {
+      showMsg('❌ Network error.', 'error');
+      btn.disabled = false; btn.textContent = 'Send OTP →';
+    }
+  });
+
+  // ── RESET PASSWORD ────────────────────────────────────────────────
+  document.getElementById('resetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = document.getElementById('resetOtpCode').value.trim();
+    const newPassword = document.getElementById('newPassword').value;
+    if (!code || code.length !== 6) return showMsg('❌ Enter the full 6-digit OTP.', 'error');
+    if (!newPassword || newPassword.length < 8) return showMsg('❌ Password must be at least 8 characters.', 'error');
+    const btn = document.getElementById('resetBtn');
+    btn.disabled = true; btn.textContent = 'Resetting…';
+
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: currentPhone, code, newPassword })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        showMsg('✅ Password reset! Please log in.', 'success');
+        setTimeout(() => showSection('loginSection'), 1500);
+      } else {
+        showMsg('❌ ' + (data.message || 'Failed to reset password.'), 'error');
+        btn.disabled = false; btn.textContent = 'Reset Password →';
+      }
+    } catch (err) {
+      showMsg('❌ Network error.', 'error');
+      btn.disabled = false; btn.textContent = 'Reset Password →';
+    }
+  });
+
+  // ── BACK LINKS ────────────────────────────────────────────────────
+  document.getElementById('backToLoginBtn').addEventListener('click', (e) => { e.preventDefault(); showSection('loginSection'); document.getElementById('loginBtn').disabled = false; document.getElementById('loginBtn').textContent = 'Login to Dashboard →'; });
+  document.getElementById('backToLoginBtn2').addEventListener('click', (e) => { e.preventDefault(); showSection('loginSection'); });
+  document.getElementById('backToLoginBtn3').addEventListener('click', (e) => { e.preventDefault(); showSection('loginSection'); });
+</script>
+
 </body>
 </html>
