@@ -176,8 +176,12 @@
   let currentEmail = '';
 
   // If already logged in, redirect
-  if (localStorage.getItem('token')) {
-    window.location.href = '/dashboard.html';
+  try {
+    if (localStorage.getItem('token')) {
+      window.location.href = '/dashboard.html';
+    }
+  } catch (e) {
+    alert("Warning: Your browser is blocking local storage. Please enable cookies to login.");
   }
 
   function showSection(id) {

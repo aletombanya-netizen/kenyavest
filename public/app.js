@@ -426,7 +426,10 @@ setInterval(updateTicker, 5000);
 (function startCountdown() {
   // Store target in sessionStorage so it persists on reload but resets on new session
   const KEY = 'kv_cd_end';
-  let endTime = sessionStorage.getItem(KEY);
+  let endTime = null;
+  try {
+    endTime = sessionStorage.getItem(KEY);
+  } catch(e) {}
   if (!endTime) {
     // random between 6-23 hours from now
     const hours = 6 + Math.floor(Math.random() * 18);

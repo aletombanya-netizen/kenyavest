@@ -2,7 +2,13 @@
    KenyaVest — dashboard.js
    ===================================================== */
 
-const TOKEN = localStorage.getItem('token');
+let TOKEN = null;
+try {
+  TOKEN = localStorage.getItem('token');
+} catch (e) {
+  alert("Warning: Your browser is blocking local storage. Please enable cookies to access the dashboard.");
+}
+
 if (!TOKEN) window.location.href = '/';
 
 const PLANS = {
