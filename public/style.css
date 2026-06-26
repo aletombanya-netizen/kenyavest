@@ -61,6 +61,7 @@ img { max-width: 100%; display: block; }
   color: transparent;
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
+  padding: 0.2em 0;
 }
 
 
