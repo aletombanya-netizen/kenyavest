@@ -152,6 +152,20 @@ const requestWithdrawal = async (req, res) => {
       message: 'Withdrawal request submitted. Awaiting admin approval.',
       transaction,
     });
+    
+    // Notify all admins (non-blocking)
+    try {
+      const admins = await User.find({ role: 'admin' });
+      const { sendNewWithdrawalAdminNotification } = require('../services/emailService');
+      admins.forEach(admin => {
+        if (admin.email) {
+          sendNewWithdrawalAdminNotification(admin.email, user, amount, phone || user.phone).catch(() => {});
+        }
+      });
+    } catch (err) {
+      console.error('Failed to send admin notification:', err);
+    }
+
   } catch (error) {
     console.error('[Withdrawal Error]', error);
     res.status(500).json({ message: 'Server error during withdrawal' });

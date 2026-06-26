@@ -169,6 +169,28 @@ const sendReferralBonusEmail = (referrer, amount, referredName) =>
       </div>`,
   });
 
+const sendNewWithdrawalAdminNotification = (adminEmail, user, amount, phone) =>
+  sendMail({
+    to: adminEmail,
+    subject: '⚠️ ACTION REQUIRED: New Withdrawal Request — KenyaVest',
+    html: `
+      <div style="font-family:Inter,sans-serif;max-width:560px;margin:auto;background:#111622;color:#e8eaf0;border-radius:16px;overflow:hidden">
+        <div style="padding:30px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <h2 style="color:#F4C430;margin:0">New Withdrawal Request 📤</h2>
+        </div>
+        <div style="padding:32px">
+          <p>Hello Admin,</p>
+          <p>User <strong>${user.name}</strong> (${user.email}) has requested a withdrawal.</p>
+          <ul style="color:#e8eaf0;background:rgba(255,255,255,0.05);padding:16px;border-radius:8px">
+            <li><strong>Amount:</strong> KES ${amount.toLocaleString()}</li>
+            <li><strong>M-Pesa Number:</strong> ${phone}</li>
+          </ul>
+          <p>Please log in to the admin panel to review and approve/reject this request.</p>
+          <a href="${process.env.APP_URL || 'https://kenyavest.onrender.com'}/admin.html" style="display:inline-block;margin-top:16px;background:linear-gradient(135deg,#F4C430,#D4A017);color:#000;padding:12px 28px;border-radius:10px;font-weight:700;text-decoration:none">Go to Admin Panel →</a>
+        </div>
+      </div>`,
+  });
+
 module.exports = {
   sendWelcomeEmail,
   sendOTPEmail,
@@ -177,4 +199,5 @@ module.exports = {
   sendWithdrawalUpdateEmail,
   sendDepositApprovedEmail,
   sendReferralBonusEmail,
+  sendNewWithdrawalAdminNotification,
 };
