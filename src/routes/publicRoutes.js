@@ -48,4 +48,23 @@ router.get('/recent-activity', async (req, res) => {
   }
 });
 
+const Setting = require('../models/Setting');
+
+// @route GET /api/public/settings
+// @desc  Get public settings like WhatsApp number
+// @access Public
+router.get('/settings', async (req, res) => {
+  try {
+    const settings = await Setting.find();
+    const config = {};
+    settings.forEach(s => {
+      config[s.key] = s.value;
+    });
+    res.json(config);
+  } catch (error) {
+    console.error('[Settings API Error]', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

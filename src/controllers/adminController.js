@@ -158,6 +158,28 @@ const toggleUserBan = async (req, res) => {
   }
 };
 
+const Setting = require('../models/Setting');
+
+// @route PUT /api/admin/settings
+// @desc Update global settings (e.g. WhatsApp number)
+// @access Private/Admin
+const updateSettings = async (req, res) => {
+  try {
+    const updates = req.body; // e.g. { whatsappNumber: '254700123456' }
+    for (const [key, value] of Object.entries(updates)) {
+      await Setting.findOneAndUpdate(
+        { key },
+        { value },
+        { upsert: true, new: true }
+      );
+    }
+    res.json({ message: 'Settings updated successfully' });
+  } catch (error) {
+    console.error('[Admin Settings Error]', error);
+    res.status(500).json({ message: 'Server error updating settings' });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getAllTransactions,
@@ -165,4 +187,5 @@ module.exports = {
   updateUserBalance,
   getContactMessages,
   toggleUserBan,
+  updateSettings,
 };

@@ -7,6 +7,7 @@ const {
   updateUserBalance,
   toggleUserBan,
   getContactMessages,
+  updateSettings,
 } = require('../controllers/adminController');
 const { protect } = require('../middleware/auth');
 const { admin } = require('../middleware/admin');
@@ -17,5 +18,6 @@ router.route('/users/:id/ban').put(protect, admin, toggleUserBan);
 router.route('/transactions').get(protect, admin, getAllTransactions);
 router.route('/transactions/:id').put(protect, admin, updateTransactionStatus);
 router.route('/contacts').get(protect, admin, getContactMessages);
+router.route('/settings').put(protect, admin, updateSettings);
 
 module.exports = router;

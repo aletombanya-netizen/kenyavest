@@ -158,6 +158,7 @@
     <a class="nav-item" onclick="switchPanel('users')" id="nav-users"><span class="icon">👥</span> Users</a>
     <a class="nav-item" onclick="switchPanel('transactions')" id="nav-transactions"><span class="icon">📋</span> Transactions</a>
     <a class="nav-item" onclick="switchPanel('messages')" id="nav-messages"><span class="icon">✉️</span> Messages</a>
+    <a class="nav-item" onclick="switchPanel('settings')" id="nav-settings"><span class="icon">⚙️</span> Settings</a>
     <div class="sidebar-footer">
       <div class="sidebar-user">
         <div class="user-avatar" id="userAvatar">A</div>
@@ -216,6 +217,18 @@
       </div>
       <div class="panel" id="panel-messages">
         <div class="card"><div class="card-header"><span class="card-title">✉️ Contact Messages</span></div><div id="msgsTable"><div class="loading"><span class="spinner"></span> Loading...</div></div></div>
+      </div>
+      <div class="panel" id="panel-settings">
+        <div class="card">
+          <div class="card-header"><span class="card-title">⚙️ Global Settings</span></div>
+          <div style="padding: 24px; max-width: 500px;">
+            <div class="form-group">
+              <label style="color:var(--text2);margin-bottom:8px;display:block;font-size:13px;">WhatsApp Number (Include Country Code, e.g., 254700000000)</label>
+              <input type="text" id="waNumberInput" placeholder="2547..." style="width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:white;margin-bottom:16px;" />
+            </div>
+            <button class="btn-approve" onclick="saveSettings()" style="padding: 10px 16px; font-size: 14px;">Save Settings</button>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -285,6 +298,7 @@
     users:        ['All Users',          'View and manage registered users'],
     transactions: ['All Transactions',   'Full transaction history'],
     messages:     ['Contact Messages',   'Messages from visitors'],
+    settings:     ['Global Settings',    'Configure platform settings like WhatsApp'],
   };
 
   function switchPanel(panel) {
@@ -300,7 +314,7 @@
   }
 
   function loadCurrentPanel() {
-    ({ dashboard: loadDashboard, withdrawals: loadWithdrawals, users: loadUsers, transactions: loadTransactions, messages: loadMessages })[currentPanel]?.();
+    ({ dashboard: loadDashboard, withdrawals: loadWithdrawals, users: loadUsers, transactions: loadTransactions, messages: loadMessages, settings: loadSettings })[currentPanel]?.();
   }
 
   let depChart = null;
@@ -503,6 +517,33 @@
         <td>${fmt(m.createdAt)}</td>
       </tr>`).join('');
     document.getElementById('msgsTable').innerHTML = `<table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Date</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  /* ── Settings ── */
+  async function loadSettings() {
+    try {
+      const res = await fetch('/api/public/settings');
+      if (!res.ok) throw new Error('Failed to load settings');
+      const settings = await res.json();
+      if (settings.whatsappNumber) {
+        document.getElementById('waNumberInput').value = settings.whatsappNumber;
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('Error loading settings', 'error');
+    }
+  }
+
+  async function saveSettings() {
+    const waNum = document.getElementById('waNumberInput').value.trim();
+    if (!waNum) return showToast('Please enter a WhatsApp number', 'error');
+    
+    try {
+      const data = await apiPut('/api/admin/settings', { whatsappNumber: waNum });
+      if (data) showToast('Settings saved successfully');
+    } catch (e) {
+      showToast('Failed to save settings', 'error');
+    }
   }
 
   /* ── Helpers ── */

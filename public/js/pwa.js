@@ -65,8 +65,19 @@ window.addEventListener('appinstalled', () => {
 // ── Global WhatsApp Support Widget ─────────────────────────────────
 // This injects a beautiful floating WhatsApp button onto every page.
 // Update the phone number to your actual support number!
-window.addEventListener('DOMContentLoaded', () => {
-  const waPhone = '254700000000'; // <--- UPDATE YOUR NUMBER HERE (Include 254, no +)
+window.addEventListener('DOMContentLoaded', async () => {
+  let waPhone = '254700000000'; // Fallback
+  
+  try {
+    const res = await fetch('/api/public/settings');
+    if (res.ok) {
+      const settings = await res.json();
+      if (settings.whatsappNumber) waPhone = settings.whatsappNumber;
+    }
+  } catch (e) {
+    console.error('Failed to load settings', e);
+  }
+
   const waMessage = encodeURIComponent('Hello KenyaVest Support, I need some help.');
   
   const waHTML = `
@@ -119,6 +130,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.head.insertAdjacentHTML('beforeend', '<style>' + waCSS + '</style>');
   document.body.insertAdjacentHTML('beforeend', waHTML);
+  
+  // Try to update any static elements on the page that display the phone number
+  const staticWaElements = document.querySelectorAll('.whatsapp-number-display');
+  if (staticWaElements.length > 0) {
+    staticWaElements.forEach(el => el.textContent = '+' + waPhone);
+  }
 });
 
 // ── Social Proof "Recent Payouts" Widget ──────────────────────────
