@@ -577,3 +577,22 @@ setTimeout(() => {
   }, 12000 + Math.random() * 6000);
 }, 4000);
 
+
+// ---- SCROLL REVEAL ----
+(function initScrollReveal() {
+  const revealClasses = ['.reveal', '.reveal-scale', '.reveal-left', '.reveal-right'];
+  const allReveal = document.querySelectorAll(revealClasses.join(','));
+
+  if (!allReveal.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target); // animate once
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  allReveal.forEach(el => observer.observe(el));
+})();

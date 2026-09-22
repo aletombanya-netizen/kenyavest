@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Referral Leaderboard — KenyaVest</title>
+  <title>Referral Leaderboard â€” KenyaVest</title>
+  <meta name="description" content="See Kenya's top earners on the KenyaVest referral leaderboard. Earn 10% commission on every referral." />
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
   <link rel="manifest" href="/manifest.json" />
@@ -12,79 +13,117 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0B1120; --bg2: #111622; --bg3: #181f30;
+      --bg: #060c1a; --bg2: #111928; --bg3: #1A2235;
       --border: rgba(255,255,255,0.08); --text: #e8eaf0; --text2: #8b9ab8;
-      --gold: #F4C430; --accent: #4ade80; --purple: #a855f7;
+      --gold: #F4C430; --gold-glow: rgba(244,196,48,.35);
+      --accent: #4ade80; --purple: #a855f7;
+      --silver: #e2e8f0; --bronze: #cd7f32;
     }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
     /* Ambient background */
-    .bg-glow { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 60%); top: -200px; right: -200px; pointer-events: none; z-index: 0; }
+    .bg-glow { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(244,196,48,0.06) 0%, transparent 60%); top: -200px; right: -200px; pointer-events: none; z-index: 0; }
+    .bg-glow2 { position: fixed; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(168,85,247,0.06) 0%, transparent 60%); bottom: -100px; left: -150px; pointer-events: none; z-index: 0; }
+
+    /* Back nav */
+    .back-nav { position: sticky; top: 0; z-index: 900; background: rgba(6,12,26,.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.08); padding: .6rem 1.5rem; display: flex; align-items: center; gap: 1rem; }
+    .back-nav a { display: inline-flex; align-items: center; gap: .4rem; color: var(--gold); font-size: .88rem; font-weight: 600; text-decoration: none; transition: opacity .2s; }
+    .back-nav a:hover { opacity: .75; }
+    .back-nav-sep { color: var(--text2); font-size: .8rem; }
+    .back-nav-title { color: var(--text); font-size: .88rem; font-weight: 500; text-transform: capitalize; }
 
     /* Header */
-    .header { background: rgba(17,22,34,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
+    .header { background: rgba(17,22,34,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 14px; position: sticky; top: 41px; z-index: 50; }
     .header a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--gold); font-weight: 800; font-size: 18px; }
     .header img { width: 32px; height: 32px; border-radius: 6px; }
     .header-nav { margin-left: auto; display: flex; gap: 12px; }
     .nav-link { color: var(--text2); font-size: 14px; font-weight: 500; text-decoration: none; padding: 6px 14px; border-radius: 8px; transition: all .2s; }
     .nav-link:hover { color: var(--gold); background: rgba(244,196,48,0.1); }
-    .nav-btn { background: linear-gradient(135deg, var(--gold), #D4A017); color: #000; font-weight: 700; padding: 6px 16px; border-radius: 8px; text-decoration: none; transition: transform .2s; }
-    .nav-btn:hover { transform: translateY(-1px); }
+    .nav-btn { background: linear-gradient(135deg, var(--gold), #D4A017); color: #000; font-weight: 700; padding: 6px 16px; border-radius: 8px; text-decoration: none; transition: transform .2s, box-shadow .2s; }
+    .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(244,196,48,.4); }
 
-    .main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; position: relative; z-index: 10; }
-    
+    .main { max-width: 700px; margin: 0 auto; padding: 48px 20px 80px; position: relative; z-index: 10; }
+
     .hero { text-align: center; margin-bottom: 40px; }
-    .hero-icon { font-size: 3rem; margin-bottom: 16px; display: inline-block; animation: bounce 2s infinite ease-in-out; }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .hero-icon { font-size: 3.5rem; margin-bottom: 16px; display: inline-block; animation: bounce 2.5s infinite ease-in-out; filter: drop-shadow(0 0 20px rgba(244,196,48,.5)); }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     .hero h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
-    .hero h1 span { background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { color: var(--text2); font-size: 1.1rem; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+    .hero h1 span { background: linear-gradient(135deg, var(--gold), #ffb300); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.05rem; max-width: 500px; margin: 0 auto; line-height: 1.7; }
 
-    .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-    .lb-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
+    /* Leaderboard */
+    .leaderboard { background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+    .lb-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,.02); }
     .lb-title { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-    .lb-meta { font-size: 12px; color: var(--text2); }
+    .lb-meta { font-size: 12px; color: var(--text2); background: rgba(244,196,48,.08); border: 1px solid rgba(244,196,48,.2); color: var(--gold); padding: 4px 10px; border-radius: 20px; }
 
     .lb-list { display: flex; flex-direction: column; }
-    .lb-item { display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); transition: background .2s; }
-    .lb-item:hover { background: rgba(255,255,255,0.02); }
+    .lb-item { display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); transition: background .2s; position: relative; }
+    .lb-item:hover { background: rgba(255,255,255,.02); }
     .lb-item:last-child { border-bottom: none; }
-    
-    .rank { width: 36px; font-weight: 800; font-size: 1.1rem; color: var(--text2); }
-    .rank-1 { color: #F4C430; font-size: 1.4rem; text-shadow: 0 0 10px rgba(244,196,48,0.4); }
-    .rank-2 { color: #e2e8f0; font-size: 1.3rem; }
-    .rank-3 { color: #cd7f32; font-size: 1.2rem; }
-    
+    .lb-item.top-1 { background: linear-gradient(135deg, rgba(244,196,48,.06) 0%, transparent 100%); }
+    .lb-item.top-2 { background: linear-gradient(135deg, rgba(226,232,240,.04) 0%, transparent 100%); }
+    .lb-item.top-3 { background: linear-gradient(135deg, rgba(205,127,50,.04) 0%, transparent 100%); }
+
+    .rank { width: 40px; font-weight: 800; font-size: 1.2rem; color: var(--text2); text-align: center; flex-shrink: 0; }
+    .rank-medal { font-size: 1.6rem; animation: medal-pulse 3s ease-in-out infinite; }
+    .top-1 .rank-medal { filter: drop-shadow(0 0 8px rgba(244,196,48,.7)); }
+    .top-2 .rank-medal { filter: drop-shadow(0 0 6px rgba(226,232,240,.5)); }
+    .top-3 .rank-medal { filter: drop-shadow(0 0 6px rgba(205,127,50,.5)); }
+    @keyframes medal-pulse { 0%, 100% { filter: drop-shadow(0 0 8px rgba(244,196,48,.7)); } 50% { filter: drop-shadow(0 0 18px rgba(244,196,48,1)); } }
+
     .user { flex: 1; display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--gold); border: 1px solid var(--border); }
-    .rank-1 .avatar { background: rgba(244,196,48,0.1); border-color: var(--gold); }
+    .avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--gold); border: 1px solid var(--border); font-size: 14px; flex-shrink: 0; }
+    .top-1 .avatar { background: rgba(244,196,48,.15); border-color: var(--gold); box-shadow: 0 0 12px rgba(244,196,48,.3); }
+    .top-2 .avatar { background: rgba(226,232,240,.1); border-color: var(--silver); }
+    .top-3 .avatar { background: rgba(205,127,50,.1); border-color: var(--bronze); }
     .name { font-weight: 600; font-size: 15px; }
-    
+    .user-rank-num { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
     .earnings { text-align: right; }
-    .earnings-val { font-weight: 800; font-size: 1.1rem; color: var(--purple); }
+    .earnings-val { font-weight: 800; font-size: 1.1rem; color: var(--gold); }
     .earnings-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    .empty { padding: 48px 24px; text-align: center; color: var(--text2); }
-    
-    .promo { margin-top: 32px; background: rgba(244,196,48,0.05); border: 1px solid rgba(244,196,48,0.2); border-radius: 16px; padding: 24px; text-align: center; }
-    .promo h3 { color: var(--gold); margin-bottom: 8px; font-size: 1.1rem; }
-    .promo p { color: var(--text); font-size: 14px; margin-bottom: 16px; }
-    .promo a { display: inline-block; background: var(--gold); color: #000; padding: 10px 24px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 14px; }
+    /* Skeleton loader */
+    .skeleton { background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .skel-item { display: flex; align-items: center; padding: 16px 24px; gap: 16px; border-bottom: 1px solid var(--border); }
+    .skel-rank { width: 36px; height: 36px; border-radius: 50%; }
+    .skel-avatar { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; }
+    .skel-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .skel-name { height: 14px; width: 55%; }
+    .skel-sub { height: 10px; width: 30%; }
+    .skel-val { width: 80px; height: 20px; border-radius: 6px; margin-left: auto; }
+
+    .empty { padding: 56px 24px; text-align: center; color: var(--text2); font-size: 15px; }
+
+    .promo { margin-top: 28px; background: linear-gradient(135deg, rgba(244,196,48,.06), rgba(244,196,48,.02)); border: 1px solid rgba(244,196,48,.2); border-radius: 18px; padding: 28px 24px; text-align: center; }
+    .promo h3 { color: var(--gold); margin-bottom: 8px; font-size: 1.15rem; font-weight: 700; }
+    .promo p { color: var(--text2); font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+    .promo a { display: inline-block; background: linear-gradient(135deg, var(--gold), #D4A017); color: #0a0f22; padding: 12px 28px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 15px; transition: transform .2s, box-shadow .2s; }
+    .promo a:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(244,196,48,.4); }
 
     @media (max-width: 600px) {
       .header-nav .nav-link { display: none; }
-      .lb-item { padding: 16px; }
+      .lb-item { padding: 14px 16px; }
+      .skel-item { padding: 14px 16px; }
     }
   </style>
 </head>
 <body>
-<nav class=\"back-nav\"><a href=\"/\" aria-label=\"Back to Home\">&#8592; Home</a><span class=\"back-nav-sep\">/</span><span class=\"back-nav-title\">leaderboard</span></nav>
+
+<nav class="back-nav">
+  <a href="/" aria-label="Back to Home">&#8592; Home</a>
+  <span class="back-nav-sep">/</span>
+  <span class="back-nav-title">Leaderboard</span>
+</nav>
 
 <div class="bg-glow"></div>
+<div class="bg-glow2"></div>
 
 <header class="header">
   <a href="/">
-    <img src="/icon-192.png" alt="KFI" />
+    <img src="/icon-192.png" alt="KenyaVest" />
     KenyaVest
   </a>
   <div class="header-nav" id="navLinks">
@@ -95,63 +134,90 @@
 
 <div class="main">
   <div class="hero">
-    <div class="hero-icon">🏆</div>
+    <div class="hero-icon">ðŸ†</div>
     <h1>Top <span>Referrers</span></h1>
-    <p>See who's earning the most by inviting their friends to KenyaVest. You earn 10% instantly on every first deposit!</p>
+    <p>See who's earning the most by inviting friends to KenyaVest. Earn <strong style="color:var(--gold)">10%</strong> instantly on every first deposit!</p>
   </div>
 
   <div class="leaderboard">
     <div class="lb-header">
-      <div class="lb-title">🚀 All-Time Leaders</div>
+      <div class="lb-title">ðŸš€ All-Time Leaders</div>
       <div class="lb-meta">Top 10</div>
     </div>
     <div class="lb-list" id="lbList">
-      <div class="empty">Loading leaderboard...</div>
+      <!-- Skeleton loaders while fetching -->
+      <div class="skel-item">
+        <div class="skeleton skel-rank"></div>
+        <div class="skeleton skel-avatar"></div>
+        <div class="skel-info"><div class="skeleton skel-name"></div><div class="skeleton skel-sub"></div></div>
+        <div class="skeleton skel-val"></div>
+      </div>
+      <div class="skel-item">
+        <div class="skeleton skel-rank"></div>
+        <div class="skeleton skel-avatar"></div>
+        <div class="skel-info"><div class="skeleton skel-name"></div><div class="skeleton skel-sub"></div></div>
+        <div class="skeleton skel-val"></div>
+      </div>
+      <div class="skel-item">
+        <div class="skeleton skel-rank"></div>
+        <div class="skeleton skel-avatar"></div>
+        <div class="skel-info"><div class="skeleton skel-name"></div><div class="skeleton skel-sub"></div></div>
+        <div class="skeleton skel-val"></div>
+      </div>
     </div>
   </div>
 
   <div class="promo">
-    <h3>Want to see your name here?</h3>
-    <p>Share your unique referral link with friends. When they make their first deposit, you instantly receive 10% as a bonus!</p>
-    <a href="/dashboard.html" id="promoBtn">Get Your Referral Link</a>
+    <h3>ðŸŽ¯ Want to see your name here?</h3>
+    <p>Share your unique referral link. When friends make their first deposit, you instantly receive <strong style="color:var(--gold)">10%</strong> as a bonus â€” no cap!</p>
+    <a href="/dashboard.html" id="promoBtn">Get Your Referral Link â†’</a>
   </div>
 </div>
 
 <script>
-  // Auth state check to update header
+  // Auth state â€” update header & promo
   const token = localStorage.getItem('token');
   if (token) {
     document.getElementById('navLinks').innerHTML = `
-      <a href="/dashboard.html" class="nav-btn">Go to Dashboard →</a>
+      <a href="/dashboard.html" class="nav-btn">Go to Dashboard â†’</a>
     `;
-    document.getElementById('promoBtn').textContent = 'Share Your Link Now';
+    document.getElementById('promoBtn').textContent = 'Share Your Link Now â†’';
+    document.getElementById('promoBtn').href = '/dashboard.html';
   }
 
-  function fmt(n) { return 'KES ' + Number(n).toLocaleString('en-KE', { minimumFractionDigits: 0 }); }
+  function fmt(n) {
+    return 'KES ' + Number(n).toLocaleString('en-KE', { minimumFractionDigits: 0 });
+  }
 
   async function loadLeaderboard() {
     try {
       const res = await fetch('/api/auth/leaderboard');
       const data = await res.json();
-      
+
       const list = document.getElementById('lbList');
       if (!data || data.length === 0) {
-        list.innerHTML = '<div class="empty">No referral earnings yet. Be the first!</div>';
+        list.innerHTML = '<div class="empty">ðŸ No referral earnings yet. Be the first on the board!</div>';
         return;
       }
 
       list.innerHTML = data.map((user, i) => {
-        const rank = i + 1;
-        const rClass = rank <= 3 ? `rank-${rank}` : '';
-        const icon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+        const rank  = i + 1;
+        const topClass = rank <= 3 ? `top-${rank}` : '';
+        const medal = rank === 1 ? 'ðŸ¥‡' : rank === 2 ? 'ðŸ¥ˆ' : rank === 3 ? 'ðŸ¥‰' : '';
+        const rankHTML = medal
+          ? `<div class="rank"><span class="rank-medal">${medal}</span></div>`
+          : `<div class="rank" style="color:var(--text2);font-size:.95rem">#${rank}</div>`;
         const initials = user.name.substring(0, 2).toUpperCase();
 
         return `
-          <div class="lb-item">
-            <div class="rank ${rClass}">${icon}</div>
+          <div class="lb-item ${topClass}">
+            ${rankHTML}
             <div class="user">
               <div class="avatar">${initials}</div>
-              <div class="name">${user.name}</div>
+              <div>
+                <div class="name">${user.name}</div>
+                <div class="user-rank-num">Rank #${rank}</div>
+              </div>
             </div>
             <div class="earnings">
               <div class="earnings-val">${fmt(user.earnings)}</div>
@@ -161,7 +227,7 @@
         `;
       }).join('');
     } catch (e) {
-      document.getElementById('lbList').innerHTML = '<div class="empty">Failed to load leaderboard.</div>';
+      document.getElementById('lbList').innerHTML = '<div class="empty">âš ï¸ Failed to load leaderboard. Please try again.</div>';
     }
   }
 
