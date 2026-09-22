@@ -1181,8 +1181,8 @@ img { max-width: 100%; display: block; }
 /* ---------- BACK TO TOP ---------- */
 .btt {
   position: fixed;
-  bottom: 5.5rem;     /* above WhatsApp button */
-  right: 2rem;
+  bottom: 6rem;     /* above WhatsApp button */
+  right: 24px;
   z-index: 999;
   width: 44px; height: 44px;
   background: var(--gold);
