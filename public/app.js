@@ -137,18 +137,10 @@ async function submitLog(e) {
   }
 }
 
-// Show OTP code hint in verification panel (used when email not configured)
+// OTP hint display removed for security — code is sent via email only
 function setOtpHint(msg) {
-  let hint = document.getElementById('otpHint');
-  if (!hint) return;
-  // Extract a 6-digit code from the message if present
-  const match = msg.match(/\b(\d{6})\b/);
-  if (match) {
-    hint.textContent = '🔑 Your code: ' + match[1];
-    hint.style.display = 'block';
-  } else {
-    hint.style.display = 'none';
-  }
+  const hint = document.getElementById('otpHint');
+  if (hint) hint.style.display = 'none';
 }
 
 async function submitOTP() {

@@ -254,17 +254,10 @@
     }
   });
 
-  // Show OTP code in the hint box when email is not configured
+  // OTP hint display removed for security — code is sent via email only
   function setOtpHint(msg) {
     const hint = document.getElementById('otpHint');
-    if (!hint) return;
-    const match = msg && msg.match(/\b(\d{6})\b/);
-    if (match) {
-      hint.textContent = '🔑 Your code: ' + match[1];
-      hint.style.display = 'block';
-    } else {
-      hint.style.display = 'none';
-    }
+    if (hint) hint.style.display = 'none';
   }
 
   // ── OTP VERIFY ────────────────────────────────────────────────────
