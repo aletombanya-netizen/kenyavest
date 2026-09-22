@@ -48,6 +48,7 @@ app.use(
 
 // ── CORS ──────────────────────────────────────────────────────────
 const allowedOrigins = [
+  'https://kenyavest.onrender.com',
   'https://kashflowvest.onrender.com',
   'http://localhost:3000',
   'http://localhost:5000',
