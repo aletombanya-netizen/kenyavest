@@ -29,15 +29,15 @@ const registerUser = async (req, res) => {
           purpose: 'verify',
           expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
         });
-        console.log(`[OTP - Reregister] Email: ${email} | Code: ${code} | Purpose: verify`);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`[OTP - Reregister] Email: ${email} | Purpose: verify`);
+        }
         
         // Send OTP email
-        const emailSent = await sendOTPEmail(user.email, code, 'verify');
+        await sendOTPEmail(user.email, code, 'verify');
 
         return res.status(201).json({
-          message: emailSent
-            ? 'Account created! Please check your email for the verification code.'
-            : `Account created! Your verification code is: ${code} (email not configured)`,
+          message: 'Account created! Please check your email for the verification code.',
           email: user.email,
           requiresVerification: true,
         });
@@ -76,16 +76,16 @@ const registerUser = async (req, res) => {
     });
 
     // Send OTP email
-    const emailSent = await sendOTPEmail(user.email, code, 'verify');
-    console.log(`[OTP] Email: ${email} | Code: ${code} | Purpose: verify`);
+    await sendOTPEmail(user.email, code, 'verify');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[OTP] Email: ${email} | Purpose: verify`);
+    }
 
     // Send welcome email if they provided an email (optional field)
     if (user.email) sendWelcomeEmail(user).catch(() => {});
 
     res.status(201).json({
-      message: emailSent
-        ? 'Account created! Please check your email for the verification code.'
-        : `Account created! Your verification code is: ${code}`,
+      message: 'Account created! Please check your email for the verification code.',
       email: user.email,
       requiresVerification: true,
     });
@@ -159,8 +159,10 @@ const resendOTP = async (req, res) => {
     
     // Send OTP email
     await sendOTPEmail(user.email, code, 'verify');
-    console.log(`[OTP RESEND] Email: ${email} | Code: ${code}`);
-    res.json({ message: 'New OTP sent. Check the Render logs for the code.' });
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[OTP RESEND] Email: ${email}`);
+    }
+    res.json({ message: 'A new verification code has been sent to your email.' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -177,6 +179,11 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    // Block banned users
+    if (user.isBanned) {
+      return res.status(403).json({ message: 'Your account has been suspended. Please contact support.' });
+    }
+
     if (!user.isVerified) {
       // Resend a fresh OTP automatically
       await OTP.deleteMany({ email, purpose: 'verify' });
@@ -184,13 +191,13 @@ const loginUser = async (req, res) => {
       await OTP.create({ email, code, purpose: 'verify', expiresAt: new Date(Date.now() + 10 * 60 * 1000) });
       
       // Send OTP email
-      const emailSent = await sendOTPEmail(user.email, code, 'verify');
-      console.log(`[OTP - Login Attempt] Email: ${email} | Code: ${code}`);
+      await sendOTPEmail(user.email, code, 'verify');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`[OTP - Login Attempt] Email: ${email}`);
+      }
       
       return res.status(403).json({
-        message: emailSent
-          ? 'Please check your email for the verification code.'
-          : `Your verification code is: ${code}`,
+        message: 'Please check your email for the verification code.',
         requiresVerification: true,
         email: user.email,
       });
@@ -233,9 +240,11 @@ const forgotPassword = async (req, res) => {
     });
     
     // Send OTP email
-    const emailSent = await sendOTPEmail(user.email, code, 'reset');
-    console.log(`[OTP - PASSWORD RESET] Email: ${email} | Code: ${code}`);
-    res.json({ message: emailSent ? 'Password reset code sent to your email.' : `Your reset code is: ${code}` });
+    await sendOTPEmail(user.email, code, 'reset');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[OTP - PASSWORD RESET] Email: ${email}`);
+    }
+    res.json({ message: 'If that email is registered, a password reset code has been sent.' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -337,11 +346,19 @@ const getLeaderboard = async (req, res) => {
   }
 };
 
-// ── Setup Admin (Temporary Route) ───────────────────────────────────
-// @route GET /api/auth/setup-admin?email=your_email@example.com
+// ── Setup Admin (Protected Route) ────────────────────────────────────
+// @route GET /api/auth/setup-admin?email=your_email@example.com&secret=ADMIN_SETUP_SECRET
 const setupAdmin = async (req, res) => {
   try {
-    const { email } = req.query;
+    const { email, secret } = req.query;
+    // Require a secret token from env — prevents unauthorized admin escalation
+    const expectedSecret = process.env.ADMIN_SETUP_SECRET;
+    if (!expectedSecret) {
+      return res.status(403).send('Admin setup is disabled (ADMIN_SETUP_SECRET not configured).');
+    }
+    if (!secret || secret !== expectedSecret) {
+      return res.status(403).send('Invalid setup secret.');
+    }
     if (!email) return res.status(400).send('Please provide an email query parameter');
     
     const user = await User.findOne({ email: email.toLowerCase() });
