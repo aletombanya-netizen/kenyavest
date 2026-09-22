@@ -179,6 +179,9 @@
       </div>
       <button type="submit" class="btn" id="resetBtn">Reset Password →</button>
     </form>
+    <div class="resend-row" style="margin-bottom:14px;">
+      Didn't get the code? <a id="resendResetOtpLink">Resend OTP</a>
+    </div>
     <div class="links"><a href="#" id="backToLoginBtn3">← Back to Login</a></div>
   </div>
 
@@ -336,6 +339,21 @@
     } catch (err) {
       showMsg('❌ Network error.', 'error');
       btn.disabled = false; btn.textContent = 'Send OTP →';
+    }
+  });
+
+  // ── RESEND RESET OTP ──────────────────────────────────────────────
+  document.getElementById('resendResetOtpLink').addEventListener('click', async () => {
+    if (!currentEmail) return;
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentEmail })
+      });
+      const data = await res.json();
+      showMsg(res.ok ? '✅ New reset code sent! Check your email.' : '❌ ' + (data.message || 'Failed to resend.'), res.ok ? 'success' : 'error');
+    } catch (err) {
+      showMsg('❌ Network error.', 'error');
     }
   });
 

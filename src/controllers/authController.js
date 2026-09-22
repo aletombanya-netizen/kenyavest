@@ -282,6 +282,34 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// ── Change Password (Authenticated) ───────────────────────────────
+// @route POST /api/auth/change-password
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Current and new passwords are required' });
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({ message: 'New password must be at least 8 characters' });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) return res.status(401).json({ message: 'Current password is incorrect' });
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: 'Password updated successfully!' });
+  } catch (error) {
+    console.error('[Change Password Error]', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // ── Get Profile ───────────────────────────────────────────────────
 // @route GET /api/auth/profile
 const getUserProfile = async (req, res) => {
@@ -410,6 +438,7 @@ module.exports = {
   resendOTP,
   forgotPassword,
   resetPassword,
+  changePassword,
   getUserProfile,
   getUserTransactions,
   getLeaderboard,

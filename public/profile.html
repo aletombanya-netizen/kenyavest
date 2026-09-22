@@ -262,30 +262,29 @@
 
     btn.disabled = true; btn.textContent = 'Updating…';
 
-    // Use the forgot-password / reset flow since there's no direct change-password endpoint
-    // We'll first verify old password via login, then reset
     try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-      const email = userInfo.email;
-
-      // Step 1: verify current password via login
-      const loginRes = await fetch('/api/auth/login', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: current })
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + TOKEN
+        },
+        body: JSON.stringify({ currentPassword: current, newPassword: newPw })
       });
-      if (!loginRes.ok) {
-        msg.className = 'msg error'; msg.textContent = '❌ Current password is incorrect.';
-        btn.disabled = false; btn.textContent = 'Update Password'; return;
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        msg.className = 'msg success';
+        msg.textContent = '✅ ' + data.message;
+        // Clear fields
+        document.getElementById('currentPw').value = '';
+        document.getElementById('newPw').value = '';
+        document.getElementById('confirmPw').value = '';
+      } else {
+        msg.className = 'msg error';
+        msg.textContent = '❌ ' + (data.message || 'Failed to update password.');
       }
-
-      // Step 2: request OTP
-      await fetch('/api/auth/forgot-password', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-
-      msg.className = 'msg success';
-      msg.textContent = '📧 A verification code has been sent to your email. Use the Reset Password flow on the login page to complete the change.';
     } catch(e) {
       msg.className = 'msg error'; msg.textContent = '❌ Network error. Please try again.';
     }

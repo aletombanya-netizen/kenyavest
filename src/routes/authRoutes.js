@@ -7,6 +7,7 @@ const {
   resendOTP,
   forgotPassword,
   resetPassword,
+  changePassword,
   getUserProfile,
   getUserTransactions,
   getLeaderboard,
@@ -23,6 +24,7 @@ router.post('/verify-phone',    verifyPhone);
 router.post('/resend-otp',      resendOTP);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password',  resetPassword);
+router.post('/change-password', protect, changePassword);
 router.get('/setup-admin',      setupAdmin);
 router.post('/set-pin',         protect, setPin);
 
