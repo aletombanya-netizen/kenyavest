@@ -18,6 +18,7 @@ const { startDailyROICron } = require('./src/services/cronJobs');
 const { apiLimiter, authLimiter } = require('./src/middleware/rateLimiter');
 
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy (Render)
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
