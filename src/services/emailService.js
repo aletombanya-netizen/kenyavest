@@ -3,7 +3,7 @@ const { Resend } = require('resend');
 // Configure Resend — uses RESEND_API_KEY env var
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'KenyaVest <noreply@kenyavest.com>';
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'KenyaVest <noreply@kashflowvest.site>';
 const APP_URL    = process.env.APP_URL || 'https://kenyavest.onrender.com';
 
 /**
