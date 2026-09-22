@@ -12,9 +12,9 @@ try {
 if (!TOKEN) window.location.href = '/';
 
 const PLANS = {
-  starter: { rate: 0.03 },
-  pro:     { rate: 0.05 },
-  elite:   { rate: 0.08 },
+  starter: { rate: 0.30 },
+  pro:     { rate: 0.40 },
+  elite:   { rate: 0.50 },
 };
 
 let balanceChartInstance = null;

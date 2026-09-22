@@ -5,9 +5,9 @@ const crypto = require('crypto');
 
 // Investment plans configuration
 const PLANS = {
-  starter: { name: 'Starter', dailyReturnRate: 0.03, minAmount: 500, maxAmount: 4999, durationDays: 7 },
-  pro:     { name: 'Pro',     dailyReturnRate: 0.05, minAmount: 5000, maxAmount: 49999, durationDays: 14 },
-  elite:   { name: 'Elite',   dailyReturnRate: 0.08, minAmount: 50000, maxAmount: Infinity, durationDays: 30 },
+  starter: { name: 'Starter', dailyReturnRate: 0.30, minAmount: 500, maxAmount: 4999, durationDays: 7 },
+  pro:     { name: 'Pro',     dailyReturnRate: 0.40, minAmount: 5000, maxAmount: 49999, durationDays: 14 },
+  elite:   { name: 'Elite',   dailyReturnRate: 0.50, minAmount: 50000, maxAmount: Infinity, durationDays: 30 },
 };
 
 // @desc    Create a new investment

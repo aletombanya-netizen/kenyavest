@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Referral Leaderboard â€” KenyaVest</title>
+  <title>Referral Leaderboard — KenyaVest</title>
   <meta name="description" content="See Kenya's top earners on the KenyaVest referral leaderboard. Earn 10% commission on every referral." />
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
@@ -20,6 +20,7 @@
       --silver: #e2e8f0; --bronze: #cd7f32;
     }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    a { text-decoration: none; }
 
     /* Ambient background */
     .bg-glow { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(244,196,48,0.06) 0%, transparent 60%); top: -200px; right: -200px; pointer-events: none; z-index: 0; }
@@ -134,14 +135,14 @@
 
 <div class="main">
   <div class="hero">
-    <div class="hero-icon">ðŸ†</div>
+    <div class="hero-icon">🏆</div>
     <h1>Top <span>Referrers</span></h1>
     <p>See who's earning the most by inviting friends to KenyaVest. Earn <strong style="color:var(--gold)">10%</strong> instantly on every first deposit!</p>
   </div>
 
   <div class="leaderboard">
     <div class="lb-header">
-      <div class="lb-title">ðŸš€ All-Time Leaders</div>
+      <div class="lb-title">🚀 All-Time Leaders</div>
       <div class="lb-meta">Top 10</div>
     </div>
     <div class="lb-list" id="lbList">
@@ -168,20 +169,20 @@
   </div>
 
   <div class="promo">
-    <h3>ðŸŽ¯ Want to see your name here?</h3>
-    <p>Share your unique referral link. When friends make their first deposit, you instantly receive <strong style="color:var(--gold)">10%</strong> as a bonus â€” no cap!</p>
-    <a href="/dashboard.html" id="promoBtn">Get Your Referral Link â†’</a>
+    <h3>🎯 Want to see your name here?</h3>
+    <p>Share your unique referral link. When friends make their first deposit, you instantly receive <strong style="color:var(--gold)">10%</strong> as a bonus — no cap!</p>
+    <a href="/dashboard.html" id="promoBtn">Get Your Referral Link →</a>
   </div>
 </div>
 
 <script>
-  // Auth state â€” update header & promo
+  // Auth state — update header & promo
   const token = localStorage.getItem('token');
   if (token) {
     document.getElementById('navLinks').innerHTML = `
-      <a href="/dashboard.html" class="nav-btn">Go to Dashboard â†’</a>
+      <a href="/dashboard.html" class="nav-btn">Go to Dashboard →</a>
     `;
-    document.getElementById('promoBtn').textContent = 'Share Your Link Now â†’';
+    document.getElementById('promoBtn').textContent = 'Share Your Link Now →';
     document.getElementById('promoBtn').href = '/dashboard.html';
   }
 
@@ -196,14 +197,14 @@
 
       const list = document.getElementById('lbList');
       if (!data || data.length === 0) {
-        list.innerHTML = '<div class="empty">ðŸ No referral earnings yet. Be the first on the board!</div>';
+        list.innerHTML = '<div class="empty">🏁 No referral earnings yet. Be the first on the board!</div>';
         return;
       }
 
       list.innerHTML = data.map((user, i) => {
         const rank  = i + 1;
         const topClass = rank <= 3 ? `top-${rank}` : '';
-        const medal = rank === 1 ? 'ðŸ¥‡' : rank === 2 ? 'ðŸ¥ˆ' : rank === 3 ? 'ðŸ¥‰' : '';
+        const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
         const rankHTML = medal
           ? `<div class="rank"><span class="rank-medal">${medal}</span></div>`
           : `<div class="rank" style="color:var(--text2);font-size:.95rem">#${rank}</div>`;
@@ -227,7 +228,7 @@
         `;
       }).join('');
     } catch (e) {
-      document.getElementById('lbList').innerHTML = '<div class="empty">âš ï¸ Failed to load leaderboard. Please try again.</div>';
+      document.getElementById('lbList').innerHTML = '<div class="empty">⚠️ Failed to load leaderboard. Please try again.</div>';
     }
   }
 
