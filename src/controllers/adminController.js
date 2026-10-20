@@ -158,6 +158,7 @@ const toggleUserBan = async (req, res) => {
   }
 };
 
+const Investment = require('../models/Investment');
 const Setting = require('../models/Setting');
 
 // @route PUT /api/admin/settings
@@ -180,6 +181,74 @@ const updateSettings = async (req, res) => {
   }
 };
 
+// ── Client Package Management ─────────────────────────────────────
+
+// @route GET /api/admin/users/:id/investments
+const getUserInvestmentsAdmin = async (req, res) => {
+  try {
+    const investments = await Investment.find({ user: req.params.id }).sort({ createdAt: -1 });
+    res.json(investments);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching client packages' });
+  }
+};
+
+// @route POST /api/admin/users/:id/investments
+// @desc Assign new investment package or update an existing one
+const assignOrUpdateUserInvestment = async (req, res) => {
+  try {
+    const { investmentId, planName, amountInvested, dailyReturn, durationDays, status } = req.body;
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (investmentId) {
+      // Edit existing package
+      const inv = await Investment.findById(investmentId);
+      if (!inv) return res.status(404).json({ message: 'Investment package not found' });
+      if (planName) inv.planName = planName;
+      if (amountInvested !== undefined) inv.amountInvested = Number(amountInvested);
+      if (dailyReturn !== undefined) inv.dailyReturn = Number(dailyReturn);
+      if (durationDays !== undefined) inv.durationDays = Number(durationDays);
+      if (status) inv.status = status;
+      await inv.save();
+      return res.json({ message: 'Investment package updated successfully', investment: inv });
+    }
+
+    // Assign new package directly to client
+    const days = Number(durationDays) || 30;
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + days);
+
+    const newInv = await Investment.create({
+      user: user._id,
+      planName: planName || 'Custom Plan',
+      amountInvested: Number(amountInvested) || 0,
+      dailyReturn: Number(dailyReturn) || 0,
+      durationDays: days,
+      endDate,
+      status: status || 'active',
+    });
+
+    res.status(201).json({ message: 'Investment package assigned successfully', investment: newInv });
+  } catch (error) {
+    console.error('[Admin Assign Package Error]', error);
+    res.status(500).json({ message: 'Error saving package for user' });
+  }
+};
+
+// @route DELETE /api/admin/investments/:id
+const cancelUserInvestment = async (req, res) => {
+  try {
+    const inv = await Investment.findById(req.params.id);
+    if (!inv) return res.status(404).json({ message: 'Investment not found' });
+    inv.status = 'cancelled';
+    await inv.save();
+    res.json({ message: 'Package cancelled successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error cancelling investment' });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getAllTransactions,
@@ -188,4 +257,7 @@ module.exports = {
   getContactMessages,
   toggleUserBan,
   updateSettings,
+  getUserInvestmentsAdmin,
+  assignOrUpdateUserInvestment,
+  cancelUserInvestment,
 };

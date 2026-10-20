@@ -202,13 +202,77 @@
       
       <!-- Edit Balance Modal -->
       <div id="balanceModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center">
-        <div style="background:var(--bg2);padding:24px;border-radius:12px;width:300px;border:1px solid var(--border)">
-          <h3 style="margin-bottom:16px;font-size:16px">Edit Balance</h3>
-          <p style="font-size:13px;color:var(--text2);margin-bottom:8px" id="balModalUser"></p>
+        <div style="background:var(--bg2);padding:24px;border-radius:12px;width:340px;border:1px solid var(--border)">
+          <h3 style="margin-bottom:12px;font-size:16px;color:var(--accent)">💰 Edit Client Balance</h3>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:12px" id="balModalUser"></p>
+          <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">Balance (KES)</label>
           <input type="number" id="newBalInput" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:white;padding:10px;border-radius:6px;margin-bottom:16px" />
           <div style="display:flex;gap:10px">
-            <button onclick="saveBalance()" class="btn-approve" style="flex:1">Save</button>
-            <button onclick="document.getElementById('balanceModal').style.display='none'" class="btn-reject" style="flex:1">Cancel</button>
+            <button onclick="saveBalance()" class="btn-approve" style="flex:1;padding:10px">Save Balance</button>
+            <button onclick="document.getElementById('balanceModal').style.display='none'" class="btn-reject" style="flex:1;padding:10px">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Packages Modal -->
+      <div id="packageModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center">
+        <div style="background:var(--bg2);padding:24px;border-radius:14px;width:550px;max-width:92%;max-height:90vh;overflow-y:auto;border:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3 style="font-size:17px;color:#F4C430">📦 Client Investment Packages</h3>
+            <button onclick="document.getElementById('packageModal').style.display='none'" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer">×</button>
+          </div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:16px" id="pkgModalUser"></p>
+
+          <!-- Current Packages Table -->
+          <div style="margin-bottom:20px">
+            <h4 style="font-size:13px;margin-bottom:8px;color:var(--text)">Active & Past Packages</h4>
+            <div id="clientPkgList"><div class="loading"><span class="spinner"></span> Loading packages...</div></div>
+          </div>
+
+          <!-- Add / Edit Package Form -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px">
+            <h4 style="font-size:13px;margin-bottom:12px;color:var(--accent)" id="pkgFormTitle">➕ Assign / Edit Package</h4>
+            <input type="hidden" id="pkgEditId" />
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div>
+                <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px">Plan Name</label>
+                <select id="pkgPlanName" style="width:100%;padding:8px;background:var(--bg2);border:1px solid var(--border);color:white;border-radius:6px">
+                  <option value="Starter">Starter</option>
+                  <option value="Pro">Pro</option>
+                  <option value="Christmas Star">Christmas Star</option>
+                  <option value="Premium">Premium</option>
+                  <option value="VIP">VIP</option>
+                  <option value="Elite">Elite</option>
+                  <option value="Custom">Custom Plan</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px">Amount Invested (KES)</label>
+                <input type="number" id="pkgAmount" placeholder="e.g. 20000" style="width:100%;padding:8px;background:var(--bg2);border:1px solid var(--border);color:white;border-radius:6px" />
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+              <div>
+                <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px">Daily Return (KES)</label>
+                <input type="number" id="pkgDailyReturn" placeholder="e.g. 12000" style="width:100%;padding:8px;background:var(--bg2);border:1px solid var(--border);color:white;border-radius:6px" />
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px">Duration (Days)</label>
+                <input type="number" id="pkgDuration" value="30" style="width:100%;padding:8px;background:var(--bg2);border:1px solid var(--border);color:white;border-radius:6px" />
+              </div>
+              <div>
+                <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:4px">Status</label>
+                <select id="pkgStatus" style="width:100%;padding:8px;background:var(--bg2);border:1px solid var(--border);color:white;border-radius:6px">
+                  <option value="active">Active</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px">
+              <button onclick="saveClientPackage()" class="btn-approve" style="flex:1;padding:8px">Save Package</button>
+              <button onclick="resetPackageForm()" class="btn-reject" style="padding:8px">Reset</button>
+            </div>
           </div>
         </div>
       </div>
@@ -301,6 +365,14 @@
   }
   async function apiPut(path, body) {
     const res = await fetch(path, { method:'PUT', headers:{'Content-Type':'application/json', Authorization:`Bearer ${TOKEN}`}, body: JSON.stringify(body) });
+    return res.json();
+  }
+  async function apiPost(path, body) {
+    const res = await fetch(path, { method:'POST', headers:{'Content-Type':'application/json', Authorization:`Bearer ${TOKEN}`}, body: JSON.stringify(body) });
+    return res.json();
+  }
+  async function apiDelete(path) {
+    const res = await fetch(path, { method:'DELETE', headers:{ Authorization:`Bearer ${TOKEN}` } });
     return res.json();
   }
 
@@ -460,14 +532,17 @@
         <td>${u.email||'—'}</td>
         <td style="color:var(--accent);font-weight:600">
           KES ${(u.balance||0).toLocaleString()} 
-          <button style="background:none;border:none;cursor:pointer;font-size:12px" onclick="openBalanceModal('${u._id}','${u.name}',${u.balance})">✏️</button>
+          <button style="background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);color:#4ade80;cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;margin-left:4px" onclick="openBalanceModal('${u._id}','${u.name}',${u.balance})" title="Edit Balance">✏️ Edit</button>
+        </td>
+        <td>
+          <button style="background:rgba(244,196,48,0.15);border:1px solid rgba(244,196,48,0.3);color:#F4C430;cursor:pointer;font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600" onclick="openPackageModal('${u._id}','${u.name}')">📦 Packages</button>
         </td>
         <td><span class="badge ${u.role==='admin'?'badge-purple':'badge-info'}">${u.role}</span></td>
         <td>
           ${u.role !== 'admin' ? `<button class="${u.isBanned ? 'btn-approve' : 'btn-reject'}" style="padding:4px 8px;font-size:11px" onclick="toggleBan('${u._id}')">${u.isBanned ? 'Unban' : 'Ban'}</button>` : '—'}
         </td>
       </tr>`).join('');
-    document.getElementById('usrTable').innerHTML = `<table id="usrTable"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Role</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById('usrTable').innerHTML = `<table id="usrTable"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Balance</th><th>Packages</th><th>Role</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   let editingUser = null;
@@ -482,8 +557,94 @@
     const bal = document.getElementById('newBalInput').value;
     const data = await apiPut(`/api/admin/users/${editingUser}/balance`, { balance: bal });
     document.getElementById('balanceModal').style.display = 'none';
-    showToast('Balance updated');
+    showToast('Balance updated successfully', 'success');
     loadUsers();
+  }
+
+  /* ── Package Management for Clients ── */
+  let pkgUserId = null;
+  async function openPackageModal(id, name) {
+    pkgUserId = id;
+    document.getElementById('pkgModalUser').textContent = `Client: ${name} (${id})`;
+    document.getElementById('packageModal').style.display = 'flex';
+    resetPackageForm();
+    await loadClientPackages();
+  }
+
+  async function loadClientPackages() {
+    const el = document.getElementById('clientPkgList');
+    el.innerHTML = '<div class="loading"><span class="spinner"></span> Loading packages...</div>';
+    const packages = await api(`/api/admin/users/${pkgUserId}/investments`);
+    if (!packages || !packages.length) {
+      el.innerHTML = '<p style="font-size:12px;color:var(--text2);padding:10px 0;">No packages assigned to this user yet.</p>';
+      return;
+    }
+    const rows = packages.map(p => `
+      <tr id="pkg-row-${p._id}">
+        <td><strong>${p.planName}</strong></td>
+        <td>KES ${(p.amountInvested||0).toLocaleString()}</td>
+        <td style="color:#4ade80">+KES ${(p.dailyReturn||0).toLocaleString()}/day</td>
+        <td>${p.durationDays}d</td>
+        <td><span class="badge ${p.status==='active'?'badge-success':(p.status==='completed'?'badge-info':'badge-danger')}">${p.status}</span></td>
+        <td>
+          <button style="background:none;border:none;cursor:pointer;font-size:13px;margin-right:6px" onclick='editPackageRow(${JSON.stringify(p)})' title="Edit">✏️</button>
+          ${p.status === 'active' ? `<button style="background:none;border:none;cursor:pointer;font-size:13px" onclick="cancelPackage('${p._id}')" title="Cancel Package">❌</button>` : ''}
+        </td>
+      </tr>`).join('');
+    el.innerHTML = `<table style="font-size:12px"><thead><tr><th>Plan</th><th>Invested</th><th>Daily ROI</th><th>Duration</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function editPackageRow(pkg) {
+    document.getElementById('pkgEditId').value = pkg._id;
+    document.getElementById('pkgPlanName').value = pkg.planName;
+    document.getElementById('pkgAmount').value = pkg.amountInvested;
+    document.getElementById('pkgDailyReturn').value = pkg.dailyReturn;
+    document.getElementById('pkgDuration').value = pkg.durationDays;
+    document.getElementById('pkgStatus').value = pkg.status;
+    document.getElementById('pkgFormTitle').textContent = '✏️ Edit Existing Package';
+  }
+
+  function resetPackageForm() {
+    document.getElementById('pkgEditId').value = '';
+    document.getElementById('pkgPlanName').value = 'Christmas Star';
+    document.getElementById('pkgAmount').value = '';
+    document.getElementById('pkgDailyReturn').value = '';
+    document.getElementById('pkgDuration').value = '30';
+    document.getElementById('pkgStatus').value = 'active';
+    document.getElementById('pkgFormTitle').textContent = '➕ Assign / Add New Package';
+  }
+
+  async function saveClientPackage() {
+    const investmentId = document.getElementById('pkgEditId').value;
+    const planName = document.getElementById('pkgPlanName').value;
+    const amountInvested = parseFloat(document.getElementById('pkgAmount').value) || 0;
+    const dailyReturn = parseFloat(document.getElementById('pkgDailyReturn').value) || 0;
+    const durationDays = parseInt(document.getElementById('pkgDuration').value) || 30;
+    const status = document.getElementById('pkgStatus').value;
+
+    const res = await apiPost(`/api/admin/users/${pkgUserId}/investments`, {
+      investmentId: investmentId || undefined,
+      planName,
+      amountInvested,
+      dailyReturn,
+      durationDays,
+      status,
+    });
+
+    if (res?.message) {
+      showToast(res.message, 'success');
+      resetPackageForm();
+      await loadClientPackages();
+    } else {
+      showToast(res?.message || 'Error saving package', 'error');
+    }
+  }
+
+  async function cancelPackage(id) {
+    if (!confirm('Are you sure you want to cancel this client package?')) return;
+    const res = await apiDelete(`/api/admin/investments/${id}`);
+    showToast(res?.message || 'Package cancelled', 'error');
+    await loadClientPackages();
   }
 
   async function toggleBan(id) {

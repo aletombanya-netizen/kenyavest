@@ -8,6 +8,9 @@ const {
   toggleUserBan,
   getContactMessages,
   updateSettings,
+  getUserInvestmentsAdmin,
+  assignOrUpdateUserInvestment,
+  cancelUserInvestment,
 } = require('../controllers/adminController');
 const { protect } = require('../middleware/auth');
 const { admin } = require('../middleware/admin');
@@ -15,6 +18,8 @@ const { admin } = require('../middleware/admin');
 router.route('/users').get(protect, admin, getAllUsers);
 router.route('/users/:id/balance').put(protect, admin, updateUserBalance);
 router.route('/users/:id/ban').put(protect, admin, toggleUserBan);
+router.route('/users/:id/investments').get(protect, admin, getUserInvestmentsAdmin).post(protect, admin, assignOrUpdateUserInvestment);
+router.route('/investments/:id').delete(protect, admin, cancelUserInvestment);
 router.route('/transactions').get(protect, admin, getAllTransactions);
 router.route('/transactions/:id').put(protect, admin, updateTransactionStatus);
 router.route('/contacts').get(protect, admin, getContactMessages);
