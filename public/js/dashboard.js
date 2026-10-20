@@ -156,6 +156,8 @@ function renderChart(txs) {
 }
 
 // ── Investments ──────────────────────────────────────
+let _countdownTimer = null;
+
 function renderInvestments(investments) {
   const el = document.getElementById('investmentsList');
   const active = investments.filter(i => i.status === 'active');
@@ -163,20 +165,18 @@ function renderInvestments(investments) {
     el.innerHTML = '<div class="empty"><div class="empty-icon">🌱</div><p>No active investments yet</p></div>';
     return;
   }
+
   el.innerHTML = active.map(inv => {
-    const start     = new Date(inv.createdAt);
-    const end       = new Date(inv.endDate);
-    const now       = new Date();
-    
-    let daysElapsed = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-    let planDuration = inv.durationDays || 30;
-    
-    if (daysElapsed < 0) daysElapsed = 0;
+    const start       = new Date(inv.createdAt);
+    const end         = new Date(inv.endDate);
+    const now         = new Date();
+    const planDuration = inv.durationDays || 30;
+    let daysElapsed   = Math.max(0, Math.floor((now - start) / 86400000));
     if (daysElapsed > planDuration) daysElapsed = planDuration;
-    
-    const daysRemaining = planDuration - daysElapsed;
     const pct = Math.min(100, Math.round((daysElapsed / planDuration) * 100));
-    
+    const endISO = end.toISOString();
+    const uid = inv._id;
+
     return `
       <div class="invest-item">
         <div class="invest-top">
@@ -186,10 +186,57 @@ function renderInvestments(investments) {
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
         <div class="invest-meta">
           <span>KES ${(inv.amountInvested || 0).toLocaleString('en-KE')} invested</span>
-          <span style="color:#F4C430">${daysRemaining} days remaining</span>
+          <span style="color:#F4C430;font-size:11px">Matures: ${end.toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'})}</span>
+        </div>
+        <div class="invest-countdown" data-end="${endISO}" data-id="${uid}">
+          <div class="cd-block"><span class="cd-num" id="cd-d-${uid}">--</span><span class="cd-lbl">Days</span></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-block"><span class="cd-num" id="cd-h-${uid}">--</span><span class="cd-lbl">Hrs</span></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-block"><span class="cd-num" id="cd-m-${uid}">--</span><span class="cd-lbl">Min</span></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-block"><span class="cd-num" id="cd-s-${uid}">--</span><span class="cd-lbl">Sec</span></div>
         </div>
       </div>`;
   }).join('');
+
+  startInvestmentCountdowns();
+}
+
+function startInvestmentCountdowns() {
+  if (_countdownTimer) clearInterval(_countdownTimer);
+
+  function tick() {
+    const cards = document.querySelectorAll('.invest-countdown');
+    cards.forEach(card => {
+      const end  = new Date(card.dataset.end);
+      const uid  = card.dataset.id;
+      const diff = end - new Date();
+
+      if (diff <= 0) {
+        document.getElementById(`cd-d-${uid}`).textContent = '00';
+        document.getElementById(`cd-h-${uid}`).textContent = '00';
+        document.getElementById(`cd-m-${uid}`).textContent = '00';
+        document.getElementById(`cd-s-${uid}`).textContent = '00';
+        card.style.opacity = '0.5';
+        return;
+      }
+
+      const days = Math.floor(diff / 86400000);
+      const hrs  = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000)  / 60000);
+      const secs = Math.floor((diff % 60000)    / 1000);
+
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById(`cd-d-${uid}`).textContent = pad(days);
+      document.getElementById(`cd-h-${uid}`).textContent = pad(hrs);
+      document.getElementById(`cd-m-${uid}`).textContent = pad(mins);
+      document.getElementById(`cd-s-${uid}`).textContent = pad(secs);
+    });
+  }
+
+  tick(); // run immediately
+  _countdownTimer = setInterval(tick, 1000);
 }
 
 // ── Transactions ─────────────────────────────────────

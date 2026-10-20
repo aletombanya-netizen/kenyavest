@@ -26,7 +26,7 @@ const investmentSchema = mongoose.Schema(
     durationDays: {
       type: Number,
       required: true,
-      default: 7,
+      default: 30,
     },
     endDate: {
       type: Date,
