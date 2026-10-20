@@ -39,42 +39,53 @@ const createInvestment = async (req, res) => {
       return res.status(400).json({ message: 'Insufficient balance. Please deposit funds first.' });
     }
 
-    // Deduct amount from user balance
+    // Deduct amount from user balance with rollback protection
     user.balance -= investAmount;
     await user.save();
+    let balanceDeducted = true;
 
-    const dailyReturn = parseFloat((investAmount * plan.dailyReturnRate).toFixed(2));
+    try {
+      const dailyReturn = parseFloat((investAmount * plan.dailyReturnRate).toFixed(2));
 
-    // Calculate End Date
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + plan.durationDays);
+      // Calculate End Date
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + plan.durationDays);
 
-    // Create the investment
-    const investment = await Investment.create({
-      user: user._id,
-      planName: plan.name,
-      amountInvested: investAmount,
-      dailyReturn,
-      status: 'active',
-      durationDays: plan.durationDays,
-      endDate: endDate,
-    });
+      // Create the investment
+      const investment = await Investment.create({
+        user: user._id,
+        planName: plan.name,
+        amountInvested: investAmount,
+        dailyReturn,
+        status: 'active',
+        durationDays: plan.durationDays,
+        endDate: endDate,
+      });
 
-    // Log a transaction for this investment
-    await Transaction.create({
-      user: user._id,
-      amount: investAmount,
-      type: 'investment',
-      status: 'completed',
-      reference: `INV-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
-    });
+      // Log a transaction for this investment
+      await Transaction.create({
+        user: user._id,
+        amount: investAmount,
+        type: 'investment',
+        status: 'completed',
+        reference: `INV-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+        description: `Investment in ${plan.name} plan`,
+      });
 
-    res.status(201).json({
-      message: `${plan.name} plan activated! You'll earn KES ${dailyReturn}/day.`,
-      investment,
-    });
+      res.status(201).json({
+        message: `${plan.name} plan activated! You'll earn KES ${dailyReturn}/day.`,
+        investment,
+      });
+    } catch (createErr) {
+      // Rollback deducted balance if creation failed
+      if (balanceDeducted) {
+        user.balance += investAmount;
+        await user.save().catch(() => {});
+      }
+      throw createErr;
+    }
   } catch (error) {
-    console.error(error);
+    console.error('[Investment Creation Error]', error);
     res.status(500).json({ message: 'Server error creating investment' });
   }
 };

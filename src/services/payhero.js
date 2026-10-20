@@ -2,6 +2,9 @@ const axios = require('axios');
 
 const initiateSTKPush = async (amount, phone, reference) => {
   try {
+    const appUrl = process.env.APP_URL || 'https://kenyavest.onrender.com';
+    const callbackUrl = process.env.PAYHERO_CALLBACK_URL || `${appUrl}/api/payments/callback`;
+
     const response = await axios.post(
       'https://backend.payhero.co.ke/api/v2/payments',
       {
@@ -10,7 +13,7 @@ const initiateSTKPush = async (amount, phone, reference) => {
         channel_id: parseInt(process.env.PAYHERO_CHANNEL_ID),
         provider: 'm-pesa',
         external_reference: reference,
-        callback_url: 'https://kashflowvest.onrender.com/api/payments/callback',
+        callback_url: callbackUrl,
       },
       {
         headers: {

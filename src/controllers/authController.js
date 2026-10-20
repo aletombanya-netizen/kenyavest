@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const OTP = require('../models/OTP');
+const Transaction = require('../models/Transaction');
 const { sendWelcomeEmail, sendOTPEmail } = require('../services/emailService');
 
 const generateToken = (id) =>
@@ -80,9 +81,6 @@ const registerUser = async (req, res) => {
     if (process.env.NODE_ENV !== 'production') {
       console.log(`[OTP] Email: ${email} | Purpose: verify`);
     }
-
-    // Send welcome email if they provided an email (optional field)
-    if (user.email) sendWelcomeEmail(user).catch(() => {});
 
     res.status(201).json({
       message: 'Account created! Please check your email for the verification code.',
@@ -337,7 +335,6 @@ const getUserProfile = async (req, res) => {
 // @route GET /api/auth/transactions
 const getUserTransactions = async (req, res) => {
   try {
-    const Transaction = require('../models/Transaction');
     const txs = await Transaction.find({ user: req.user._id })
       .sort({ createdAt: -1 })
       .limit(50);

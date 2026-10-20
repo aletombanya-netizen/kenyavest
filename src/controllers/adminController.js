@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
+const Investment = require('../models/Investment');
+const Setting = require('../models/Setting');
 const Contact = require('../models/Contact');
 const { sendWithdrawalUpdateEmail, sendDepositApprovedEmail, sendReferralBonusEmail } = require('../services/emailService');
 const crypto = require('crypto');
@@ -157,9 +159,6 @@ const toggleUserBan = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
-const Investment = require('../models/Investment');
-const Setting = require('../models/Setting');
 
 // @route PUT /api/admin/settings
 // @desc Update global settings (e.g. WhatsApp number)

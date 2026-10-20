@@ -38,7 +38,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com', 'cdn.jsdelivr.net'],
         fontSrc: ["'self'", 'fonts.gstatic.com', 'data:'],
         imgSrc: ["'self'", 'data:', 'blob:'],
-        connectSrc: ["'self'", 'https://kashflowvest.onrender.com', 'https://fonts.googleapis.com', 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net'],
+        connectSrc: ["'self'", 'https://kenyavest.onrender.com', 'https://kashflowvest.onrender.com', 'https://fonts.googleapis.com', 'https://fonts.gstatic.com', 'https://cdn.jsdelivr.net'],
         workerSrc: ["'self'", 'blob:'],
         manifestSrc: ["'self'"],
       },

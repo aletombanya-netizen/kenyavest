@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
+const Setting = require('../models/Setting');
 
 // @route GET /api/public/recent-activity
 // @desc  Get anonymized recent deposits and withdrawals for social proof popup
@@ -47,8 +48,6 @@ router.get('/recent-activity', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-const Setting = require('../models/Setting');
 
 // @route GET /api/public/settings
 // @desc  Get public settings like WhatsApp number
