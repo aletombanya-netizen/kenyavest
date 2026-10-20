@@ -103,7 +103,7 @@ function renderChart(txs) {
   const data   = [];
 
   sorted.forEach(t => {
-    const sign = ['deposit', 'roi', 'referral'].includes(t.type) ? 1 : -1;
+    const sign = ['deposit', 'roi', 'referral', 'capital_return'].includes(t.type) ? 1 : -1;
     running += sign * (t.amount || 0);
     labels.push(new Date(t.createdAt).toLocaleDateString('en-KE', { month: 'short', day: 'numeric' }));
     data.push(parseFloat(running.toFixed(2)));
@@ -247,11 +247,12 @@ function startInvestmentCountdowns() {
 
 // ── Transactions ─────────────────────────────────────
 const TX_META = {
-  deposit:    { icon: '📥', label: 'M-Pesa Deposit',  cls: 'positive',   iconCls: 'tx-icon-deposit' },
-  withdrawal: { icon: '📤', label: 'Withdrawal',       cls: 'negative',   iconCls: 'tx-icon-withdrawal' },
-  roi:        { icon: '💸', label: 'Daily ROI',         cls: 'positive',   iconCls: 'tx-icon-roi' },
-  investment: { icon: '📦', label: 'Investment',        cls: 'negative',   iconCls: 'tx-icon-investment' },
-  referral:   { icon: '🎁', label: 'Referral Bonus',    cls: 'positive',   iconCls: 'tx-icon-referral' },
+  deposit:        { icon: '📥', label: 'M-Pesa Deposit',  cls: 'positive',   iconCls: 'tx-icon-deposit' },
+  withdrawal:     { icon: '📤', label: 'Withdrawal',       cls: 'negative',   iconCls: 'tx-icon-withdrawal' },
+  roi:            { icon: '💸', label: 'Daily ROI',         cls: 'positive',   iconCls: 'tx-icon-roi' },
+  investment:     { icon: '📦', label: 'Investment',        cls: 'negative',   iconCls: 'tx-icon-investment' },
+  referral:       { icon: '🎁', label: 'Referral Bonus',    cls: 'positive',   iconCls: 'tx-icon-referral' },
+  capital_return: { icon: '💰', label: 'Capital Return',    cls: 'positive',   iconCls: 'tx-icon-deposit' },
 };
 
 function renderTransactions(txs) {
@@ -286,7 +287,7 @@ function renderReferral(user, txs) {
 
 function copyReferral() {
   const code = document.getElementById('referralCode').textContent;
-  const url  = `https://kashflowvest.onrender.com?ref=${code}`;
+  const url  = `${window.location.origin}/?ref=${code}`;
   navigator.clipboard.writeText(url).then(() => showToast('✅ Referral link copied!', 'success'));
 }
 

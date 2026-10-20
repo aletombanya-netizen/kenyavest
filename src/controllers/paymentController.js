@@ -1,7 +1,7 @@
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const payhero = require('../services/payhero');
-const { sendDepositConfirmation } = require('../services/emailService');
+const { sendDepositConfirmation, sendDepositApprovedEmail } = require('../services/emailService');
 const crypto = require('crypto');
 
 // ── Initiate Deposit ──────────────────────────────────────────────
@@ -99,6 +99,11 @@ const payheroCallback = async (req, res) => {
 
           user.hasDeposited = true;
           await user.save();
+
+          // Send deposit approved email (non-blocking)
+          if (user.email) {
+            sendDepositApprovedEmail(user, transaction.amount).catch(() => {});
+          }
         }
       }
     } else if (extRef) {

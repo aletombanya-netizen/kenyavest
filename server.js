@@ -93,7 +93,7 @@ app.get('/ping', (req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ── Smart Catch-all (404 for unknown routes, SPA fallback for known) ─
-const spaRoutes = ['/', '/index.html', '/login.html', '/register.html', '/dashboard.html', '/admin.html', '/verify.html', '/terms.html', '/privacy.html', '/404.html', '/transactions.html', '/profile.html'];
+const spaRoutes = ['/', '/index.html', '/login.html', '/register.html', '/dashboard.html', '/admin.html', '/verify.html', '/terms.html', '/privacy.html', '/404.html', '/transactions.html', '/profile.html', '/leaderboard.html'];
 app.use((req, res) => {
   // API misses handled separately
   if (req.path.startsWith('/api/')) {

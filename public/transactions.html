@@ -138,6 +138,7 @@
     <button class="filter-btn" onclick="filterTx('roi', this)">🌟 ROI</button>
     <button class="filter-btn" onclick="filterTx('investment', this)">🔵 Investments</button>
     <button class="filter-btn" onclick="filterTx('referral', this)">🟣 Referrals</button>
+    <button class="filter-btn" onclick="filterTx('capital_return', this)">💰 Capital Return</button>
   </div>
 
   <!-- Table -->
@@ -161,11 +162,12 @@
   let currentFilter = 'all';
 
   const typeConfig = {
-    deposit:    { icon: '💚', label: 'Deposit',    cls: 'type-deposit',    sign: '+', amtClass: 'positive' },
-    withdrawal: { icon: '🔴', label: 'Withdrawal', cls: 'type-withdrawal', sign: '-', amtClass: 'negative' },
-    roi:        { icon: '⭐', label: 'ROI Earned', cls: 'type-roi',        sign: '+', amtClass: 'neutral' },
-    investment: { icon: '🔵', label: 'Investment', cls: 'type-investment', sign: '-', amtClass: 'negative' },
-    referral:   { icon: '🟣', label: 'Referral',   cls: 'type-referral',  sign: '+', amtClass: 'positive' },
+    deposit:        { icon: '💚', label: 'Deposit',        cls: 'type-deposit',    sign: '+', amtClass: 'positive' },
+    withdrawal:     { icon: '🔴', label: 'Withdrawal',     cls: 'type-withdrawal', sign: '-', amtClass: 'negative' },
+    roi:            { icon: '⭐', label: 'ROI Earned',     cls: 'type-roi',        sign: '+', amtClass: 'neutral' },
+    investment:     { icon: '🔵', label: 'Investment',     cls: 'type-investment', sign: '-', amtClass: 'negative' },
+    referral:       { icon: '🟣', label: 'Referral',       cls: 'type-referral',  sign: '+', amtClass: 'positive' },
+    capital_return: { icon: '💰', label: 'Capital Return', cls: 'type-deposit',   sign: '+', amtClass: 'positive' },
   };
 
   function fmt(n) { return 'KES ' + Number(n).toLocaleString('en-KE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
