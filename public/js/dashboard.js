@@ -12,9 +12,12 @@ try {
 if (!TOKEN) window.location.href = '/';
 
 const PLANS = {
-  starter: { rate: 0.30 },
-  pro:     { rate: 0.40 },
-  elite:   { rate: 0.50 },
+  starter:        { rate: 0.30, days: 30 },
+  pro:            { rate: 0.40, days: 30 },
+  christmas_star: { rate: 0.60, days: 30 },
+  premium:        { rate: 0.70, days: 30 },
+  vip:            { rate: 0.80, days: 30 },
+  elite:          { rate: 0.90, days: 30 },
 };
 
 let balanceChartInstance = null;
@@ -267,8 +270,11 @@ function updateROIPreview() {
   const plan   = PLANS[document.getElementById('investPlan').value] || PLANS.starter;
   const amount = parseFloat(document.getElementById('investAmount').value) || 0;
   const daily  = (amount * plan.rate).toFixed(2);
+  const total  = (amount * plan.rate * plan.days).toFixed(2);
   document.getElementById('roiPreview').textContent =
-    amount > 0 ? `📈 Daily return: KES ${parseFloat(daily).toLocaleString('en-KE')}` : '';
+    amount > 0
+      ? `📈 Daily: KES ${parseFloat(daily).toLocaleString('en-KE')} × ${plan.days} days = KES ${parseFloat(total).toLocaleString('en-KE')} total`
+      : '';
 }
 
 // ── Deposit Form ──────────────────────────────────────
