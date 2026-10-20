@@ -99,6 +99,7 @@
     KenyaVest
   </a>
   <div class="header-nav">
+    <a href="/admin.html" class="nav-btn" id="headerAdminBtn" style="display:none;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.4);font-weight:700;">⚡ Admin Panel</a>
     <a href="/dashboard.html" class="nav-btn">📊 Dashboard</a>
     <a href="/transactions.html" class="nav-btn">📋 Transactions</a>
     <button class="nav-btn danger" id="logoutBtn">Logout</button>
@@ -224,6 +225,8 @@
       if (u.role === 'admin') {
         const adminLnk = document.getElementById('adminBadgeLink');
         if (adminLnk) adminLnk.style.display = 'inline-block';
+        const headerAdmin = document.getElementById('headerAdminBtn');
+        if (headerAdmin) headerAdmin.style.display = 'inline-flex';
       }
 
       document.getElementById('loadingState').style.display = 'none';
