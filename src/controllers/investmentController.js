@@ -65,7 +65,7 @@ const createInvestment = async (req, res) => {
       user: user._id,
       amount: investAmount,
       type: 'investment',
-      status: 'success',
+      status: 'completed',
       reference: `INV-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
     });
 
