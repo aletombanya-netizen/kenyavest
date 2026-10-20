@@ -61,6 +61,12 @@ function renderProfile(user) {
     vipEl.textContent = user.vipTier || 'BRONZE';
     vipEl.style.color = vipColors[user.vipTier] || '#cd7f32';
   }
+
+  // If user is an admin, ensure Admin Panel button is visible in header
+  const adminBtn = document.getElementById('adminPanelLink');
+  if (user.role === 'admin' && adminBtn) {
+    adminBtn.style.display = 'inline-flex';
+  }
 }
 
 // ── Stats ────────────────────────────────────────────

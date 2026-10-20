@@ -237,7 +237,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  let TOKEN = localStorage.getItem('adminToken');
+  let TOKEN = localStorage.getItem('adminToken') || localStorage.getItem('token');
   let currentPanel = 'dashboard';
 
   /* ── Auth ── */
@@ -252,6 +252,7 @@
       if (data.role !== 'admin') return showToast('Access denied: Admins only', 'error');
       TOKEN = data.token;
       localStorage.setItem('adminToken', TOKEN);
+      localStorage.setItem('token', TOKEN);
       showApp(data.name);
       loadDashboard();
     } catch { showToast('Network error', 'error'); }
@@ -264,16 +265,28 @@
     document.getElementById('userAvatar').textContent = (name || 'A')[0].toUpperCase();
   }
 
-  function adminLogout() { localStorage.removeItem('adminToken'); location.reload(); }
+  function adminLogout() {
+    localStorage.removeItem('adminToken');
+    location.reload();
+  }
 
   window.addEventListener('DOMContentLoaded', async () => {
     if (!TOKEN) return;
     try {
       const res  = await fetch('/api/auth/profile', { headers: { Authorization: `Bearer ${TOKEN}` } });
       const data = await res.json();
-      if (res.ok && data.role === 'admin') { showApp(data.name); loadDashboard(); }
-      else { localStorage.removeItem('adminToken'); TOKEN = null; }
-    } catch { localStorage.removeItem('adminToken'); TOKEN = null; }
+      if (res.ok && data.role === 'admin') {
+        localStorage.setItem('adminToken', TOKEN);
+        showApp(data.name);
+        loadDashboard();
+      } else {
+        localStorage.removeItem('adminToken');
+        TOKEN = null;
+      }
+    } catch {
+      localStorage.removeItem('adminToken');
+      TOKEN = null;
+    }
   });
 
   document.addEventListener('keydown', e => {
