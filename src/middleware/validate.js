@@ -34,7 +34,7 @@ const nameValidator = body('name')
 
 const amountValidator = body('amount')
   .isNumeric().withMessage('Amount must be a number')
-  .custom(val => parseFloat(val) >= 10).withMessage('Minimum amount is KES 10');
+  .custom(val => parseFloat(val) >= 500).withMessage('Minimum amount is KES 500');
 
 const registerValidators = [
   nameValidator,

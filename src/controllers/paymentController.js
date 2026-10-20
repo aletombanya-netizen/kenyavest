@@ -12,8 +12,8 @@ const initiateDeposit = async (req, res) => {
 
     // Validate amount
     const numAmount = Number(amount);
-    if (!numAmount || numAmount < 10) {
-      return res.status(400).json({ message: 'Minimum deposit amount is KES 10' });
+    if (!numAmount || numAmount < 500) {
+      return res.status(400).json({ message: 'Minimum deposit amount is KES 500' });
     }
     if (numAmount > 1000000) {
       return res.status(400).json({ message: 'Maximum deposit amount is KES 1,000,000' });
