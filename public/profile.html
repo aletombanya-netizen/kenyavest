@@ -122,9 +122,9 @@
         <p id="profileEmail">—</p>
         <div class="profile-badges">
           <span class="badge badge-verified">✓ Verified</span>
-          <span class="badge badge-role" id="profileRole">User</span>
+          <a href="/admin.html" class="badge badge-role" id="profileRole" style="text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;">User</a>
           <span class="badge badge-member" id="profileSince">—</span>
-          <a href="/admin.html" id="adminBadgeLink" style="display:none;background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;font-weight:700;padding:4px 12px;border-radius:20px;font-size:12px;text-decoration:none;margin-left:8px;box-shadow:0 0 12px rgba(74,222,128,0.35);">⚡ Open Admin Dashboard →</a>
+          <a href="/admin.html" id="adminBadgeLink" style="display:none;align-items:center;gap:4px;background:#4ade80;color:#000;font-weight:700;padding:4px 14px;border-radius:20px;font-size:12px;text-decoration:none;box-shadow:0 0 15px rgba(74,222,128,0.4);">⚡ Open Admin Dashboard →</a>
         </div>
       </div>
     </div>
@@ -206,28 +206,24 @@
       document.getElementById('avatarLetter').textContent = initials;
       document.getElementById('profileName').textContent = u.name;
       document.getElementById('profileEmail').textContent = u.email;
-      document.getElementById('profileRole').textContent = u.role === 'admin' ? '⭐ Admin' : '👤 Investor';
-      document.getElementById('profileSince').textContent = 'Member since ' + since;
-
-      document.getElementById('statBalance').textContent = fmt(u.balance);
-      document.getElementById('statRefEarnings').textContent = fmt(u.referralEarnings);
-
-      document.getElementById('infoName').textContent = u.name;
-      document.getElementById('infoEmail').textContent = u.email;
-      document.getElementById('infoPhone').textContent = u.phone;
-      document.getElementById('infoRole').textContent = u.role.charAt(0).toUpperCase() + u.role.slice(1);
-      document.getElementById('infoSince').textContent = since;
-
-      document.getElementById('refCode').textContent = u.referralCode;
-      document.getElementById('refLink').textContent = refUrl;
-      document.getElementById('refEarningsDetail').textContent = fmt(u.referralEarnings);
-
+      const roleEl = document.getElementById('profileRole');
       if (u.role === 'admin') {
+        roleEl.textContent = '⭐ Admin (Click to open Dashboard)';
+        roleEl.href = '/admin.html';
+        roleEl.style.background = 'rgba(74,222,128,0.2)';
+        roleEl.style.color = '#4ade80';
+        roleEl.style.border = '1px solid #4ade80';
+        
         const adminLnk = document.getElementById('adminBadgeLink');
-        if (adminLnk) adminLnk.style.display = 'inline-block';
+        if (adminLnk) adminLnk.style.display = 'inline-flex';
         const headerAdmin = document.getElementById('headerAdminBtn');
         if (headerAdmin) headerAdmin.style.display = 'inline-flex';
+      } else {
+        roleEl.textContent = '👤 Investor';
+        roleEl.removeAttribute('href');
+        roleEl.style.cursor = 'default';
       }
+      document.getElementById('profileSince').textContent = 'Member since ' + since;
 
       document.getElementById('loadingState').style.display = 'none';
       document.getElementById('profileContent').style.display = 'block';
