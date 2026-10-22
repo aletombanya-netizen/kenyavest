@@ -238,12 +238,15 @@ const forgotPassword = async (req, res) => {
     });
     
     // Send OTP email
-    await sendOTPEmail(user.email, code, 'reset');
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`[OTP - PASSWORD RESET] Email: ${email}`);
+    const emailSent = await sendOTPEmail(user.email, code, 'reset');
+    if (!emailSent) {
+      console.error(`[Forgot Password] Email FAILED to send to: ${user.email}`);
+    } else {
+      console.log(`[OTP - PASSWORD RESET] Email sent to: ${email}`);
     }
     res.json({ message: 'If that email is registered, a password reset code has been sent.' });
   } catch (error) {
+    console.error('[Forgot Password Error]', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
