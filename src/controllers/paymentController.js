@@ -54,14 +54,16 @@ const payheroCallback = async (req, res) => {
     const data = req.body;
     console.log('Payhero Callback:', JSON.stringify(data));
 
-    const isSuccess = data?.response?.Success || data?.status === 'SUCCESS';
-    const extRef    = data?.response?.ExternalReference || data?.external_reference;
-    const amount    = data?.response?.Amount || data?.amount;
-    const receipt   = data?.response?.MpesaReceiptNumber || data?.mpesa_receipt;
+    // Payhero sends a flat payload: { success: true, status: "success", external_reference, amount, provider_reference }
+    const isSuccess = data?.success === true || data?.status?.toLowerCase() === 'success';
+    const extRef    = data?.external_reference || data?.response?.ExternalReference;
+    const amount    = data?.amount            || data?.response?.Amount;
+    const receipt   = data?.provider_reference || data?.response?.MpesaReceiptNumber || data?.mpesa_receipt;
 
     if (isSuccess && extRef) {
+      // Accept both 'pending' and 'failed' (failed may be due to old parsing bug on retries)
       const transaction = await Transaction.findOne({ reference: extRef });
-      if (transaction && transaction.status === 'pending') {
+      if (transaction && transaction.status !== 'completed') {
         transaction.status = 'completed';
         if (receipt) transaction.mpesaReceiptNumber = receipt;
         await transaction.save();
