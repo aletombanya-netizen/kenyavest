@@ -31,15 +31,18 @@ const getAllTransactions = async (req, res) => {
 // @route PUT /api/admin/transactions/:id
 const updateTransactionStatus = async (req, res) => {
   try {
-    const { status } = req.body;
+    let { status } = req.body;
+    if (status === 'success') status = 'completed';
     if (!['completed', 'rejected', 'failed'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status value' });
     }
 
     const transaction = await Transaction.findById(req.params.id).populate('user', 'name phone email');
     if (!transaction) return res.status(404).json({ message: 'Transaction not found' });
-    if (transaction.status !== 'pending') {
-      return res.status(400).json({ message: 'Transaction has already been processed' });
+    
+    // Prevent double-completing
+    if (transaction.status === 'completed') {
+      return res.status(400).json({ message: 'Transaction has already been completed' });
     }
 
     const user = await User.findById(transaction.user._id || transaction.user);
@@ -70,7 +73,7 @@ const updateTransactionStatus = async (req, res) => {
     // ── Manual deposit approval ───────────────────────────────────
     if (transaction.type === 'deposit') {
       if (status === 'completed' && user) {
-        user.balance += Number(transaction.amount);
+        user.balance = (user.balance || 0) + Number(transaction.amount);
         user.accumulatedDeposits = (user.accumulatedDeposits || 0) + Number(transaction.amount);
         
         // ── Referral Bonus (first deposit only) ───────────────
@@ -108,7 +111,7 @@ const updateTransactionStatus = async (req, res) => {
         }
         
       } else {
-        transaction.status = 'rejected';
+        transaction.status = status;
       }
       await transaction.save();
       return res.json({ message: 'Deposit updated successfully', transaction });
@@ -127,10 +130,47 @@ const updateUserBalance = async (req, res) => {
     const { balance } = req.body;
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    user.balance = Number(balance);
+    
+    const oldBalance = Number(user.balance) || 0;
+    const newBalance = Number(balance);
+    const diff = newBalance - oldBalance;
+
+    user.balance = newBalance;
+    if (diff > 0) {
+      user.accumulatedDeposits = (user.accumulatedDeposits || 0) + diff;
+      user.hasDeposited = true;
+    }
     await user.save();
-    res.json({ message: 'Balance updated', balance: user.balance });
-  } catch {
+
+    // Check if there is an unfulfilled pending or failed deposit for this user
+    let linkedTx = await Transaction.findOne({
+      user: user._id,
+      type: 'deposit',
+      status: { $in: ['pending', 'failed'] }
+    }).sort({ createdAt: -1 });
+
+    if (linkedTx) {
+      linkedTx.status = 'completed';
+      await linkedTx.save();
+    } else if (diff > 0) {
+      // Create a completed deposit transaction record so it reflects in the client's history & charts
+      linkedTx = await Transaction.create({
+        user: user._id,
+        amount: diff,
+        type: 'deposit',
+        status: 'completed',
+        reference: `MAN-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+        description: 'Manual Balance Credit by Admin',
+      });
+    }
+
+    res.json({
+      message: 'Balance updated successfully',
+      balance: user.balance,
+      transaction: linkedTx,
+    });
+  } catch (error) {
+    console.error('[Admin Balance Update Error]', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

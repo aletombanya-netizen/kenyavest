@@ -515,9 +515,15 @@
 
   async function updateTx(id, status) {
     const data = await apiPut(`/api/admin/transactions/${id}`, { status });
-    showToast(status === 'completed' ? '✅ Withdrawal approved!' : '❌ Withdrawal rejected', status === 'completed' ? 'success' : 'error');
-    document.getElementById(`row-${id}`)?.remove();
-    loadDashboard();
+    if (data?.transaction || data?.message?.includes('successfully')) {
+      showToast(data.message || (status === 'completed' ? '✅ Transaction approved!' : '❌ Transaction rejected'), 'success');
+      document.getElementById(`row-${id}`)?.remove();
+      loadDashboard();
+      if (currentPanel === 'transactions') loadTransactions();
+      if (currentPanel === 'withdrawals') loadWithdrawals();
+    } else {
+      showToast(data?.message || 'Failed to update transaction', 'error');
+    }
   }
 
   /* ── Users ── */
@@ -557,8 +563,14 @@
     const bal = document.getElementById('newBalInput').value;
     const data = await apiPut(`/api/admin/users/${editingUser}/balance`, { balance: bal });
     document.getElementById('balanceModal').style.display = 'none';
-    showToast('Balance updated successfully', 'success');
-    loadUsers();
+    if (data?.balance !== undefined) {
+      showToast('✅ Balance updated successfully! Deposits synchronized.', 'success');
+      loadUsers();
+      if (currentPanel === 'transactions') loadTransactions();
+      loadDashboard();
+    } else {
+      showToast(data?.message || 'Failed to update balance', 'error');
+    }
   }
 
   /* ── Package Management for Clients ── */
@@ -663,8 +675,17 @@
   function renderTxHTML(container, txs, showActions) {
     if (!txs.length) return document.getElementById(container).innerHTML = empty('📋','No transactions found');
     const tc = { deposit:'badge-success', withdrawal:'badge-warning', investment:'badge-purple', roi:'badge-info' };
-    const sc = { completed:'badge-success', pending:'badge-warning', rejected:'badge-danger', active:'badge-info' };
-    const rows = txs.map(t => `
+    const sc = { completed:'badge-success', pending:'badge-warning', rejected:'badge-danger', failed:'badge-danger', active:'badge-info' };
+    const rows = txs.map(t => {
+      let actionBtn = '—';
+      if (showActions) {
+        if (t.status === 'pending' && t.type === 'withdrawal') {
+          actionBtn = `<button class="btn-approve" onclick="updateTx('${t._id}','completed')" title="Approve Withdrawal">✅</button><button class="btn-reject" onclick="updateTx('${t._id}','rejected')" title="Reject Withdrawal">❌</button>`;
+        } else if ((t.status === 'pending' || t.status === 'failed') && t.type === 'deposit') {
+          actionBtn = `<button class="btn-approve" onclick="updateTx('${t._id}','completed')" title="Approve Deposit / Credit Account">✅ Approve</button>${t.status === 'pending' ? `<button class="btn-reject" onclick="updateTx('${t._id}','rejected')" title="Reject">❌</button>` : ''}`;
+        }
+      }
+      return `
       <tr>
         <td>${t._id.slice(-6).toUpperCase()}</td>
         <td>${t.user?.name || t.user?.phone || '—'}</td>
@@ -672,8 +693,9 @@
         <td style="font-weight:600">KES ${(t.amount||0).toLocaleString()}</td>
         <td><span class="badge ${sc[t.status]||'badge-info'}">${t.status}</span></td>
         <td>${fmt(t.createdAt)}</td>
-        ${showActions ? `<td>${(t.status==='pending' && (t.type==='withdrawal' || t.type==='deposit')) ? `<button class="btn-approve" onclick="updateTx('${t._id}','completed')">✅</button><button class="btn-reject" onclick="updateTx('${t._id}','rejected')">❌</button>` : '—'}</td>`:'' }
-      </tr>`).join('');
+        ${showActions ? `<td>${actionBtn}</td>` : ''}
+      </tr>`;
+    }).join('');
     document.getElementById(container).innerHTML = `<table id="${container}"><thead><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th>${showActions?'<th>Action</th>':''}</tr></thead><tbody>${rows}</tbody></table>`;
   }
 

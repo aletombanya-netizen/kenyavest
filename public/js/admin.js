@@ -60,10 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const userPhone = tx.user ? tx.user.phone : '';
         
         let actionButtons = '';
-        if (tx.status === 'pending') {
+        if (tx.status === 'pending' || (tx.type === 'deposit' && tx.status === 'failed')) {
           actionButtons = `
-            <button class="btn-sm btn-approve" onclick="updateTx('${tx._id}', 'success')">Approve</button>
-            <button class="btn-sm btn-reject" onclick="updateTx('${tx._id}', 'rejected')">Reject</button>
+            <button class="btn-sm btn-approve" onclick="updateTx('${tx._id}', 'completed')">Approve</button>
+            ${tx.status === 'pending' ? `<button class="btn-sm btn-reject" onclick="updateTx('${tx._id}', 'rejected')">Reject</button>` : ''}
           `;
         }
 

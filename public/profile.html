@@ -225,6 +225,21 @@
       }
       document.getElementById('profileSince').textContent = 'Member since ' + since;
 
+      // Stats
+      if (document.getElementById('statBalance')) document.getElementById('statBalance').textContent = fmt(u.balance || 0);
+      if (document.getElementById('statRefEarnings')) document.getElementById('statRefEarnings').textContent = fmt(u.referralEarnings || 0);
+
+      // Account info
+      if (document.getElementById('infoName')) document.getElementById('infoName').textContent = u.name || '—';
+      if (document.getElementById('infoEmail')) document.getElementById('infoEmail').textContent = u.email || '—';
+      if (document.getElementById('infoPhone')) document.getElementById('infoPhone').textContent = u.phone || '—';
+      if (document.getElementById('infoRole')) document.getElementById('infoRole').textContent = u.role === 'admin' ? 'Administrator' : 'Investor';
+      if (document.getElementById('infoSince')) document.getElementById('infoSince').textContent = since;
+
+      // Referral info
+      if (document.getElementById('refCode')) document.getElementById('refCode').textContent = u.referralCode || '——';
+      if (document.getElementById('refLink')) document.getElementById('refLink').textContent = refUrl;
+
       document.getElementById('loadingState').style.display = 'none';
       document.getElementById('profileContent').style.display = 'block';
     } catch(e) {
