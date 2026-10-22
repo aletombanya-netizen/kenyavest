@@ -438,7 +438,7 @@ img { max-width: 100%; display: block; }
 .about-visual { position: relative; }
 .card-stack {
   position: relative;
-  height: 380px;
+  height: 420px;
 }
 .float-card {
   position: absolute;
@@ -452,10 +452,16 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
   animation: float 4s ease-in-out infinite;
+  z-index: 2;
+  white-space: nowrap;
 }
-.float-card.fc-top { top: 0; left: -20px; animation-delay: 0s; }
-.float-card.fc-bot { bottom: 60px; right: -20px; animation-delay: -2s; }
-.float-card.fc-ref { bottom: 0; left: 20px; animation-delay: -1s; }
+/* fc-top: top-left, above chart */
+.float-card.fc-top { top: 8px; left: -16px; animation-delay: 0s; }
+/* fc-bot: bottom-right, below chart */
+.float-card.fc-bot { bottom: 8px; right: -16px; animation-delay: -2s; }
+/* fc-ref: vertically centered on left - uses a separate animation to preserve centering */
+.float-card.fc-ref { top: 50%; left: -16px; transform: translateY(-50%); animation-name: float-ref; animation-delay: -1s; }
+@keyframes float-ref { 0%,100% { transform: translateY(-50%); } 50% { transform: translateY(calc(-50% - 10px)); } }
 @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
 .fc-ico { font-size: 1.5rem; }
 .fc-lbl { font-size: .75rem; color: var(--muted); }
@@ -1238,7 +1244,7 @@ img { max-width: 100%; display: block; }
   }
 
   .about-grid { grid-template-columns: 1fr; }
-  .card-stack { height: 280px; }
+  .card-stack { height: 320px; }
   .feat-grid { grid-template-columns: 1fr 1fr; }
   .plans-grid { grid-template-columns: 1fr 1fr; }
   .steps-grid { grid-template-columns: 1fr; gap: 1.2rem; }
